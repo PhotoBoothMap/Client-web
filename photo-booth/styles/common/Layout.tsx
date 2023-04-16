@@ -8,5 +8,7 @@ export const GlobalLayout = styled.section`
 
     min-height: 100vh;
     margin: 0 auto;
+
+    position: relative;
   }
 `;
