@@ -19,7 +19,7 @@
       "@pages/*": ["./pages/*"],
       "@components/*": ["./components/*"],
       "@utils/*": ["./utils/*"],
-      "@apis/*": ["./apis/*"],
+      "@repositories/*": ["./repositories/*"],
       "@assets/*": ["./assets/*"]
     }
   },
