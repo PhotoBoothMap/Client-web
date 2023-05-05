@@ -2,7 +2,7 @@ import styled from 'styled-components';
 
 import { useCallback, useEffect, useState } from 'react';
 
-import Map from '@components/map';
+import Map from '@components/map/map';
 import Slider from '@components/map/slider';
 import { useMapStore } from '@store/map';
 import { BoothPreview } from '@utils/interface/photoBooth';
