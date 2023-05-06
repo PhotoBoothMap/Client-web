@@ -10,5 +10,6 @@ export const GlobalLayout = styled.section`
     margin: 0 auto;
 
     position: relative;
+    background-color: black;
   }
 `;
