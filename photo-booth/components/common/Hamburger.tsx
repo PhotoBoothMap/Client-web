@@ -4,7 +4,7 @@ import React, { useState } from 'react';
 
 const Hamburger = ({}) => {
   const [user, setUser] = useState(null);
-  const [openHamburger, setOpenHamburger] = useState(true);
+  const [openHamburger, setOpenHamburger] = useState(false);
 
   return (
     <HamburgerStyle display={`${openHamburger ? 'flex' : 'none'}`}>
