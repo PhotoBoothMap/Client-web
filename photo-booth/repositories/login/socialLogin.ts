@@ -1,12 +1,12 @@
 import { HOST_URL } from '@assets/url';
 import axios from 'axios';
 
-import { createSession } from '../../../lib/secret/createSession';
-import client from '../../../lib/server/client';
+// import { createSession } from '../../../lib/secret/createSession';
+// import client from '../../../lib/server/client';
 
-interface Response<T> {
-  result: T;
-}
+// interface Response<T> {
+//   result: T;
+// }
 
 import { NextApiRequest, NextApiResponse } from 'next';
 

@@ -9,14 +9,11 @@ const kakaoLoginPage = () => {
     async (code: string | string[]) => {
       // 백엔드에 전송
       //TODO utils로 빼기
-      const response: ResponseType = await fetch(`/auth/login/kakao?code=${code}`, {
+      const response = await fetch(`/auth/login/kakao?code=${code}`, {
         method: 'GET',
         headers: {
           'Content-Type': 'application/json',
         },
-        // body: JSON.stringify({
-        //   authCode: code,
-        // }),
       }).then((res) => res.json());
 
       if (response.data.success) {
@@ -33,12 +30,11 @@ const kakaoLoginPage = () => {
   useEffect(() => {
     if (authCode) {
       loginHandler(authCode);
-
       // 인가코드를 제대로 못 받았을 경우에 에러 페이지를 띄운다.
     } else if (kakaoServerError) {
       router.push('/notifications/authentication-failed');
     }
-  }, [loginHandler, authCode, kakaoServerError, router]);
+  }, [authCode, kakaoServerError, router]);
 
   return (
     <div className={`bg-white`}>

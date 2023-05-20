@@ -6,7 +6,7 @@ const loginPage = () => {
   // 등록한 redirectUri를 매개변수로 넣어준다.
   const kakaoLogin = () => {
     window.Kakao.Auth.authorize({
-      redirectUri: 'http://localhost:3000/account/login/kakao', //TODO .env에 넣기
+      redirectUri: `${process.env.NEXT_PUBLIC_HOST}/account/login/kakao`,
     });
   };
 

@@ -14,7 +14,7 @@ declare global {
 function MyApp({ Component, pageProps }: AppProps) {
   const kakaoInit = () => {
     // 페이지가 로드되면 실행
-    window.Kakao.init('0d11ae3742b7e7a40f57856e9ac1db18'); //TODO .env에 넣기 process.env.NEXT_PUBLIC_KAKAO_JS_KEY
+    window.Kakao.init(process.env.NEXT_PUBLIC_KAKAOMAP_APPKEY);
     console.log(window.Kakao.isInitialized());
   };
 
