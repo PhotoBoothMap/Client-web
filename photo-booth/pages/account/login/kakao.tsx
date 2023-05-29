@@ -9,11 +9,16 @@ const kakaoLoginPage = () => {
     async (code: string | string[]) => {
       // 백엔드에 전송
       //TODO utils로 빼기
-      const response = await fetch(`/auth/login/kakao?code=${code}`, {
-        method: 'GET',
+      // const response = await axios
+
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_HOST}/auth/kakao/`, {
+        method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
+        body: JSON.stringify({
+          authorizationCode: code,
+        }),
       }).then((res) => res.json());
 
       if (response.data.success) {
