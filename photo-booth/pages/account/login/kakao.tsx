@@ -22,8 +22,22 @@ const kakaoLoginPage = () => {
       }).then((res) => res.json());
 
       if (response.data.success) {
-        // 성공하면 홈으로 리다이렉트
-        router.push('/');
+        // 성공하면 validation 체크하기
+        const validationResponse = await fetch(
+          `${process.env.NEXT_PUBLIC_API_HOST}/members/validate/`,
+          {
+            method: 'PUT',
+            headers: {
+              'Content-Type': 'application/json',
+              Authorization: response.header.Authorization,
+            },
+          },
+        ).then((res) => res.json());
+
+        if (validationResponse.data.success) {
+          // 성공하면 홈으로 리다이렉트
+          router.push('/');
+        }
       } else {
         // 실패하면 에러 페이지로 리다이렉트
         router.push('/notifications/authentication-failed');
