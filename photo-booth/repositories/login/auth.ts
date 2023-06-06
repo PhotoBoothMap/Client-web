@@ -1,4 +1,4 @@
-import { setCookie } from 'cookies-next';
+import { deleteCookie, getCookie, setCookie } from 'cookies-next';
 
 export const setRefreshTokenCookie = (token: any) => {
   setCookie('refreshToken', token, { httpOnly: true });
@@ -6,6 +6,14 @@ export const setRefreshTokenCookie = (token: any) => {
 
 export const setAccessTokenCookie = (token: any) => {
   setCookie('accessToken', token);
+};
+
+export const getTokenCookie = (type: 'refresh' | 'access') => {
+  getCookie(`${type}Token`);
+};
+
+export const deleteTokenCookie = (type: 'refresh' | 'access') => {
+  deleteCookie(`${type}Token`);
 };
 
 export const kakaoLoginApi = async (code: string) => {
