@@ -1,5 +1,6 @@
-import { useRouter } from 'next/router';
 import React, { useCallback, useEffect } from 'react';
+import { useRouter } from 'next/router';
+import { setRTCookie } from '@repositories/login/auth';
 
 const kakaoLoginPage = () => {
   const router = useRouter();
@@ -22,6 +23,9 @@ const kakaoLoginPage = () => {
       }).then((res) => res.json());
 
       if (response.data.success) {
+        const cookie = response.headers.cookie;
+
+        setRTCookie(cookie);
         // 성공하면 validation 체크하기
         const validationResponse = await fetch(
           `${process.env.NEXT_PUBLIC_API_HOST}/members/validate/`,
