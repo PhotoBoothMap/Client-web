@@ -30,24 +30,29 @@ export const kakaoLoginApi = async (code: string) => {
   return response;
 };
 
-export const validateApi = async (AT: any) => {
+export const validateApi = async () => {
+  const at = getTokenCookie('access');
+
   const response = await fetch(`${process.env.NEXT_PUBLIC_API_HOST}/members/validate/`, {
     method: 'PUT',
     headers: {
       'Content-Type': 'application/json',
-      Authorization: `Bearer ${AT}`,
+      Authorization: `Bearer ${at}`,
     },
   }).then((res) => res.json());
 
   return response;
 };
 
-export const reIssueApi = async (refreshToken: any, accessToken: any) => {
+export const reIssueApi = async () => {
+  const at = getTokenCookie('access');
+  const rt = getTokenCookie('refresh');
+
   const response = await fetch(`${process.env.NEXT_PUBLIC_API_HOST}/auth/reissue/`, {
     method: 'GET',
     headers: {
       'Content-Type': 'application/json',
-      Authorization: `Bearer ${accessToken}`,
+      Authorization: `Bearer ${at}`,
     },
   }).then((res) => res.json());
 
