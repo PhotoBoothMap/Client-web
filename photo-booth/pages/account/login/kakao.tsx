@@ -1,42 +1,26 @@
 import React, { useCallback, useEffect } from 'react';
 import { useRouter } from 'next/router';
 import { setRTCookie } from '@repositories/login/auth';
+import { kakaoLoginApi, validateApi } from '@repositories/login/socialLogin';
 
 const kakaoLoginPage = () => {
   const router = useRouter();
   const { code: authCode, error: kakaoServerError } = router.query;
 
   const loginHandler = useCallback(
-    async (code: string | string[]) => {
-      // 백엔드에 전송
+    async (code: string) => {
       //TODO utils로 빼기
       // const response = await axios
 
-      const response = await fetch(`${process.env.NEXT_PUBLIC_API_HOST}/auth/kakao/`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          authorizationCode: code,
-        }),
-      }).then((res) => res.json());
+      const response = await kakaoLoginApi(code);
 
       if (response.data.success) {
         const cookie = response.headers.cookie;
 
         setRTCookie(cookie);
+
         // 성공하면 validation 체크하기
-        const validationResponse = await fetch(
-          `${process.env.NEXT_PUBLIC_API_HOST}/members/validate/`,
-          {
-            method: 'PUT',
-            headers: {
-              'Content-Type': 'application/json',
-              Authorization: response.header.Authorization,
-            },
-          },
-        ).then((res) => res.json());
+        const validationResponse = await validateApi(response.header.Authorization);
 
         if (validationResponse.data.success) {
           // 성공하면 홈으로 리다이렉트

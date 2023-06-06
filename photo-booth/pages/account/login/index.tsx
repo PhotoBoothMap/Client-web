@@ -7,6 +7,8 @@ const loginPage = () => {
   const kakaoLogin = () => {
     window.Kakao.Auth.authorize({
       redirectUri: `${process.env.NEXT_PUBLIC_HOST}/account/login/kakao`,
+      //        'https://kauth.kakao.com/oauth/authorize?client_id=cf552915e52ec7012b72a272c81c1244&redirect_uri=https://api.photohere.co.kr/login/oauth2/code/kakao&response_type=code',
+      //`${process.env.NEXT_PUBLIC_HOST}/account/login/kakao`,
     });
   };
 
