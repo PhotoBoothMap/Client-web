@@ -1,7 +1,10 @@
 import React, { useCallback, useEffect } from 'react';
 import { useRouter } from 'next/router';
-import { setRTCookie } from '@repositories/login/auth';
-import { kakaoLoginApi, validateApi } from '@repositories/login/socialLogin';
+import {
+  setAccessTokenCookie,
+  setRefreshTokenCookie,
+  kakaoLoginApi,
+} from '@repositories/login/auth';
 
 const kakaoLoginPage = () => {
   const router = useRouter();
@@ -9,23 +12,18 @@ const kakaoLoginPage = () => {
 
   const loginHandler = useCallback(
     async (code: string) => {
-      //TODO utils로 빼기
-      // const response = await axios
-
       const response = await kakaoLoginApi(code);
 
       if (response.data.success) {
-        const cookie = response.headers.cookie;
+        // 성공하면 rt, at 저장
+        const refreshToken = response.headers.cookie;
+        const accessToken = response.header.Authorization;
 
-        setRTCookie(cookie);
+        setRefreshTokenCookie(refreshToken);
+        setAccessTokenCookie(accessToken);
 
-        // 성공하면 validation 체크하기
-        const validationResponse = await validateApi(response.header.Authorization);
-
-        if (validationResponse.data.success) {
-          // 성공하면 홈으로 리다이렉트
-          router.push('/');
-        }
+        // 성공하면 홈으로 리다이렉트
+        router.push('/');
       } else {
         // 실패하면 에러 페이지로 리다이렉트
         router.push('/notifications/authentication-failed');
@@ -35,7 +33,7 @@ const kakaoLoginPage = () => {
   );
 
   useEffect(() => {
-    if (authCode) {
+    if (authCode && typeof authCode === 'string') {
       loginHandler(authCode);
       // 인가코드를 제대로 못 받았을 경우에 에러 페이지를 띄운다.
     } else if (kakaoServerError) {
