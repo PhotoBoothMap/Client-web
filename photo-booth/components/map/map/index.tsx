@@ -28,8 +28,8 @@ function latLngConstructor(kakaoLatLng: any) {
 }
 
 export enum searchType {
-  부스 = "부스",
-  지역 = "지역"
+  부스 = '부스',
+  지역 = '지역',
 }
 
 export default function Map() {
@@ -52,7 +52,7 @@ export default function Map() {
     }
     const script = document.createElement('script');
     script.async = true;
-    script.src = `//dapi.kakao.com/v2/maps/sdk.js?appkey=${process.env.NEXT_PUBLIC_KAKAOMAP_APPKEY}&autoload=false&libraries=services`;
+    script.src = `//dapi.kakao.com/v2/maps/sdk.js?appkey=${process.env.NEXT_PUBLIC_KAKAO_JS_APPKEY}&autoload=false&libraries=services`;
     document.head.appendChild(script);
 
     script.addEventListener('load', () => {
