@@ -1,11 +1,11 @@
 export enum photoBooth {
-  lifeFourCuts = '인생네컷',
-  photoism = '포토이즘',
-  dailyFilm = '하루필름',
-  photomatic = '포토매틱',
-  selfics = '셀픽스',
-  photogrey = '포토그레이',
-  etc = '기타',
+  인생네컷 = '인생네컷',
+  포토이즘 = '포토이즘',
+  하루필름 = '하루필름',
+  포토매틱 = '포토매틱',
+  셀픽스 = '셀픽스',
+  포토그레이 = '포토그레이',
+  기타 = '기타',
 }
 
 /**
@@ -18,7 +18,7 @@ export enum userTag {
   parkingless = '주차공간이 없어요',
 }
 
-export interface PhotoBooth {
+export interface BoothDetail {
   id: number;
   brand: photoBooth;
   name: string;
@@ -26,29 +26,35 @@ export interface PhotoBooth {
   address: string;
   distance: number;
   score: number;
-  review: Array<Review>;
   reviewNum: number;
   homepage: string;
   status: string;
-  userTags: {
-    userTag: number;
-  };
   coordinate: {
     lat: number;
     long: number;
   };
+  frame: {
+    shape: string | null;
+    price: number;
+  };
 }
-
-export interface BoothMarker extends Partial<Pick<PhotoBooth, 'id' | 'brand' | 'coordinate'>> {}
-
-export interface BoothPreview
-  extends Partial<
-    Pick<PhotoBooth, 'id' | 'brand' | 'name' | 'distance' | 'address' | 'score' | 'reviewNum'>
-  > {}
 
 export interface Review {
   user: string;
   date: Date;
   content: string;
+  imgUrl: string;
   userTags: Array<userTag>;
 }
+
+export interface PhotoBooth {
+  boothDetail: BoothDetail;
+  review: Review[];
+}
+
+export interface BoothMarker extends Partial<Pick<BoothDetail, 'id' | 'brand' | 'coordinate'>> {}
+
+export interface BoothPreview
+  extends Partial<
+    Pick<BoothDetail, 'id' | 'brand' | 'name' | 'distance' | 'address' | 'score' | 'reviewNum'>
+  > {}
