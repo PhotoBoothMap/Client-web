@@ -68,7 +68,11 @@ function SearchBox({ curSearchType, setCurSearchType }: SearchBoxProps) {
           </li>
         </ul>
       </DropDown>
-      <Image src={SearchIcon} alt="searcbox_icon" width="24" />
+      <Image src={SearchIcon} alt="searcbox_icon" width="24" 
+        onClick={() => {
+          
+        }}
+      />
       <input
         placeholder={inputPlaceholder}
         value={curInput}

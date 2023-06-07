@@ -23,7 +23,7 @@ import PreviewsWrapper from '../previewsWrapper';
 function latLngConstructor(kakaoLatLng: any) {
   return {
     lat: kakaoLatLng.getLat() as number,
-    long: kakaoLatLng.getLng() as number,
+    lng: kakaoLatLng.getLng() as number,
   };
 }
 
@@ -41,13 +41,13 @@ export default function Map() {
   const [curLevel, setCurLevel] = useState<number>(3);
   const [curBoundDistance, setCurBoundDistance] = useState<number>(Number.POSITIVE_INFINITY);
   const [curSearchType, setCurSearchType] = useState<searchType | null>(null);
+  const [curMarkers, setCurMarkers] = useState<Array<any>>([]);
 
   const ref = useRef<any>(null);
   const curMap = useRef<any>(null);
 
   useEffect(() => {
     if (ref.current === null) {
-      console.log('hereh');
       return;
     }
     const script = document.createElement('script');
@@ -59,7 +59,7 @@ export default function Map() {
       window.kakao.maps.load(() => {
         const container = ref.current;
         const options = {
-          center: new window.kakao.maps.LatLng(curCor.lat, curCor.long),
+          center: new window.kakao.maps.LatLng(curCor.lat, curCor.lng),
           level: 3,
         };
         const map = new window.kakao.maps.Map(container, options);
@@ -80,8 +80,8 @@ export default function Map() {
     (cor1: Coordinate, cor2: Coordinate) => {
       if (curMap.current === null) return;
       const linePath = [
-        new window.kakao.maps.LatLng(cor1.lat, cor1.long),
-        new window.kakao.maps.LatLng(cor2.lat, cor2.long),
+        new window.kakao.maps.LatLng(cor1.lat, cor1.lng),
+        new window.kakao.maps.LatLng(cor2.lat, cor2.lng),
       ];
       const polyline = new window.kakao.maps.Polyline({
         map: curMap.current,
@@ -107,6 +107,7 @@ export default function Map() {
     [curMap.current],
   );
 
+  // 마커 등록
   const setMarkers = useCallback(
     (id: number, boothName: photoBooth, latLng: Coordinate) => {
       let boothIcon;
@@ -134,7 +135,7 @@ export default function Map() {
           break;
       }
 
-      const markerPosition = new window.kakao.maps.LatLng(latLng.lat, latLng.long);
+      const markerPosition = new window.kakao.maps.LatLng(latLng.lat, latLng.lng);
 
       const icon = new window.kakao.maps.MarkerImage(
         boothIcon,
@@ -151,13 +152,19 @@ export default function Map() {
       }).setMap(curMap.current);
 
       new window.kakao.maps.event.addListener(marker, 'click', () => {});
+      return marker;
     },
     [curMap.current],
   );
 
+  const searchByPlace = (keyword: string) => {
+    const ps = new window.kakao.maps.services.Places();
+    ps.keywordSearch(ps);
+  };
+
+  // 줌 in,out 시 bound 거리 다시 계산
   useEffect(() => {
     if (curMap.current === null) return;
-
     const centerLatLng = (curMap.current as any).getCenter();
     const bounds = (curMap.current as any).getBounds();
     const neLatLng = bounds.getNorthEast();
@@ -165,6 +172,7 @@ export default function Map() {
     setCurBoundDistance(boundDistance);
   }, [curMap.current, curLevel]);
 
+  // 이동시에 일정 거리 이동시 부스 정보 업데이트
   useEffect(() => {
     if (curMap.current === null) {
       return;
@@ -175,18 +183,27 @@ export default function Map() {
       const latLng = map.getCenter();
       const curDistance = getDistanceByCor(latLngConstructor(latLng), curCor);
       if (curDistance >= curBoundDistance) {
+        //기존 마커 제거
+        curMarkers.forEach((marker) => {
+          marker.setMap(null);
+        });
+
         const bounds = (map as any).getBounds();
         const neLatLng = bounds.getNorthEast();
+
         const response = await mapRepository.getMarkers(
           latLngConstructor(latLng),
           latLngConstructor(neLatLng),
           boothFilters,
         );
+
+        const markerList: Array<any> = [];
         response?.forEach((booth) => {
           const { id, brand, coordinate } = booth;
-          setMarkers(id!, brand!, coordinate!);
+          const curMarker = setMarkers(id!, brand!, coordinate!);
+          markerList.push(curMarker);
         });
-
+        setCurMarkers(markerList);
         setCurCor(latLngConstructor(latLng));
       }
     });

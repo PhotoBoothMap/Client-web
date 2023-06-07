@@ -14,7 +14,7 @@ class BoothRepository {
     curCor: Coordinate,
     filter: Array<photoBooth>,
   ): Promise<PhotoBooth | null> {
-    const { lat: curX, long: curY } = curCor;
+    const { lat: curX, lng: curY } = curCor;
     try {
       const response: Response<{ photobooth: PhotoBooth }> = await axios.get(
         `${HOST_URL}/booth/:${id}?curx=${curX}&cury=${curY}&filter=${filter}`,

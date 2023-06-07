@@ -31,7 +31,7 @@ export interface BoothDetail {
   status: string;
   coordinate: {
     lat: number;
-    long: number;
+    lng: number;
   };
   frame: {
     shape: string | null;
