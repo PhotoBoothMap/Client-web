@@ -55,10 +55,14 @@ class MapRepository {
     const filterToString = Array.from(filter).join(',');
     try {
       const response: Response<{
-        boothList: Array<{}>;
+        boothList: Array<BoothMarker>;
       }> = await axios.get(`${HOST_URL}/map/search?keyword=${keyword}&filter=${filter}`);
+
+      const result = response.data['result'];
+      return result['boothList'];
     } catch (e) {
-      return e;
+      console.log(e);
+      return [];
     }
   }
 }

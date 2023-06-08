@@ -157,10 +157,37 @@ export default function Map() {
     [curMap.current],
   );
 
-  const searchByPlace = (keyword: string) => {
+  const getMarkersByCor = useCallback(
+    async (centerCor: Coordinate, neCor: Coordinate) => {
+      const response = await mapRepository.getMarkers(centerCor, neCor, boothFilters);
+      const markerList: Array<any> = [];
+      response?.forEach((booth) => {
+        const { id, brand, coordinate } = booth;
+        const curMarker = setMarkers(id!, brand!, coordinate!);
+        markerList.push(curMarker);
+      });
+      setCurMarkers(markerList);
+    },
+    [boothFilters],
+  );
+
+  const searchByPlace = useCallback((keyword: string) => {
     const ps = new window.kakao.maps.services.Places();
-    ps.keywordSearch(ps);
-  };
+    ps.keywordSearch(keyword, (data: any, status: any, pagination: any) => {
+      if (window.kakao.maps.services.Status.OK) {
+        let bounds = new window.kakao.map.LatLngBounds();
+        for (let position of data) {
+          bounds.extend(window.kakao.LatLng(position.y, position.x));
+        }
+        curMap.current.setBounds(bounds);
+        const curCor = curMap.current.getCenter();
+        const neCor = bounds.getNorthEast();
+        getMarkersByCor(latLngConstructor(curCor), latLngConstructor(neCor));
+        setCurCor(curCor);
+      } else {
+      }
+    });
+  }, []);
 
   // 줌 in,out 시 bound 거리 다시 계산
   useEffect(() => {
@@ -190,20 +217,7 @@ export default function Map() {
 
         const bounds = (map as any).getBounds();
         const neLatLng = bounds.getNorthEast();
-
-        const response = await mapRepository.getMarkers(
-          latLngConstructor(latLng),
-          latLngConstructor(neLatLng),
-          boothFilters,
-        );
-
-        const markerList: Array<any> = [];
-        response?.forEach((booth) => {
-          const { id, brand, coordinate } = booth;
-          const curMarker = setMarkers(id!, brand!, coordinate!);
-          markerList.push(curMarker);
-        });
-        setCurMarkers(markerList);
+        getMarkersByCor(latLngConstructor(latLng), latLngConstructor(neLatLng));
         setCurCor(latLngConstructor(latLng));
       }
     });
@@ -211,7 +225,11 @@ export default function Map() {
 
   return (
     <Wrapper>
-      <MapHeader curSearchType={curSearchType} setCurSearchType={setCurSearchType} />
+      <MapHeader
+        curSearchType={curSearchType}
+        setCurSearchType={setCurSearchType}
+        searchByPlace={searchByPlace}
+      />
       <MapWrapper ref={ref!} />
       <PreviewsWrapper />
     </Wrapper>
@@ -220,6 +238,7 @@ export default function Map() {
 
 const Wrapper = styled.div`
   width: 100%;
+  position: relative;
   flex-grow: 1;
 `;
 

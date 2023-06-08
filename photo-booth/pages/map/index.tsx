@@ -16,13 +16,13 @@ export default function Main() {
     //현재 좌표 저장
     setCurCor({
       lat: position.coords.latitude,
-      lng: position.coords.lngitude,
+      lng: position.coords.longitude,
     });
 
     // User 정보 저장
     setUserCor({
       lat: position.coords.latitude,
-      lng: position.coords.lngitude,
+      lng: position.coords.longitude,
     });
   }, []);
 
