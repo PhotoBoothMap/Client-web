@@ -20,7 +20,7 @@ interface BoothAction {
 export const useBoothStore = create<BoothState & BoothAction>((set) => ({
   curBoothMakers: [],
   curBoothPreviews: [],
-  boothFilters: new Set([...(Object.keys(photoBooth) as Array<photoBooth>)]),
+  boothFilters: new Set(),
   setCurBoothMakers: (boothMarkers: BoothMarker[]) => {
     set(() => ({ curBoothMakers: boothMarkers }));
   },

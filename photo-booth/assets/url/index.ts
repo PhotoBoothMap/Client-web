@@ -1,1 +1,1 @@
-export const HOST_URL = 'https://api.photohere.co.kr/';
+export const HOST_URL = 'http://localhost:8080';

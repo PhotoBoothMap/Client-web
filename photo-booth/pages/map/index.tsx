@@ -3,6 +3,7 @@ import styled from 'styled-components';
 import { useCallback, useEffect, useState } from 'react';
 
 import Map from '@components/map/map';
+import Slider from '@components/map/slider';
 import { useMapStore } from '@store/map';
 import { BoothPreview } from '@utils/interface/photoBooth';
 
@@ -38,6 +39,7 @@ export default function Main() {
 
   return (
     <Page>
+      <Slider />
       <Map />
     </Page>
   );
@@ -49,5 +51,7 @@ const Page = styled.div`
   align-items: center;
   width: 100%;
   min-height: 100vh;
-  position: relative;
+`;
+const Wrapper = styled.div`
+  width: 100%;
 `;
