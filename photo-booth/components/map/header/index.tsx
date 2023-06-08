@@ -121,7 +121,7 @@ const DropDown = styled.button<DropDownProps>`
   & > ul {
     position: absolute;
     left: 0;
-    top: 32px;
+    top: 48px;
     background-color: #242424;
     width: 100px;
     padding: 0.5rem;
