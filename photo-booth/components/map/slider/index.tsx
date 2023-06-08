@@ -36,9 +36,13 @@ export default function Slider({}: SliderProps) {
 
   return (
     <Wrapper>
-      {boothes.map((booth) => {
+      {boothes.map((booth, idx) => {
         // filter 된 photoBooth
-        return SlideElement({ booth: booth });
+        return (
+          <div key={idx}>
+            <SlideElement booth={booth} />
+          </div>
+        );
       })}
     </Wrapper>
   );
