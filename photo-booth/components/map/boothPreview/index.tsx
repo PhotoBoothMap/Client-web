@@ -59,15 +59,15 @@ export default function BoothPreview({
         <p className="address">{address}</p>
         <div className="review_wrapper">
           <div className="score_wrapper">
-            <Image src={starIcon} alt="" />
+            <Image src={starIcon} alt="" height="14" />
             <p className="score">{score}</p>
           </div>
           <div className="review">{`리뷰 ${reviewNum}`}</div>
         </div>
       </Body>
       <BoothIconWrapper color={BoothColor[brand!]}>
-        <Image src={curIcon ?? ''} alt="" />
-        <p className="distance">{distance}</p>
+        <Image src={curIcon ?? ''} alt="" height="40" />
+        <p className="distance">{distance + 'm'}</p>
       </BoothIconWrapper>
     </Wrapper>
   );
@@ -76,8 +76,9 @@ export default function BoothPreview({
 const Wrapper = styled.div`
   display: flex;
   flex-direction: row;
-  justify-content: center;
-  border-bottom: 1px solid #ffffff;
+  justify-content: space-between;
+  padding: 1rem 1.5rem;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
 `;
 
 const Body = styled.div`
@@ -86,16 +87,43 @@ const Body = styled.div`
   justify-content: start;
   & {
     > p.title {
+      font-style: normal;
+      font-size: 16px;
+      line-height: 19px;
+      font-weight: 600;
+      margin-bottom: 6px;
     }
 
     > p.address {
+      font-size: 14px;
+      font-weight: 400;
+      line-height: 17px;
+      margin-bottom: 8px;
+      color: #c9c9c9;
     }
 
     > div.review_wrapper {
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+      font-size: 14px;
+
       > div.score_wrapper {
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        border-right: 2px solid #666666;
+        gap: 8px;
+        height: 16px;
+        font-size: 14px;
+        padding-right: 10px;
       }
 
       > p.score {
+      }
+
+      > div.review {
+        padding-left: 0.5rem;
       }
     }
   }
@@ -109,8 +137,11 @@ const BoothIconWrapper = styled.div<BoothIconWrapperProps>`
   display: flex;
   flex-direction: column;
   justify-content: center;
+  align-items: center;
+  gap: 5px;
   & {
-    > div.distance {
+    > p.distance {
+      font-size: 14px;
       color: ${({ color }) => color};
     }
   }

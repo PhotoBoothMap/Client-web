@@ -18,6 +18,7 @@ export default function PreviewsWrapper() {
   };
 
   const handleMouseUp = (e: MouseEvent<HTMLImageElement>) => {
+    console.log('is mouse up');
     setIsDragging(false);
     setMouseBeforePosition(e.clientY);
   };
@@ -33,7 +34,7 @@ export default function PreviewsWrapper() {
       }
 
       if (dy > 0 && neOffset > window.innerHeight * 0.3 && neOffset < window.innerHeight * 0.35) {
-        setCurOffset(window.innerHeight * 0.8);
+        setCurOffset(window.innerHeight * 0.9);
         setIsDragging(false);
         return;
       }
@@ -42,7 +43,7 @@ export default function PreviewsWrapper() {
         return;
       }
 
-      if (neOffset > window.innerHeight * 0.8) {
+      if (neOffset > window.innerHeight * 0.9) {
         return;
       }
 
@@ -52,17 +53,24 @@ export default function PreviewsWrapper() {
   };
 
   useEffect(() => {
-    setCurOffset(window.innerHeight * 0.8);
+    setCurOffset(window.innerHeight * 0.9);
   }, []);
 
   return (
-    <Wrapper state={isDragging} offset={curOffset} onMouseMove={handleMouseMove}>
+    <Wrapper
+      state={isDragging}
+      offset={curOffset}
+      onMouseMove={handleMouseMove}
+      onMouseUp={handleMouseUp}
+    >
       <div className="blank"></div>
       <Header state={isDragging}>
         <HamburgerScroll>
           <Image
+            width="40"
             src={hamburgetScroll}
             alt=""
+            draggable="false"
             onMouseDown={handleMouseDown}
             onMouseUp={handleMouseUp}
           />
@@ -73,6 +81,7 @@ export default function PreviewsWrapper() {
           const { id, brand, name, distance, address, score, reviewNum } = previewInfo;
           return (
             <BoothPreview
+              key={id}
               id={id}
               brand={brand}
               name={name}
@@ -123,6 +132,8 @@ interface HeaderProps {
 
 const Header = styled.div<HeaderProps>`
   width: 100%;
+  padding-top: 20px;
+  padding-bottom: 20px;
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -135,6 +146,8 @@ const HamburgerScroll = styled.div``;
 const Body = styled.ul`
   width: 100%;
   height: 100%;
+  padding-left: 1rem;
+  padding-right: 1rem;
   display: flex;
   flex-direction: column;
   justify-content: start;
