@@ -24,6 +24,7 @@ export default function Main() {
       lat: position.coords.latitude,
       lng: position.coords.longitude,
     });
+    
   }, []);
 
   const getUserCorErr = useCallback((err: GeolocationPositionError) => {

@@ -109,30 +109,41 @@ export default function Map() {
 
   // 마커 등록
   const setMarkers = useCallback(
+
     (id: number, boothName: photoBooth, latLng: Coordinate) => {
+
       let boothIcon;
+
       switch (boothName) {
+
         case photoBooth.하루필름:
           boothIcon = markBluedMap;
           break;
+
         case photoBooth.포토이즘:
           boothIcon = markYellowMap;
-          break;
+          break; 
+
         case photoBooth.포토매틱:
           boothIcon = markRedMap;
           break;
+
         case photoBooth.포토그레이:
           boothIcon = markGreyMap;
           break;
+
         case photoBooth.인생네컷:
           boothIcon = markPinkMap;
           break;
+
         case photoBooth.셀픽스:
           boothIcon = markGreenMap;
           break;
+
         case photoBooth.기타:
           boothIcon = markDarkGreyMap;
           break;
+          
       }
 
       const markerPosition = new window.kakao.maps.LatLng(latLng.lat, latLng.lng);
@@ -145,6 +156,7 @@ export default function Map() {
           coords: '1,20,1,9,5,2,10,0,21,0,27,3,30,9,30,20,17,33,14,33',
         },
       );
+
       const marker = new window.kakao.maps.Marker({
         title: id,
         position: markerPosition,
@@ -152,9 +164,13 @@ export default function Map() {
       }).setMap(curMap.current);
 
       new window.kakao.maps.event.addListener(marker, 'click', () => {});
+
       return marker;
+
     },
+
     [curMap.current],
+
   );
 
   const getMarkersByCor = useCallback(
