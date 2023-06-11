@@ -2,21 +2,23 @@ import { faCheck, faPlus } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
 import Image from 'next/image';
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import styled from 'styled-components';
 
 import { BoothColor } from '@assets/const';
 import SearchIcon from '@image/search_icon.png';
 import { useBoothStore } from '@store/booth';
 import { photoBooth } from '@utils/interface/photoBooth';
+import { clone } from '@utils/tools/BasicUtils';
 import { searchType } from '../map';
 
 interface SearchBoxProps {
   curSearchType: searchType | null;
   setCurSearchType: (value: searchType | null) => void;
+  searchByPlace: (keyword: string) => void;
 }
 
-function SearchBox({ curSearchType, setCurSearchType }: SearchBoxProps) {
+function SearchBox({ curSearchType, setCurSearchType, searchByPlace }: SearchBoxProps) {
   const [isSelectView, setIsSelectView] = useState<boolean>(false);
   const [curInput, setCurInput] = useState<string>('');
 
@@ -68,13 +70,14 @@ function SearchBox({ curSearchType, setCurSearchType }: SearchBoxProps) {
           </li>
         </ul>
       </DropDown>
-      <Image src={SearchIcon} alt="searcbox_icon" width="24" />
+      <Image src={SearchIcon} alt="searcbox_icon" width="24" onClick={() => {}} />
       <input
         placeholder={inputPlaceholder}
         value={curInput}
         onChange={(e) => {
           setCurInput(e.target.value);
         }}
+        disabled={curSearchType === null}
       />
     </SearchBoxWrapper>
   );
@@ -118,13 +121,12 @@ const DropDown = styled.button<DropDownProps>`
   & > ul {
     position: absolute;
     left: 0;
-    top: 32px;
+    top: 48px;
     background-color: #242424;
     width: 100px;
     padding: 0.5rem;
     opacity: ${({ state }) => (state ? 1 : 0)};
     pointer-events: ${({ state }) => (state ? 'auto' : 'none')};
-    transition: all 0.5s;
     list-style-type: none;
     z-index: 99;
     li {
@@ -140,21 +142,43 @@ const DropDown = styled.button<DropDownProps>`
 interface MapHeaderProps {
   curSearchType: searchType | null;
   setCurSearchType: (value: searchType | null) => void;
+  searchByPlace: (keyword: string) => void;
 }
 
-export default function MapHeader({ curSearchType, setCurSearchType }: MapHeaderProps) {
+export default function MapHeader({
+  curSearchType,
+  setCurSearchType,
+  searchByPlace,
+}: MapHeaderProps) {
   const [boothFilters, toggleFilter] = useBoothStore((store) => [
     store.boothFilters,
     store.toggleFilter,
   ]);
 
-  const boothes = useMemo(() => {
+  const [boothes, setBoothes] = useState([...(Object.keys(photoBooth) as Array<photoBooth>)]);
+
+  const boothesOrigin = useMemo(() => {
     return [...(Object.keys(photoBooth) as Array<photoBooth>)];
   }, []);
 
+  useEffect(() => {
+    const curBoothes = clone(boothes);
+    curBoothes.sort((a, b) => {
+      const leftV = boothFilters.has(a) ? -1 * boothesOrigin.indexOf(a) : -99;
+      const rightV = boothFilters.has(b) ? -1 * boothesOrigin.indexOf(b) : -99;
+      return rightV - leftV;
+    });
+    setBoothes(curBoothes);
+    console.log(curBoothes);
+  }, [Array.from(boothFilters).length]);
+
   return (
     <Wrapper>
-      <SearchBox curSearchType={curSearchType} setCurSearchType={setCurSearchType} />
+      <SearchBox
+        curSearchType={curSearchType}
+        setCurSearchType={setCurSearchType}
+        searchByPlace={searchByPlace}
+      />
       <HeaderWrapper>
         <FilterSlide>
           {boothes.map((booth, idx) => {
@@ -229,6 +253,7 @@ const Filter = styled.div<FilterProps>`
   box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.04);
   border-radius: 32px;
   background-color: ${({ state, color }) => (state ? color : '#242424')};
+  transition: all 0.5s;
   color: white;
 `;
 

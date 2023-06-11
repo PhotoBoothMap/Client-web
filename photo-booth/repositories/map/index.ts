@@ -14,8 +14,8 @@ class MapRepository {
     nextCor: Coordinate,
     filter: Set<photoBooth>,
   ): Promise<Array<BoothMarker> | null> {
-    const { lat: curX, long: curY } = curCor;
-    const { lat: nextX, long: nextY } = nextCor;
+    const { lat: curX, lng: curY } = curCor;
+    const { lat: nextX, lng: nextY } = nextCor;
     const filterToString = Array.from(filter).join(',');
 
     try {
@@ -36,7 +36,7 @@ class MapRepository {
     count: number,
     filter: Set<photoBooth>,
   ): Promise<Array<BoothPreview> | null> {
-    const { lat: curX, long: curY } = curCor;
+    const { lat: curX, lng: curY } = curCor;
     const filterToString = Array.from(filter).join(',');
     try {
       const response: Response<{
@@ -48,6 +48,21 @@ class MapRepository {
       return result['boothList'];
     } catch (e) {
       return null;
+    }
+  }
+
+  async searchBooth(keyword: string, filter: Set<photoBooth>) {
+    const filterToString = Array.from(filter).join(',');
+    try {
+      const response: Response<{
+        boothList: Array<BoothMarker>;
+      }> = await axios.get(`${HOST_URL}/map/search?keyword=${keyword}&filter=${filter}`);
+
+      const result = response.data['result'];
+      return result['boothList'];
+    } catch (e) {
+      console.log(e);
+      return [];
     }
   }
 }

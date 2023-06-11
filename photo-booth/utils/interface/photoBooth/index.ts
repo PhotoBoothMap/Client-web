@@ -31,11 +31,11 @@ export interface BoothDetail {
   status: string;
   coordinate: {
     lat: number;
-    long: number;
+    lng: number;
   };
   frame: {
     shape: string | null;
-    price: number;
+    price: number | null;
   };
 }
 
