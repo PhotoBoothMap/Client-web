@@ -2,7 +2,6 @@ import { config } from '@fortawesome/fontawesome-svg-core';
 import '@fortawesome/fontawesome-svg-core/styles.css';
 config.autoAddCss = false;
 
-import { GlobalLayout } from '@styles/common/Layout';
 import type { AppProps } from 'next/app';
 
 import '../styles/globals.css';
@@ -20,7 +19,7 @@ declare global {
 function MyApp({ Component, pageProps }: AppProps) {
   const kakaoInit = () => {
     // 페이지가 로드되면 실행
-    window.Kakao.init(process.env.NEXT_PUBLIC_KAKAOMAP_APPKEY);
+    window.Kakao.init(process.env.NEXT_PUBLIC_KAKAO_JS_APPKEY);
     console.log(window.Kakao.isInitialized());
   };
 
