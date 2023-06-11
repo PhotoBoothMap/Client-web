@@ -1,7 +1,6 @@
 import axios from 'axios';
 
 import { HOST_URL } from '@assets/url';
-import { Coordinate } from '@utils/interface/basic';
 import { PhotoBooth, photoBooth } from '@utils/interface/photoBooth';
 
 interface Response<T> {
@@ -9,15 +8,10 @@ interface Response<T> {
 }
 
 class BoothRepository {
-  async getBooth(
-    id: number,
-    curCor: Coordinate,
-    filter: Array<photoBooth>,
-  ): Promise<PhotoBooth | null> {
-    const { lat: curX, lng: curY } = curCor;
+  async getBooth(id: number): Promise<PhotoBooth | null> {
     try {
       const response: Response<{ photobooth: PhotoBooth }> = await axios.get(
-        `${HOST_URL}/booth/:${id}?curx=${curX}&cury=${curY}&filter=${filter}`,
+        `${HOST_URL}/booth/:${id}`,
       );
       const result = response.data['result'];
       return result['photobooth'];

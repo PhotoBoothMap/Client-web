@@ -1,12 +1,22 @@
 import { useBoothStore } from '@store/booth';
 
+import { PhotoBooth } from '@utils/interface/photoBooth';
+
 import Image from 'next/image';
 import { MouseEvent, useEffect, useState } from 'react';
 import styled from 'styled-components';
 import BoothPreview from '../boothPreview';
 import hamburgetScroll from '/public/image/hamburger_scroll.png';
 
-export default function PreviewsWrapper() {
+interface PreviewWrapperProps {
+  setCurBoothDetail: (value: PhotoBooth) => void;
+  setBoothDetailUp: (value: boolean) => void;
+}
+
+export default function PreviewsWrapper({
+  setCurBoothDetail,
+  setBoothDetailUp,
+}: PreviewWrapperProps) {
   const curBoothPreviews = useBoothStore((state) => state.curBoothPreviews);
   const [curOffset, setCurOffset] = useState<number>(0);
   const [mouseBeforePosition, setMouseBeforePosition] = useState<number>(0);
@@ -89,6 +99,8 @@ export default function PreviewsWrapper() {
               address={address}
               score={score}
               reviewNum={reviewNum}
+              setCurBoothDetail={setCurBoothDetail}
+              setBoothDetailUp={setBoothDetailUp}
             />
           );
         })}

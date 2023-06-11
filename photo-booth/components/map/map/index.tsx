@@ -6,7 +6,7 @@ import { useMapStore } from '@store/map';
 
 import { mapRepository } from '@repositories/map';
 import { Coordinate } from '@utils/interface/basic';
-import { photoBooth } from '@utils/interface/photoBooth';
+import { PhotoBooth, photoBooth } from '@utils/interface/photoBooth';
 
 import markBluedMap from '@image/blue_mark_map.png';
 import markDarkGreyMap from '@image/darkgrey_mark_map.png';
@@ -17,6 +17,7 @@ import markRedMap from '@image/red_mark_map.png';
 import markYellowMap from '@image/yellow_mark_map.png';
 
 import { useState } from 'react';
+import BoothDetailPop from '../boothDetailPop';
 import MapHeader from '../header';
 import PreviewsWrapper from '../previewsWrapper';
 
@@ -37,6 +38,9 @@ export default function Map() {
   const [userCor, setUserCor] = useMapStore((state) => [state.initialPosition, state.setInitialPostion]);
   const [curCor, setCurCor] = useMapStore((state) => [state.curPosition, state.setCurPosition]);
   const boothFilters = useBoothStore((state) => state.boothFilters);
+
+  const [curBoothDetail, setCurBoothDetail] = useState<PhotoBooth | null>(null);
+  const [boothDetailUp, setBoothDetailUp] = useState<boolean>(false);
 
   const [curLevel, setCurLevel] = useState<number>(3);
   const [curBoundDistance, setCurBoundDistance] = useState<number>(Number.POSITIVE_INFINITY);
@@ -109,20 +113,17 @@ export default function Map() {
 
   // 마커 등록
   const setMarkers = useCallback(
-
     (id: number, boothName: photoBooth, latLng: Coordinate) => {
-
       let boothIcon;
 
       switch (boothName) {
-
         case photoBooth.하루필름:
           boothIcon = markBluedMap;
           break;
 
         case photoBooth.포토이즘:
           boothIcon = markYellowMap;
-          break; 
+          break;
 
         case photoBooth.포토매틱:
           boothIcon = markRedMap;
@@ -143,7 +144,6 @@ export default function Map() {
         case photoBooth.기타:
           boothIcon = markDarkGreyMap;
           break;
-          
       }
 
       const markerPosition = new window.kakao.maps.LatLng(latLng.lat, latLng.lng);
@@ -166,11 +166,9 @@ export default function Map() {
       new window.kakao.maps.event.addListener(marker, 'click', () => {});
 
       return marker;
-
     },
 
     [curMap.current],
-
   );
 
   const getMarkersByCor = useCallback(
@@ -247,7 +245,13 @@ export default function Map() {
         searchByPlace={searchByPlace}
       />
       <MapWrapper ref={ref!} />
-      <PreviewsWrapper />
+      <PreviewsWrapper setCurBoothDetail={setCurBoothDetail} setBoothDetailUp={setBoothDetailUp} />
+      <BoothDetailPop
+        state={boothDetailUp}
+        boothInfo={curBoothDetail}
+        setCurBoothDetail={setCurBoothDetail}
+        setBoothDetailUp={setBoothDetailUp}
+      />
     </Wrapper>
   );
 }

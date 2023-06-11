@@ -1,7 +1,13 @@
 import { BoothColor } from '@assets/const';
-import { BoothPreview as BoothPreviewProps, photoBooth } from '@utils/interface/photoBooth';
+import { boothRepository } from '@repositories/booth';
+import {
+  BoothPreview as BoothPreviewInfo,
+  PhotoBooth,
+  photoBooth,
+} from '@utils/interface/photoBooth';
+
 import Image, { StaticImageData } from 'next/image';
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import styled from 'styled-components';
 
 import markBlued from '@image/blue_mark.png';
@@ -13,6 +19,35 @@ import markRed from '@image/red_mark.png';
 import starIcon from '@image/star_icon.png';
 import markYellow from '@image/yellow_mark.png';
 
+interface BoothPreviewProps extends BoothPreviewInfo {
+  setCurBoothDetail: (value: PhotoBooth) => void;
+  setBoothDetailUp: (value: boolean) => void;
+}
+
+const testBooth = {
+  boothDetail: {
+    id: 3,
+    brand: photoBooth.포토그레이,
+    name: '테스트 네임',
+    address: '서울 강남구 강남대로 102길 31 1층 4호',
+    call: '010-2732-7375',
+    distance: 300,
+    score: 4.2,
+    reviewNum: 10,
+    homepage: 'https://www.google.com',
+    status: '영업 중 24시간 운영',
+    coordinate: {
+      lat: 30,
+      lng: 30,
+    },
+    frame: {
+      shape: null,
+      price: null,
+    },
+  },
+  review: [],
+};
+
 export default function BoothPreview({
   id,
   brand,
@@ -21,6 +56,8 @@ export default function BoothPreview({
   address,
   score,
   reviewNum,
+  setCurBoothDetail,
+  setBoothDetailUp,
 }: BoothPreviewProps) {
   const [curIcon, setCurIcon] = useState<StaticImageData | null>(null);
 
@@ -52,8 +89,14 @@ export default function BoothPreview({
     setCurIcon(boothIcon);
   }, []);
 
+  const getDetail = useCallback(async () => {
+    const response = await boothRepository.getBooth(id!);
+    setCurBoothDetail(response ?? testBooth);
+    setBoothDetailUp(true);
+  }, []);
+
   return (
-    <Wrapper>
+    <Wrapper onClick={() => getDetail()}>
       <Body>
         <p className="title">{name}</p>
         <p className="address">{address}</p>

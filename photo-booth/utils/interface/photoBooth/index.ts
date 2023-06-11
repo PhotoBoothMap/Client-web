@@ -35,7 +35,7 @@ export interface BoothDetail {
   };
   frame: {
     shape: string | null;
-    price: number;
+    price: number | null;
   };
 }
 
