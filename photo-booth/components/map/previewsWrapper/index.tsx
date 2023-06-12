@@ -37,7 +37,7 @@ export default function PreviewsWrapper({
     if (isDragging) {
       const dy = e.clientY - mouseBeforePosition;
       const neOffset = curOffset + dy;
-      if (dy < 0 && neOffset < window.innerHeight * 0.5 && neOffset > window.innerHeight * 0.45) {
+      if (dy < 0 && neOffset < window.innerHeight * 0.7 && neOffset > window.innerHeight * 0.6) {
         setCurOffset(window.innerHeight * 0.2);
         setIsDragging(false);
         return;
