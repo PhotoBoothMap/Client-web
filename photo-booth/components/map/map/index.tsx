@@ -38,6 +38,10 @@ export default function Map() {
   const [userCor, setUserCor] = useMapStore((state) => [state.initialPosition, state.setInitialPostion]);
   const [curCor, setCurCor] = useMapStore((state) => [state.curPosition, state.setCurPosition]);
   const boothFilters = useBoothStore((state) => state.boothFilters);
+  const [isGettingMarker, setIsGettingMarker] = useBoothStore((state) => [
+    state.isGettingMarker,
+    state.setIsGettingMarker,
+  ]);
 
   const [curBoothDetail, setCurBoothDetail] = useState<PhotoBooth | null>(null);
   const [boothDetailUp, setBoothDetailUp] = useState<boolean>(false);
@@ -80,36 +84,30 @@ export default function Map() {
     });
   }, [curMap.current]);
 
-  const getDistanceByCor = useCallback(
-    (cor1: Coordinate, cor2: Coordinate) => {
-      if (curMap.current === null) return;
-      const linePath = [
-        new window.kakao.maps.LatLng(cor1.lat, cor1.lng),
-        new window.kakao.maps.LatLng(cor2.lat, cor2.lng),
-      ];
-      const polyline = new window.kakao.maps.Polyline({
-        map: curMap.current,
-        path: linePath,
-        strokeOpacity: 0,
-      });
-      return polyline.getLength();
-    },
-    [curMap.current],
-  );
+  const getDistanceByCor = (cor1: Coordinate, cor2: Coordinate) => {
+    if (curMap.current === null) return;
+    const linePath = [
+      new window.kakao.maps.LatLng(cor1.lat, cor1.lng),
+      new window.kakao.maps.LatLng(cor2.lat, cor2.lng),
+    ];
+    const polyline = new window.kakao.maps.Polyline({
+      map: curMap.current,
+      path: linePath,
+      strokeOpacity: 0,
+    });
+    return polyline.getLength();
+  };
 
-  const getDistanceByLatLng = useCallback(
-    (cor1: any, cor2: any) => {
-      if (curMap.current === null) return;
-      const linePath = [cor1, cor2];
-      const polyline = new window.kakao.maps.Polyline({
-        map: curMap.current,
-        path: linePath,
-        strokeOpacity: 0,
-      });
-      return polyline.getLength();
-    },
-    [curMap.current],
-  );
+  const getDistanceByLatLng = (cor1: any, cor2: any) => {
+    if (curMap.current === null) return;
+    const linePath = [cor1, cor2];
+    const polyline = new window.kakao.maps.Polyline({
+      map: curMap.current,
+      path: linePath,
+      strokeOpacity: 0,
+    });
+    return polyline.getLength();
+  };
 
   // 마커 등록
   const setMarkers = useCallback(
@@ -185,17 +183,38 @@ export default function Map() {
     [boothFilters],
   );
 
+  const searchByBooth = useCallback(async (keyword: string) => {
+    const bounds = curMap.current.getBounds();
+    const curCor = curMap.current.getCenter();
+    const neCor = bounds.getNorthEast();
+    const response = await mapRepository.searchBooth(curCor, neCor, keyword);
+  }, []);
+
   const searchByPlace = useCallback((keyword: string) => {
     const ps = new window.kakao.maps.services.Places();
-    ps.keywordSearch(keyword, (data: any, status: any, pagination: any) => {
+    ps.keywordSearch(keyword, async (data: any, status: any, pagination: any) => {
       if (window.kakao.maps.services.Status.OK) {
-        let bounds = new window.kakao.map.LatLngBounds();
+        let lngSum = 0;
+        let latSum = 0;
+        let cnt = 0;
         for (let position of data) {
-          bounds.extend(window.kakao.LatLng(position.y, position.x));
+          lngSum += Number.parseFloat(position.x);
+          latSum += Number.parseFloat(position.y);
+          cnt += 1;
         }
-        curMap.current.setBounds(bounds);
+
+        const latAvg = latSum / cnt;
+        const lngAvg = lngSum / cnt;
+
+        await curMap.current.setCenter(new window.kakao.maps.LatLng(latAvg, lngAvg));
+
+        const bounds = curMap.current.getBounds();
+
         const curCor = curMap.current.getCenter();
         const neCor = bounds.getNorthEast();
+
+        await getMarkersByCor(latLngConstructor(curCor), latLngConstructor(neCor));
+
         getMarkersByCor(latLngConstructor(curCor), latLngConstructor(neCor));
         setCurCor(curCor);
       } else {
@@ -211,19 +230,22 @@ export default function Map() {
     const neLatLng = bounds.getNorthEast();
     const boundDistance = getDistanceByLatLng(centerLatLng, neLatLng);
     setCurBoundDistance(boundDistance);
+    console.log(boundDistance);
   }, [curMap.current, curLevel]);
 
   // 이동시에 일정 거리 이동시 부스 정보 업데이트
   useEffect(() => {
-    if (curMap.current === null) {
+    if (curMap.current === null || isGettingMarker) {
       return;
     }
 
-    window.kakao.maps.event.addListener(curMap.current, 'center_changed', async () => {
+    async function centerChangeEvent() {
+      window.kakao.maps.event.removeListener(curMap.current, 'center_changed', centerChangeEvent);
       const map = curMap.current as any;
       const latLng = map.getCenter();
       const curDistance = getDistanceByCor(latLngConstructor(latLng), curCor);
-      if (curDistance >= curBoundDistance) {
+      if (curDistance >= curBoundDistance && !isGettingMarker) {
+        setIsGettingMarker(true);
         //기존 마커 제거
         curMarkers.forEach((marker) => {
           marker.setMap(null);
@@ -231,11 +253,21 @@ export default function Map() {
 
         const bounds = (map as any).getBounds();
         const neLatLng = bounds.getNorthEast();
-        getMarkersByCor(latLngConstructor(latLng), latLngConstructor(neLatLng));
-        setCurCor(latLngConstructor(latLng));
+        try {
+          await getMarkersByCor(latLngConstructor(latLng), latLngConstructor(neLatLng));
+        } catch (e) {
+          console.log(e);
+        } finally {
+          setIsGettingMarker(false);
+          setCurCor(latLngConstructor(latLng));
+          window.kakao.maps.event.addListener(curMap.current, 'center_changed', centerChangeEvent);
+        }
       }
-    });
-  }, [curMap.current, curCor, curBoundDistance]);
+    }
+    // 좌표 정보 바뀔시 이벤트 변경
+
+    window.kakao.maps.event.addListener(curMap.current, 'center_changed', centerChangeEvent);
+  }, [curMap.current, curCor, curBoundDistance, isGettingMarker]);
 
   return (
     <Wrapper>

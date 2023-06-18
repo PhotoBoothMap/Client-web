@@ -9,12 +9,15 @@ interface BoothState {
   curBoothPreviews: BoothPreview[];
   /** 부스 필터링 */
   boothFilters: Set<photoBooth>;
+  //** 부스 받아오는 중.. */
+  isGettingMarker: boolean;
 }
 
 interface BoothAction {
   setCurBoothMakers: (boothMarkers: BoothMarker[]) => void;
   setCurBoothPreviews: (boothPreviews: BoothPreview[]) => void;
   toggleFilter: (photoBooth: photoBooth) => void;
+  setIsGettingMarker: (state: boolean) => void;
 }
 
 export const useBoothStore = create<BoothState & BoothAction>((set) => ({
@@ -40,6 +43,7 @@ export const useBoothStore = create<BoothState & BoothAction>((set) => ({
     },
   ],
   boothFilters: new Set([...(Object.keys(photoBooth) as Array<photoBooth>)]),
+  isGettingMarker: false,
   setCurBoothMakers: (boothMarkers: BoothMarker[]) => {
     set(() => ({ curBoothMakers: boothMarkers }));
   },
@@ -52,5 +56,10 @@ export const useBoothStore = create<BoothState & BoothAction>((set) => ({
         boothFilters: toggleSet(state.boothFilters, photoBooth),
       };
     });
+  },
+  setIsGettingMarker: (state: boolean) => {
+    set(() => ({
+      isGettingMarker: state,
+    }));
   },
 }));

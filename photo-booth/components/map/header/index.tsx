@@ -23,7 +23,6 @@ function SearchBox({ curSearchType, setCurSearchType, searchByPlace }: SearchBox
   const [curInput, setCurInput] = useState<string>('');
 
   const inputPlaceholder = useMemo(() => {
-    console.log(curSearchType);
     switch (curSearchType) {
       case searchType.부스:
         return '브랜드 명으로 검색해보세요';
@@ -70,7 +69,20 @@ function SearchBox({ curSearchType, setCurSearchType, searchByPlace }: SearchBox
           </li>
         </ul>
       </DropDown>
-      <Image src={SearchIcon} alt="searcbox_icon" width="24" onClick={() => {}} />
+      <Image
+        src={SearchIcon}
+        alt="searcbox_icon"
+        width="24"
+        onClick={() => {
+          switch (curSearchType) {
+            case searchType.부스:
+              break;
+            case searchType.지역:
+              searchByPlace(curInput);
+              break;
+          }
+        }}
+      />
       <input
         placeholder={inputPlaceholder}
         value={curInput}
