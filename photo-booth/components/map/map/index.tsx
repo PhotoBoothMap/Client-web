@@ -269,6 +269,33 @@ export default function Map() {
     window.kakao.maps.event.addListener(curMap.current, 'center_changed', centerChangeEvent);
   }, [curMap.current, curCor, curBoundDistance, isGettingMarker]);
 
+  useEffect(() => {
+    if (curMap.current === null) return;
+    async function getMarkers() {
+      const map = curMap.current as any;
+      const latLng = map.getCenter();
+      const curDistance = getDistanceByCor(latLngConstructor(latLng), curCor);
+
+      setIsGettingMarker(true);
+      //기존 마커 제거
+      curMarkers.forEach((marker) => {
+        marker.setMap(null);
+      });
+
+      const bounds = (map as any).getBounds();
+      const neLatLng = bounds.getNorthEast();
+      try {
+        await getMarkersByCor(latLngConstructor(latLng), latLngConstructor(neLatLng));
+      } catch (e) {
+        console.log(e);
+      } finally {
+        setIsGettingMarker(false);
+        setCurCor(latLngConstructor(latLng));
+      }
+    }
+    getMarkers();
+  }, [curMap.current]);
+
   return (
     <Wrapper>
       <MapHeader
