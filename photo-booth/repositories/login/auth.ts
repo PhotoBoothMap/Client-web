@@ -22,12 +22,16 @@ export const kakaoLoginApi = async (code: string) => {
     headers: {
       'Content-Type': 'application/json',
     },
+    credentials: 'same-origin',
     body: JSON.stringify({
       authorizationCode: code,
     }),
-  }).then((res) => res.json());
+  });
+  // 성공하면 rt, at 저장
+  setRefreshTokenCookie(response.headers.get('refresh-token'));
+  setAccessTokenCookie(response.headers.get('Authorization'));
 
-  return response;
+  return response.json();
 };
 
 export const validateApi = async () => {
