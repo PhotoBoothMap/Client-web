@@ -52,7 +52,7 @@ export interface PhotoBooth {
   review: Review[];
 }
 
-export interface BoothMarker extends Partial<Pick<BoothDetail, 'id' | 'brand' | 'coordinate'>> {}
+export interface BoothMarker extends Pick<BoothDetail, 'id' | 'brand' | 'coordinate'> {}
 
 export interface BoothPreview
   extends Partial<

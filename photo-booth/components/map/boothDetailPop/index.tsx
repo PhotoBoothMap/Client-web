@@ -112,7 +112,7 @@ const Wrapper = styled.div<WrapperProps>`
   position: absolute;
   top: ${({ state }) => (state ? 0 : '100vh')};
   left: 0;
-  transition: all 0.5s;
+  transition: all 0.3s ease-in-out;
   padding-top: 20px;
 `;
 
