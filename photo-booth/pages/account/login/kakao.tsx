@@ -1,16 +1,21 @@
 import React, { useCallback, useEffect } from 'react';
 import { useRouter } from 'next/router';
 import { kakaoLoginApi } from '@repositories/login/auth';
+import { useLoginUserStore } from '@store/login';
 
 const kakaoLoginPage = () => {
   const router = useRouter();
   const { code: authCode, error: kakaoServerError } = router.query;
+  const { setnickName, setProfile } = useLoginUserStore();
 
   const loginHandler = useCallback(
     async (code: string) => {
       const response = await kakaoLoginApi(code);
 
       if (response.success) {
+        setnickName(response.result.nickname);
+        setProfile(response.result.profile_image_url);
+
         router.push('/map');
       } else {
         // 실패하면 에러 페이지로 리다이렉트
