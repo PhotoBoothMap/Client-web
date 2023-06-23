@@ -6,14 +6,14 @@ import { useLoginUserStore } from '@store/login';
 const kakaoLoginPage = () => {
   const router = useRouter();
   const { code: authCode, error: kakaoServerError } = router.query;
-  const { setnickName, setProfile } = useLoginUserStore();
+  const { setNickName, setProfile } = useLoginUserStore();
 
   const loginHandler = useCallback(
     async (code: string) => {
       const response = await kakaoLoginApi(code);
 
       if (response.success) {
-        setnickName(response.result.nickname);
+        setNickName(response.result.nickname);
         setProfile(response.result.profile_image_url);
 
         router.push('/map');
