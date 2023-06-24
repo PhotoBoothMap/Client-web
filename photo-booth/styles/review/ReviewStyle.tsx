@@ -1,7 +1,7 @@
 import styled from 'styled-components';
 
-interface hamburgerInterface {
-  display: string;
+interface photoBoxInterface {
+  photoUrl: string;
 }
 
 export const BasicPhotoBoxStyle = styled.div`
@@ -37,11 +37,16 @@ export const PreviewPhotoBoxStyle = styled(BasicPhotoBoxStyle)`
   & {
     border: 1px solid #f2f2f280;
     position: relative;
+    background: url(${(props: photoBoxInterface) => props.photoUrl});
+    background-position: center;
+    background-size: cover;
 
     .delete-button {
+      height: fit-content;
       position: absolute;
       top: 2px;
       right: 2px;
+      cursor: pointer;
     }
   }
 `;

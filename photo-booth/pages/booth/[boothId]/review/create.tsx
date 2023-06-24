@@ -62,11 +62,19 @@ const BoothReviewCreatePage = () => {
                   </div>
                   <div className={`font-semibold text-sm`}>{photos.length}/3</div>
                 </RegisterPhotoBoxStyle>
-                <PreviewPhotoBoxStyle>
-                  <div className="delete-button cursor-pointer">
-                    <Image src={`/common/close.svg`} width={15} height={15} alt="사진 삭제 버튼" />
-                  </div>
-                </PreviewPhotoBoxStyle>
+                {photos.length > 0 &&
+                  photos.map((photoUrl) => (
+                    <PreviewPhotoBoxStyle photoUrl={photoUrl}>
+                      <div className="delete-button">
+                        <Image
+                          src={`/common/close.svg`}
+                          width={15}
+                          height={15}
+                          alt="사진 삭제 버튼"
+                        />
+                      </div>
+                    </PreviewPhotoBoxStyle>
+                  ))}
               </div>
             </div>
             <div className={`p-4`}>
