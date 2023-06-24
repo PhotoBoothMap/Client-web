@@ -6,14 +6,22 @@ import React, { useCallback, useRef, useState } from 'react';
 
 const BoothReviewCreatePage = () => {
   const router = useRouter();
-  const fileInput = useRef();
 
   const [page, setPage] = useState(2);
   const [starRate, setStarRate] = useState(0);
-  const [tags, setTags] = useState([]);
-  const [photos, setphotos] = useState([]);
+  const [userTags, setUserTags] = useState([]);
+  const [photos, setPhotos] = useState([]);
+  const [content, setContent] = useState('');
 
   const registerPhoto = useCallback(() => {}, []);
+
+  const registerReview = useCallback(() => {
+    const requestBody = {
+      starRate,
+      userTags: userTags.length > 0 ? userTags : null,
+      content,
+    };
+  }, [starRate, userTags, content]);
 
   return (
     <div className={`flex flex-col justify-between w-full h-full text-[#F2F2F2] `}>
@@ -81,6 +89,8 @@ const BoothReviewCreatePage = () => {
               <textarea
                 className={`rounded-md bg-[#2A2A2A] resize-none w-full h-60 p-4`}
                 placeholder="더 자세한 의견을 들려주세요."
+                value={content}
+                onChange={(e) => setContent(e.target.value)}
               ></textarea>
             </div>
           </>
@@ -91,13 +101,14 @@ const BoothReviewCreatePage = () => {
         <BasicButton
           text={page === 1 ? '다음' : '리뷰 등록'}
           color={
-            starRate >= 0 && starRate <= 5 && tags.length > 0 && tags.length <= 4
+            starRate >= 0 && starRate <= 5 && userTags.length > 0 && userTags.length <= 4
               ? 'darkYellow'
               : 'white'
           }
           size={'xLarge'}
           onClickEvent={() => {
             if (page === 1) setPage(2);
+            else registerReview();
           }}
         />
       </div>
