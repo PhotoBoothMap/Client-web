@@ -1,15 +1,19 @@
 import BasicButton from '@components/common/button/BasicButton';
-import { RegisterPhotoBoxStyle, RegisteredPhotoBoxStyle } from '@styles/review/reviewStyle';
+import { PreviewPhotoBoxStyle, RegisterPhotoBoxStyle } from '@styles/review/reviewStyle';
 import Image from 'next/image';
 import { useRouter } from 'next/router';
-import React, { useState } from 'react';
+import React, { useCallback, useRef, useState } from 'react';
 
 const BoothReviewCreatePage = () => {
   const router = useRouter();
+  const fileInput = useRef();
+
   const [page, setPage] = useState(2);
   const [starRate, setStarRate] = useState(0);
   const [tags, setTags] = useState([]);
   const [photos, setphotos] = useState([]);
+
+  const registerPhoto = useCallback(() => {}, []);
 
   return (
     <div className={`flex flex-col justify-between w-full h-full text-[#F2F2F2] `}>
@@ -46,8 +50,9 @@ const BoothReviewCreatePage = () => {
             <div className={`flex flex-col p-4 gap-4`}>
               <div className={`font-semibold text-sm`}>사진을 올려주세요</div>
               <div className={`flex gap-4 `}>
-                <RegisterPhotoBoxStyle>
-                  <div className="delete-button">
+                <RegisterPhotoBoxStyle onClick={() => registerPhoto()}>
+                  <input type="file" accept="image/*"></input>
+                  <div>
                     <Image
                       src={`/common/photo-icon.svg`}
                       width={30}
@@ -57,15 +62,18 @@ const BoothReviewCreatePage = () => {
                   </div>
                   <div className={`font-semibold text-sm`}>{photos.length}/3</div>
                 </RegisterPhotoBoxStyle>
-                <RegisteredPhotoBoxStyle>
+                <PreviewPhotoBoxStyle>
                   <div className="delete-button cursor-pointer">
                     <Image src={`/common/close.svg`} width={15} height={15} alt="사진 삭제 버튼" />
                   </div>
-                </RegisteredPhotoBoxStyle>
+                </PreviewPhotoBoxStyle>
               </div>
             </div>
-            <div>
-              <div></div>
+            <div className={`p-4`}>
+              <textarea
+                className={`rounded-md bg-[#2A2A2A] resize-none w-full h-60 p-4`}
+                placeholder="더 자세한 의견을 들려주세요."
+              ></textarea>
             </div>
           </>
         )}
