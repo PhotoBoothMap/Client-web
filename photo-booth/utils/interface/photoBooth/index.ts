@@ -22,20 +22,13 @@ export interface BoothDetail {
   id: number;
   brand: photoBooth;
   name: string;
-  call: string;
   address: string;
-  distance: number;
   score: number;
   reviewNum: number;
-  homepage: string;
   status: string;
   coordinate: {
     lat: number;
     lng: number;
-  };
-  frame: {
-    shape: string | null;
-    price: number | null;
   };
 }
 
@@ -55,6 +48,4 @@ export interface PhotoBooth {
 export interface BoothMarker extends Pick<BoothDetail, 'id' | 'brand' | 'coordinate'> {}
 
 export interface BoothPreview
-  extends Partial<
-    Pick<BoothDetail, 'id' | 'brand' | 'name' | 'distance' | 'address' | 'score' | 'reviewNum'>
-  > {}
+  extends Partial<Pick<BoothDetail, 'id' | 'brand' | 'name' | 'address' | 'score' | 'reviewNum'>> {}
