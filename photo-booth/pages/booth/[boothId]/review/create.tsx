@@ -1,16 +1,20 @@
 import BasicButton from '@components/common/button/BasicButton';
 import StarRate from '@components/review/StarRate';
+import Tag, { tagKey } from '@components/review/Tag';
+import TagSelectionBox from '@components/review/TagSelectionBox';
 import { PreviewPhotoBoxStyle, RegisterPhotoBoxStyle } from '@styles/review/ReviewStyle';
 import Image from 'next/image';
 import { useRouter } from 'next/router';
 import React, { useCallback, useRef, useState } from 'react';
+
+const reviewTagSelectionKey: ['PICTURE', 'BOOTH', 'FACILITY'] = ['PICTURE', 'BOOTH', 'FACILITY'];
 
 const BoothReviewCreatePage = () => {
   const router = useRouter();
 
   const [page, setPage] = useState(1);
   const [starRate, setStarRate] = useState(0);
-  const [userTags, setUserTags] = useState([]);
+  const [userTags, setUserTags] = useState<tagKey[]>([]);
   const [photos, setPhotos] = useState([]);
   const [content, setContent] = useState('');
 
@@ -50,11 +54,25 @@ const BoothReviewCreatePage = () => {
               <StarRate starRate={starRate} setStarRate={setStarRate}></StarRate>
             </div>
             <div className={`flex flex-col`}>
-              <div className={`flex flex-col p-4 bg-yellow-700`}>
+              <div className={`flex flex-col p-4`}>
                 <div className={`font-semibold`}>어떤 점이 좋았나요?</div>
                 <div className={`font-semibold text-xs`}>(해당하는 태그 1~4개를 선택해주세요)</div>
               </div>
-              <div></div>
+              <div className="flex flex-wrap p-4">
+                {reviewTagSelectionKey.map((type) => {
+                  return (
+                    <div className={`w-1/2 mb-4`}>
+                      <TagSelectionBox
+                        type={type}
+                        selectedTags={userTags}
+                        selectEvent={(tagKey) => {
+                          setUserTags([...userTags, tagKey]);
+                        }}
+                      />
+                    </div>
+                  );
+                })}
+              </div>
             </div>
           </>
         ) : (
