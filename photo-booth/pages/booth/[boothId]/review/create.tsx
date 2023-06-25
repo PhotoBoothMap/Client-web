@@ -2,6 +2,7 @@ import BasicButton from '@components/common/button/BasicButton';
 import StarRate from '@components/review/StarRate';
 import { tagKey } from '@components/review/Tag';
 import TagSelectionBox from '@components/review/TagSelectionBox';
+import { registerPhotoApi } from '@repositories/booth/review';
 import { PreviewPhotoBoxStyle, RegisterPhotoBoxStyle } from '@styles/review/ReviewStyle';
 import Image from 'next/image';
 import { useRouter } from 'next/router';
@@ -12,13 +13,27 @@ const reviewTagSelectionKey: ['PICTURE', 'BOOTH', 'FACILITY'] = ['PICTURE', 'BOO
 const BoothReviewCreatePage = () => {
   const router = useRouter();
 
-  const [page, setPage] = useState(1);
+  const [page, setPage] = useState(2);
   const [starRate, setStarRate] = useState(0);
   const [userTags, setUserTags] = useState<tagKey[]>([]);
-  const [photos, setPhotos] = useState([]);
+  const [photos, setPhotos] = useState<string[]>([]);
   const [content, setContent] = useState('');
 
-  const registerPhoto = useCallback(() => {}, []);
+  const registerPhoto = useCallback(
+    async (e: any) => {
+      const file = e.target.files[0];
+      const formData = new FormData();
+      formData.append('file', file);
+      const response = await registerPhotoApi(Number(router.query.boothId), formData);
+
+      if (response.success) {
+        setPhotos([...photos, response.result.imageUrl]);
+      } else {
+        alert(response.message);
+      }
+    },
+    [photos],
+  );
 
   const registerReview = useCallback(() => {
     const requestBody = {
@@ -31,7 +46,7 @@ const BoothReviewCreatePage = () => {
 
   return (
     <div className={`flex flex-col justify-between w-full h-full text-[#F2F2F2]`}>
-      <div className={`flex flex-col justify-between h-1 flex-1`}>
+      <div className={`flex flex-col justify-start h-1 flex-1`}>
         <div className={`review-header flex items-center justify-between p-4`}>
           <div
             className={`cursor-pointer`}
@@ -91,8 +106,8 @@ const BoothReviewCreatePage = () => {
             <div className={`flex flex-col p-4 gap-4`}>
               <div className={`font-semibold text-sm`}>사진을 올려주세요</div>
               <div className={`flex gap-4 `}>
-                <RegisterPhotoBoxStyle onClick={() => registerPhoto()}>
-                  <input type="file" accept="image/*"></input>
+                <RegisterPhotoBoxStyle>
+                  <input type="file" accept="image/*" onChange={(e) => registerPhoto(e)}></input>
                   <div>
                     <Image
                       src={`/common/photo-icon.svg`}
@@ -138,7 +153,7 @@ const BoothReviewCreatePage = () => {
               ? starRate > 0 && starRate <= 5 && userTags.length > 0 && userTags.length <= 4
                 ? 'darkYellow'
                 : 'white'
-              : 'white'
+              : 'darkYellow'
           }
           size={'xLarge'}
           onClickEvent={() => {
