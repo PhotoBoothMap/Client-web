@@ -3,7 +3,9 @@ import styled from 'styled-components';
 import { PhotoBooth, photoBooth } from '@utils/interface/photoBooth';
 import Image from 'next/image';
 
+import Review from '@components/map/review';
 import StarIcon from '@image/star_icon.png';
+
 import HeaderArrow from '/public/image/header_arrow.png';
 
 interface BoothDetailPopProps {
@@ -25,10 +27,18 @@ export default function BoothDetailPop({
       brand: photoBooth.포토그레이,
       name: '테스트 네임',
       address: '서울 강남구 강남대로 102길 31 1층 4호',
-      score: 4.2,
+      score: 4.5,
       reviewNum: 10,
     },
-    review: [],
+    review: [
+      {
+        user: 'test name',
+        date: new Date('2023-04-17'),
+        content: '여기 사진 진짜 잘 나오네요. 만족스러운 시간이었습니다. 다음에도 꼭 가고싶어요...',
+        imgUrl: '',
+        userTags: ['PICTURE', 'LIGHT', 'VARIOUS'],
+      },
+    ],
   };
 
   return (
@@ -77,6 +87,12 @@ export default function BoothDetailPop({
         </div>
       </MetaWrapper>
       <Pictures></Pictures> */}
+      <ReviewHeader></ReviewHeader>
+      <ReviewBody>
+        {review?.map((reviewInfo) => {
+          return <Review name={boothDetail!.name} score={boothDetail!.score} review={reviewInfo} />;
+        })}
+      </ReviewBody>
     </Wrapper>
   );
 }
@@ -193,3 +209,7 @@ const MetaWrapper = styled.div`
 `;
 
 const Pictures = styled.div``;
+
+const ReviewHeader = styled.div``;
+
+const ReviewBody = styled.div``;
