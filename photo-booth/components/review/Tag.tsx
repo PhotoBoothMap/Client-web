@@ -34,7 +34,7 @@ const Tag = ({ tagKey, selected = false }: props) => {
     <div
       className={`flex items-center justify-start gap-1 bg-[#2A2A2A] rounded-3xl min-w-[9.125rem] w-fit py-2 px-4 ${
         selected && 'border border-[#FFC700]'
-      } cursor-pointer`}
+      } box-border cursor-pointer`}
     >
       <Image
         src={`/common/review/tag/${tagKey}.svg`}

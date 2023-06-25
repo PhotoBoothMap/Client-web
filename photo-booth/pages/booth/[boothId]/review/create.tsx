@@ -31,8 +31,8 @@ const BoothReviewCreatePage = () => {
 
   return (
     <div className={`flex flex-col justify-between w-full h-full text-[#F2F2F2]`}>
-      <div className={`flex flex-col justify-between`}>
-        <div className={`flex items-center justify-between p-4`}>
+      <div className={`flex flex-col justify-between h-1 flex-1`}>
+        <div className={`review-header flex items-center justify-between p-4`}>
           <div
             className={`cursor-pointer`}
             onClick={() => {
@@ -46,7 +46,7 @@ const BoothReviewCreatePage = () => {
         </div>
 
         {page === 1 ? (
-          <>
+          <div className={`flex flex-col h-1 flex-1 overflow-scroll`}>
             <div
               className={`flex flex-col justify-center items-center p-4 gap-4  border-[#2A2A2A] border-t border-b`}
             >
@@ -85,7 +85,7 @@ const BoothReviewCreatePage = () => {
                 })}
               </div>
             </div>
-          </>
+          </div>
         ) : (
           <>
             <div className={`flex flex-col p-4 gap-4`}>
@@ -130,7 +130,7 @@ const BoothReviewCreatePage = () => {
         )}
       </div>
 
-      <div className={`w-full m-4 flex justify-center text-black`}>
+      <div className={`review-button-box w-full p-4 flex justify-center text-black bg-black`}>
         <BasicButton
           text={page === 1 ? '다음' : '리뷰 등록'}
           color={
