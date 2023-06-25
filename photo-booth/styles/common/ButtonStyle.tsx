@@ -1,9 +1,13 @@
 import styled from 'styled-components';
 // import tw from 'twin.macro';
 
+export type buttonColorType = 'white' | 'yellow' | 'darkYellow';
+export type buttonSizeype = 'large' | 'xLarge';
+
 const buttonColor = {
-  yellow: '#FEE500',
   white: 'white',
+  yellow: '#FEE500',
+  darkYellow: '#FFC700',
 };
 
 const buttonSize = {
@@ -11,11 +15,15 @@ const buttonSize = {
     width: '20.4375rem',
     height: '3.5rem',
   },
+  xLarge: {
+    width: '21.4375rem',
+    height: '3.5rem',
+  },
 };
 
 interface buttonInterface {
-  size: 'large';
-  color: 'yellow' | 'white';
+  size: buttonSizeype;
+  color: buttonColorType;
 }
 
 interface socialLoginButtonInterface {
@@ -23,7 +31,7 @@ interface socialLoginButtonInterface {
 }
 
 /* ${tw`flex justify-center items-center rounded-lg cursor-pointer`} */
-export const BasicLoginButtonStyle = styled.div`
+export const BasicButtonStyle = styled.div`
   & {
     display: flex;
     justify-content: center;
@@ -34,13 +42,14 @@ export const BasicLoginButtonStyle = styled.div`
     box-shadow: 0px 4px 3px rgba(0, 0, 0, 0.05);
     width: ${(props: buttonInterface) => buttonSize[props.size].width};
     height: ${(props: buttonInterface) => buttonSize[props.size].height};
+
+    background: ${(props: buttonInterface) => buttonColor[props.color]};
   }
 `;
 
 /* ${tw`relative`} */
-export const SocialLoginButtonStyle = styled(BasicLoginButtonStyle)`
+export const SocialLoginButtonStyle = styled(BasicButtonStyle)`
   & {
     position: relative;
-    background: ${(props: buttonInterface) => buttonColor[props.color]};
   }
 `;
