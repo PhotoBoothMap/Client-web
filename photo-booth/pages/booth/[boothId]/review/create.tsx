@@ -1,6 +1,6 @@
 import BasicButton from '@components/common/button/BasicButton';
 import StarRate from '@components/review/StarRate';
-import Tag, { tagKey } from '@components/review/Tag';
+import { tagKey } from '@components/review/Tag';
 import TagSelectionBox from '@components/review/TagSelectionBox';
 import { PreviewPhotoBoxStyle, RegisterPhotoBoxStyle } from '@styles/review/ReviewStyle';
 import Image from 'next/image';
@@ -61,12 +61,23 @@ const BoothReviewCreatePage = () => {
               <div className="flex flex-wrap p-4">
                 {reviewTagSelectionKey.map((type) => {
                   return (
-                    <div className={`w-1/2 mb-4`}>
+                    <div className={`w-1/2 mb-4`} key={type}>
                       <TagSelectionBox
                         type={type}
                         selectedTags={userTags}
                         selectEvent={(tagKey) => {
-                          setUserTags([...userTags, tagKey]);
+                          if (userTags.includes(tagKey)) {
+                            const _userTags = [...userTags];
+                            const index = _userTags.indexOf(tagKey);
+                            _userTags.splice(index, 1);
+                            setUserTags(_userTags);
+                          } else {
+                            if (userTags.length === 4) {
+                              alert('태그는 최대 4개까지 선택 가능합니다.');
+                              return;
+                            }
+                            setUserTags([...userTags, tagKey]);
+                          }
                         }}
                       />
                     </div>
@@ -123,8 +134,10 @@ const BoothReviewCreatePage = () => {
         <BasicButton
           text={page === 1 ? '다음' : '리뷰 등록'}
           color={
-            starRate >= 0 && starRate <= 5 && userTags.length > 0 && userTags.length <= 4
-              ? 'darkYellow'
+            page === 1
+              ? starRate > 0 && starRate <= 5 && userTags.length > 0 && userTags.length <= 4
+                ? 'darkYellow'
+                : 'white'
               : 'white'
           }
           size={'xLarge'}
