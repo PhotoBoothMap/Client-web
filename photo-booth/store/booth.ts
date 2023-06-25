@@ -17,6 +17,7 @@ interface BoothAction {
   setCurBoothMakers: (boothMarkers: BoothMarker[]) => void;
   setCurBoothPreviews: (boothPreviews: BoothPreview[]) => void;
   toggleFilter: (photoBooth: photoBooth) => void;
+  resetFilter: () => void;
   setIsGettingMarker: (state: boolean) => void;
 }
 
@@ -54,6 +55,13 @@ export const useBoothStore = create<BoothState & BoothAction>((set) => ({
     set((state) => {
       return {
         boothFilters: toggleSet(state.boothFilters, photoBooth),
+      };
+    });
+  },
+  resetFilter: () => {
+    set((state) => {
+      return {
+        boothFilters: new Set([...(Object.keys(photoBooth) as Array<photoBooth>)]),
       };
     });
   },

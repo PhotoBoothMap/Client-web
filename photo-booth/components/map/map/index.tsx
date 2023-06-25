@@ -1,3 +1,4 @@
+import { debounce } from 'lodash';
 import { useCallback, useEffect, useRef } from 'react';
 import styled from 'styled-components';
 
@@ -48,11 +49,12 @@ export default function Map() {
 
   const [curLevel, setCurLevel] = useState<number | null>(null);
   const [curBoundDistance, setCurBoundDistance] = useState<number>(Number.POSITIVE_INFINITY);
-  const [curSearchType, setCurSearchType] = useState<searchType | null>(null);
+  const [curSearchType, setCurSearchType] = useState<searchType | null>(searchType.지역);
   const [curMarkers, setCurMarkers] = useState<Array<any>>([]);
 
   const ref = useRef<any>(null);
   const curMap = useRef<any>(null);
+  const curMoveFunctionRef = useRef<any>(null);
 
   useEffect(() => {
     if (ref.current === null) {
@@ -82,7 +84,7 @@ export default function Map() {
       var level = (curMap.current as any).getLevel();
       setCurLevel(level);
     });
-    setCurLevel(3);
+    setCurLevel(5);
     console.log('here');
   }, [curMap.current]);
 
@@ -114,12 +116,6 @@ export default function Map() {
   // 마커 등록
   const setMarkers = (id: number, boothName: photoBooth, latLng: Coordinate) => {
     let boothIcon;
-    console.log('...set marker..');
-    console.log(id);
-    console.log(boothName);
-    console.log(latLng);
-    console.log(',,,,');
-
     switch (boothName) {
       case photoBooth.하루필름:
         boothIcon = markBluedMap;
@@ -163,10 +159,7 @@ export default function Map() {
       // image: icon,
     });
 
-    console.log(marker);
-    console.log(curMap.current);
     marker.setMap(curMap.current);
-    console.log('is setted');
 
     // window.kakao.maps.event.addListener(marker, 'click', () => {});
 
@@ -231,73 +224,72 @@ export default function Map() {
     const neLatLng = bounds.getNorthEast();
     const boundDistance = getDistanceByLatLng(centerLatLng, neLatLng);
     setCurBoundDistance(boundDistance);
-    console.log(boundDistance);
   }, [curMap.current, curLevel]);
+
+  const centerChangeEvent = useCallback(() => {
+    if (isGettingMarker) return;
+    const map = curMap.current as any;
+    const latLng = map.getCenter();
+    const curDistance = getDistanceByCor(latLngConstructor(latLng), curCor);
+    if (curDistance >= curBoundDistance && !isGettingMarker) {
+      setIsGettingMarker(true);
+    }
+  }, [curMap.current, isGettingMarker, curCor, curBoundDistance]);
+
+  async function getMarkers() {
+    const map = curMap.current as any;
+    const latLng = map.getCenter();
+    curMarkers.forEach((marker) => {
+      marker.setMap(null);
+    });
+    const bounds = (map as any).getBounds();
+    const neLatLng = bounds.getNorthEast();
+    try {
+      await getMarkersByCor(latLngConstructor(latLng), latLngConstructor(neLatLng));
+    } catch (e) {
+      console.log(e);
+    } finally {
+      setCurCor(latLngConstructor(latLng));
+    }
+  }
 
   // 이동시에 일정 거리 이동시 부스 정보 업데이트
   useEffect(() => {
     if (curMap.current === null || isGettingMarker) {
       return;
     }
-    console.log('is getting');
-    window.kakao.maps.event.removeListener(curMap.current, 'center_changed', centerChangeEvent);
 
-    async function centerChangeEvent() {
-      window.kakao.maps.event.removeListener(curMap.current, 'center_changed', centerChangeEvent);
-      const map = curMap.current as any;
-      const latLng = map.getCenter();
-      const curDistance = getDistanceByCor(latLngConstructor(latLng), curCor);
-      if (curDistance >= curBoundDistance && !isGettingMarker) {
-        setIsGettingMarker(true);
-        //기존 마커 제거
-        curMarkers.forEach((marker) => {
-          marker.setMap(null);
-        });
+    const curMoveFunction = curMoveFunctionRef.current;
 
-        const bounds = (map as any).getBounds();
-        const neLatLng = bounds.getNorthEast();
-        try {
-          await getMarkersByCor(latLngConstructor(latLng), latLngConstructor(neLatLng));
-        } catch (e) {
-          console.log(e);
-        } finally {
-          setIsGettingMarker(false);
-          setCurCor(latLngConstructor(latLng));
-          window.kakao.maps.event.addListener(curMap.current, 'center_changed', centerChangeEvent);
-        }
-      }
+    function centerChangeDebounce() {
+      debounce(centerChangeEvent, 500);
     }
-    // 좌표 정보 바뀔시 이벤트 변경
 
-    window.kakao.maps.event.addListener(curMap.current, 'center_changed', centerChangeEvent);
-  }, [curMap.current, curCor, curBoundDistance, isGettingMarker]);
+    if (curMoveFunction !== null) {
+      window.kakao.maps.event.removeListener(curMap.current, 'center_changed', curMoveFunction);
+    }
+
+    window.kakao.maps.event.addListener(curMap.current, 'center_changed', centerChangeDebounce);
+    curMoveFunctionRef.current = centerChangeDebounce;
+  }, [curMap.current, centerChangeEvent]);
 
   useEffect(() => {
     if (curMap.current === null) return;
-    async function getMarkers() {
-      const map = curMap.current as any;
-      const latLng = map.getCenter();
-      const curDistance = getDistanceByCor(latLngConstructor(latLng), curCor);
-
-      setIsGettingMarker(true);
-      //기존 마커 제거
-      curMarkers.forEach((marker) => {
-        marker.setMap(null);
-      });
-
-      const bounds = (map as any).getBounds();
-      const neLatLng = bounds.getNorthEast();
-      try {
-        await getMarkersByCor(latLngConstructor(latLng), latLngConstructor(neLatLng));
-      } catch (e) {
-        console.log(e);
-      } finally {
-        setIsGettingMarker(false);
-        setCurCor(latLngConstructor(latLng));
-      }
+    async function toAsync(fn: any) {
+      await fn();
     }
-    getMarkers();
-  }, [curMap.current]);
+    toAsync(getMarkers);
+  }, [curMap.current, Array.from(boothFilters).length]);
+
+  useEffect(() => {
+    if (!isGettingMarker) return;
+    async function toAsync(fn: any) {
+      await fn();
+      setIsGettingMarker(false);
+    }
+
+    toAsync(getMarkers);
+  }, [curMap.current, isGettingMarker]);
 
   return (
     <Wrapper>

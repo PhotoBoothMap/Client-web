@@ -3,16 +3,12 @@ import styled from 'styled-components';
 import { PhotoBooth, photoBooth } from '@utils/interface/photoBooth';
 import Image from 'next/image';
 
-import CardIcon from '@image/card_icon.png';
-import ClockIcon from '@image/clock_icon.png';
-import FrameIcon from '@image/frame_icon.png';
-import PhoneIcon from '@image/phone_icon.png';
 import StarIcon from '@image/star_icon.png';
 import HeaderArrow from '/public/image/header_arrow.png';
 
 interface BoothDetailPopProps {
   state: boolean;
-  boothInfo: PhotoBooth | null;
+  boothInfo: Partial<PhotoBooth> | null;
   setCurBoothDetail: (value: PhotoBooth | null) => void;
   setBoothDetailUp: (value: boolean) => void;
 }
@@ -29,20 +25,8 @@ export default function BoothDetailPop({
       brand: photoBooth.포토그레이,
       name: '테스트 네임',
       address: '서울 강남구 강남대로 102길 31 1층 4호',
-      call: '010-2732-7375',
-      distance: 300,
       score: 4.2,
       reviewNum: 10,
-      homepage: 'https://www.google.com',
-      status: '영업 중 24시간 운영',
-      coordinate: {
-        lat: 30,
-        lng: 30,
-      },
-      frame: {
-        shape: null,
-        price: null,
-      },
     },
     review: [],
   };
@@ -60,21 +44,21 @@ export default function BoothDetailPop({
             setBoothDetailUp(false);
           }}
         />
-        <p className="appbar_sentence">{boothDetail.name}</p>
+        <p className="appbar_sentence">{boothDetail!.name}</p>
         <div className="blank"></div>
       </AppBar>
       <Header>
-        <p className="header_title">{boothDetail.name}</p>
-        <p className="header_subtitle">{boothDetail.address}</p>
+        <p className="header_title">{boothDetail!.name}</p>
+        <p className="header_subtitle">{boothDetail!.address}</p>
         <div className="review_wrapper">
           <div className="score_wrapper">
             <Image src={StarIcon} alt="" height="14" />
-            <p className="score">{boothDetail.score}</p>
+            <p className="score">{boothDetail!.score}</p>
           </div>
-          <div className="review">{`리뷰 ${boothDetail.reviewNum}`}</div>
+          <div className="review">{`리뷰 ${boothDetail!.reviewNum}`}</div>
         </div>
       </Header>
-      <MetaWrapper>
+      {/* <MetaWrapper>
         <div className="meta_line">
           <Image src={ClockIcon} alt="" width="14" />
 
@@ -92,7 +76,7 @@ export default function BoothDetailPop({
           <Image src={FrameIcon} alt="" width="14" />
         </div>
       </MetaWrapper>
-      <Pictures></Pictures>
+      <Pictures></Pictures> */}
     </Wrapper>
   );
 }
