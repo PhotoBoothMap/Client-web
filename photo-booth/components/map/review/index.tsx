@@ -21,7 +21,7 @@ export default function Review({ name, score, review }: ReviewProps) {
   return (
     <Wrapper>
       <Header>
-        <Image src={LogoBright} alt="" />
+        <Image src={LogoBright} alt="" width="30" />
         <div className="meta">
           <Box
             sx={{
@@ -72,7 +72,9 @@ export default function Review({ name, score, review }: ReviewProps) {
   );
 }
 
-const Wrapper = styled.div``;
+const Wrapper = styled.div`
+  background-color: rgba(26, 26, 26, 0.7);
+`;
 
 const Header = styled.div``;
 

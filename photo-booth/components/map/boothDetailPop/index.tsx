@@ -4,7 +4,9 @@ import { PhotoBooth, photoBooth } from '@utils/interface/photoBooth';
 import Image from 'next/image';
 
 import Review from '@components/map/review';
+import LogoBright from '@image/logo_bright.png';
 import StarIcon from '@image/star_icon.png';
+import StarsGrey from '@image/stars_grey.png';
 
 import HeaderArrow from '/public/image/header_arrow.png';
 
@@ -53,7 +55,7 @@ export default function BoothDetailPop({
             setCurBoothDetail(null);
             setBoothDetailUp(false);
           }}
-        />
+         />
         <p className="appbar_sentence">{boothDetail!.name}</p>
         <div className="blank"></div>
       </AppBar>
@@ -87,7 +89,11 @@ export default function BoothDetailPop({
         </div>
       </MetaWrapper>
       <Pictures></Pictures> */}
-      <ReviewHeader></ReviewHeader>
+      <ReviewHeader>
+        <Image src={LogoBright} alt="" width="30" />
+        <p>{`${boothDetail!.name} 어떠셨나요`}</p>
+        <Image src={StarsGrey} alt="" width="100" />
+      </ReviewHeader>
       <ReviewBody>
         {review?.map((reviewInfo) => {
           return <Review name={boothDetail!.name} score={boothDetail!.score} review={reviewInfo} />;
@@ -210,6 +216,23 @@ const MetaWrapper = styled.div`
 
 const Pictures = styled.div``;
 
-const ReviewHeader = styled.div``;
+const ReviewHeader = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  background-color: rgba(26, 26, 26, 0.7);
 
-const ReviewBody = styled.div``;
+  img {
+    flex: 0 0 auto;
+    object-fit: contain;
+  }
+
+  p {
+    color: white;
+    font-weight: 600;
+  }
+`;
+
+const ReviewBody = styled.div`
+
+`;
