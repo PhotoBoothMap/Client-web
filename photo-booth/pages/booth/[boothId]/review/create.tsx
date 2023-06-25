@@ -122,7 +122,22 @@ const BoothReviewCreatePage = () => {
               <div className={`font-semibold text-sm`}>사진을 올려주세요</div>
               <div className={`flex gap-4 `}>
                 <RegisterPhotoBoxStyle>
-                  <input type="file" accept="image/*" onChange={(e) => registerPhoto(e)}></input>
+                  {photos.length === 3 ? (
+                    <div
+                      className={`register-photo`}
+                      onClick={() => alert('사진은 최대 3장까지 등록 가능합니다.')}
+                    ></div>
+                  ) : (
+                    <input
+                      type="file"
+                      accept="image/*"
+                      className="register-photo"
+                      onChange={(e) => {
+                        registerPhoto(e);
+                      }}
+                    ></input>
+                  )}
+
                   <div>
                     <Image
                       src={`/common/photo-icon.svg`}

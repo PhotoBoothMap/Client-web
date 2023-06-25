@@ -23,7 +23,7 @@ export const RegisterPhotoBoxStyle = styled(BasicPhotoBoxStyle)`
     gap: 0.3rem;
     border: 1px dashed #f2f2f280;
 
-    input {
+    .register-photo {
       opacity: 0;
       position: absolute;
       width: 100%;
