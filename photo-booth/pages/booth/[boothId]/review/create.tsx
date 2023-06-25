@@ -2,7 +2,7 @@ import BasicButton from '@components/common/button/BasicButton';
 import StarRate from '@components/review/StarRate';
 import { tagKey } from '@components/review/Tag';
 import TagSelectionBox from '@components/review/TagSelectionBox';
-import { deletePhotoApi, registerPhotoApi } from '@repositories/booth/review';
+import { deletePhotoApi, registerPhotoApi, registerReviewApi } from '@repositories/booth/review';
 import { PreviewPhotoBoxStyle, RegisterPhotoBoxStyle } from '@styles/review/ReviewStyle';
 import Image from 'next/image';
 import { useRouter } from 'next/router';
@@ -13,7 +13,7 @@ const reviewTagSelectionKey: ['PICTURE', 'BOOTH', 'FACILITY'] = ['PICTURE', 'BOO
 const BoothReviewCreatePage = () => {
   const router = useRouter();
 
-  const [page, setPage] = useState(2);
+  const [page, setPage] = useState(1);
   const [starRate, setStarRate] = useState(0);
   const [userTags, setUserTags] = useState<tagKey[]>([]);
   const [photos, setPhotos] = useState<string[]>([]);
@@ -50,13 +50,18 @@ const BoothReviewCreatePage = () => {
     [photos, router.query],
   );
 
-  const registerReview = useCallback(() => {
+  const registerReview = useCallback(async () => {
     const requestBody = {
       starRate,
       userTags: userTags.length > 0 ? userTags : null,
-      content,
+      imageUrls: photos.length > 0 ? photos : null,
+      content: content !== '' ? content : null,
     };
-    console.log('requestBody', requestBody);
+    const response = await registerReviewApi(Number(router.query.boothId), requestBody);
+    if (response.success) {
+      alert('리뷰가 등록되었습니다.');
+      router.push('/');
+    }
   }, [starRate, userTags, content]);
 
   return (

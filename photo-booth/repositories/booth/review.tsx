@@ -26,3 +26,15 @@ export const deletePhotoApi = (boothId: number, imageUrl: string) => {
     });
   return data;
 };
+
+export const registerReviewApi = (boothId: number, requestBody: {}) => {
+  const data = axios
+    .post(`${HOST_URL}/booth/${boothId}/review`, requestBody)
+    .then((response) => {
+      return response.data;
+    })
+    .catch((error) => {
+      return error.response.data;
+    });
+  return data;
+};
