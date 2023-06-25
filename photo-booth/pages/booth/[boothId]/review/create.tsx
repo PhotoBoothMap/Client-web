@@ -1,5 +1,6 @@
 import BasicButton from '@components/common/button/BasicButton';
-import { PreviewPhotoBoxStyle, RegisterPhotoBoxStyle } from '@styles/review/reviewStyle';
+import StarRate from '@components/review/StarRate';
+import { PreviewPhotoBoxStyle, RegisterPhotoBoxStyle } from '@styles/review/ReviewStyle';
 import Image from 'next/image';
 import { useRouter } from 'next/router';
 import React, { useCallback, useRef, useState } from 'react';
@@ -7,7 +8,7 @@ import React, { useCallback, useRef, useState } from 'react';
 const BoothReviewCreatePage = () => {
   const router = useRouter();
 
-  const [page, setPage] = useState(2);
+  const [page, setPage] = useState(1);
   const [starRate, setStarRate] = useState(0);
   const [userTags, setUserTags] = useState([]);
   const [photos, setPhotos] = useState([]);
@@ -21,10 +22,11 @@ const BoothReviewCreatePage = () => {
       userTags: userTags.length > 0 ? userTags : null,
       content,
     };
+    console.log('requestBody', requestBody);
   }, [starRate, userTags, content]);
 
   return (
-    <div className={`flex flex-col justify-between w-full h-full text-[#F2F2F2] `}>
+    <div className={`flex flex-col justify-between w-full h-full text-[#F2F2F2]`}>
       <div className={`flex flex-col justify-between`}>
         <div className={`flex items-center justify-between p-4`}>
           <div
@@ -41,9 +43,11 @@ const BoothReviewCreatePage = () => {
 
         {page === 1 ? (
           <>
-            <div className={`flex flex-col bg-blue-700 justify-center items-center p-4 gap-4`}>
-              <div className={`font-semibold`}>~~~점 어떠셨나요?</div>
-              <div>별5</div>
+            <div
+              className={`flex flex-col justify-center items-center p-4 gap-4  border-[#2A2A2A] border-t border-b`}
+            >
+              <div className={`font-semibold`}>{router.query.boothName} 어떠셨나요?</div>
+              <StarRate starRate={starRate} setStarRate={setStarRate}></StarRate>
             </div>
             <div className={`flex flex-col`}>
               <div className={`flex flex-col p-4 bg-yellow-700`}>
