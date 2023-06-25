@@ -2,7 +2,7 @@ import BasicButton from '@components/common/button/BasicButton';
 import StarRate from '@components/review/StarRate';
 import { tagKey } from '@components/review/Tag';
 import TagSelectionBox from '@components/review/TagSelectionBox';
-import { registerPhotoApi } from '@repositories/booth/review';
+import { deletePhotoApi, registerPhotoApi } from '@repositories/booth/review';
 import { PreviewPhotoBoxStyle, RegisterPhotoBoxStyle } from '@styles/review/ReviewStyle';
 import Image from 'next/image';
 import { useRouter } from 'next/router';
@@ -32,7 +32,22 @@ const BoothReviewCreatePage = () => {
         alert(response.message);
       }
     },
-    [photos],
+    [photos, router.query],
+  );
+
+  const deletePhoto = useCallback(
+    async (photoIndex: number) => {
+      const response = await deletePhotoApi(Number(router.query.boothId), photos[photoIndex]);
+
+      if (response.success) {
+        const _photos = [...photos];
+        _photos.splice(photoIndex, 1);
+        setPhotos(_photos);
+      } else {
+        alert(response.message);
+      }
+    },
+    [photos, router.query],
   );
 
   const registerReview = useCallback(() => {
@@ -119,9 +134,9 @@ const BoothReviewCreatePage = () => {
                   <div className={`font-semibold text-sm`}>{photos.length}/3</div>
                 </RegisterPhotoBoxStyle>
                 {photos.length > 0 &&
-                  photos.map((photoUrl) => (
-                    <PreviewPhotoBoxStyle photoUrl={photoUrl}>
-                      <div className="delete-button">
+                  photos.map((photoUrl, index) => (
+                    <PreviewPhotoBoxStyle photoUrl={photoUrl} key={index}>
+                      <div className="delete-button" onClick={() => deletePhoto(index)}>
                         <Image
                           src={`/common/close.svg`}
                           width={15}

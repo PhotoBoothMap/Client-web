@@ -14,3 +14,15 @@ export const registerPhotoApi = (boothId: number, file: any) => {
     });
   return data;
 };
+
+export const deletePhotoApi = (boothId: number, imageUrl: string) => {
+  const data = axios
+    .post(`${HOST_URL}/booth/${boothId}/image?imageUrl=${imageUrl}`)
+    .then((response) => {
+      return response.data;
+    })
+    .catch((error) => {
+      return error.response.data;
+    });
+  return data;
+};
