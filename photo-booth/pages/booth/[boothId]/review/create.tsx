@@ -1,4 +1,5 @@
 import BasicButton from '@components/common/button/BasicButton';
+import BasicHeader from '@components/common/header/BasicHeader';
 import StarRate from '@components/review/StarRate';
 import { tagKey } from '@components/review/Tag';
 import TagSelectionBox from '@components/review/TagSelectionBox';
@@ -67,23 +68,16 @@ const BoothReviewCreatePage = () => {
   return (
     <div className={`flex flex-col justify-between w-full h-full text-[#F2F2F2]`}>
       <div className={`flex flex-col justify-start h-1 flex-1`}>
-        <div className={`review-header flex items-center justify-between p-4`}>
-          <div
-            className={`cursor-pointer`}
-            onClick={() => {
-              router.push('/sdfwerfwefwefwef e');
-            }}
-          >
-            <Image src={`/common/close.svg`} width={25} height={25} alt="리뷰 닫기 버튼" />
-          </div>
-          <div className={`font-semibold`}>리뷰쓰기</div>
-          <div></div>
-        </div>
+        <BasicHeader
+          type={'close'}
+          text={'리뷰쓰기'}
+          onClickEvent={() => router.push('/sdfwerfwefwefwef e')}
+        />
 
         {page === 1 ? (
           <div className={`flex flex-col h-1 flex-1 overflow-scroll`}>
             <div
-              className={`flex flex-col justify-center items-center p-4 gap-4  border-[#2A2A2A] border-t border-b`}
+              className={`flex flex-col justify-center items-center p-4 gap-4  border-[#2A2A2A] border-b`}
             >
               <div className={`font-semibold`}>{router.query.boothName} 어떠셨나요?</div>
               <StarRate starRate={starRate} setStarRate={setStarRate}></StarRate>
