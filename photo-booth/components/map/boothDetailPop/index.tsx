@@ -1,6 +1,6 @@
 import styled from 'styled-components';
 
-import { PhotoBooth, photoBooth } from '@utils/interface/photoBooth';
+import { PhotoBooth, photoBooth, tagKey } from '@utils/interface/photoBooth';
 import Image from 'next/image';
 
 import Review from '@components/map/review';
@@ -8,6 +8,7 @@ import LogoBright from '@image/logo_bright.png';
 import StarIcon from '@image/star_icon.png';
 import StarsGrey from '@image/stars_grey.png';
 
+import { useMemo } from 'react';
 import HeaderArrow from '/public/image/header_arrow.png';
 
 interface BoothDetailPopProps {
@@ -23,25 +24,30 @@ export default function BoothDetailPop({
   setCurBoothDetail,
   setBoothDetailUp,
 }: BoothDetailPopProps) {
-  const { boothDetail, review } = boothInfo ?? {
-    boothDetail: {
-      id: 3,
-      brand: photoBooth.포토그레이,
-      name: '테스트 네임',
-      address: '서울 강남구 강남대로 102길 31 1층 4호',
-      score: 4.5,
-      reviewNum: 10,
-    },
-    review: [
-      {
-        user: 'test name',
-        date: new Date('2023-04-17'),
-        content: '여기 사진 진짜 잘 나오네요. 만족스러운 시간이었습니다. 다음에도 꼭 가고싶어요...',
-        imgUrl: '',
-        userTags: ['PICTURE', 'LIGHT', 'VARIOUS'],
+  const testData = useMemo(() => {
+    return {
+      boothDetail: {
+        id: 3,
+        brand: photoBooth.포토그레이,
+        name: '테스트 네임',
+        address: '서울 강남구 강남대로 102길 31 1층 4호',
+        score: 4.5,
+        reviewNum: 10,
       },
-    ],
-  };
+      review: [
+        {
+          user: 'test name',
+          date: undefined,
+          content:
+            '여기 사진 진짜 잘 나오네요. 만족스러운 시간이었습니다. 다음에도 꼭 가고싶어요...',
+          imgUrl: '',
+          userTags: ['PICTURE', 'LIGHT', 'VARIOUS'] as tagKey[],
+        },
+      ],
+    };
+  }, []);
+
+  const { boothDetail, review } = useMemo(() => boothInfo ?? testData, []);
 
   return (
     <Wrapper state={state}>
@@ -55,7 +61,7 @@ export default function BoothDetailPop({
             setCurBoothDetail(null);
             setBoothDetailUp(false);
           }}
-         />
+        />
         <p className="appbar_sentence">{boothDetail!.name}</p>
         <div className="blank"></div>
       </AppBar>
@@ -89,16 +95,20 @@ export default function BoothDetailPop({
         </div>
       </MetaWrapper>
       <Pictures></Pictures> */}
-      <ReviewHeader>
-        <Image src={LogoBright} alt="" width="30" />
-        <p>{`${boothDetail!.name} 어떠셨나요`}</p>
-        <Image src={StarsGrey} alt="" width="100" />
-      </ReviewHeader>
-      <ReviewBody>
-        {review?.map((reviewInfo) => {
-          return <Review name={boothDetail!.name} score={boothDetail!.score} review={reviewInfo} />;
-        })}
-      </ReviewBody>
+      <ReviewWrapper>
+        <ReviewHeader>
+          <Image src={LogoBright} alt="" width="30" />
+          <p>{`${boothDetail!.name} 어떠셨나요`}</p>
+          <Image src={StarsGrey} alt="" width="100" />
+        </ReviewHeader>
+        <ReviewBody>
+          {review?.map((reviewInfo) => {
+            return (
+              <Review name={boothDetail!.name} score={boothDetail!.score} review={reviewInfo} />
+            );
+          })}
+        </ReviewBody>
+      </ReviewWrapper>
     </Wrapper>
   );
 }
@@ -216,10 +226,19 @@ const MetaWrapper = styled.div`
 
 const Pictures = styled.div``;
 
+const ReviewWrapper = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+  padding: 1rem;
+`;
+
 const ReviewHeader = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
+  width: 100%;
   background-color: rgba(26, 26, 26, 0.7);
 
   img {
@@ -234,5 +253,6 @@ const ReviewHeader = styled.div`
 `;
 
 const ReviewBody = styled.div`
-
+  display: flex;
+  flex-direction: column;
 `;
