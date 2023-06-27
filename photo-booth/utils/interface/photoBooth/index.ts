@@ -18,7 +18,19 @@ export const tags = {
   FACILITY: '시설이 깔끔해요',
   POWDER_ROOM: '파우더룸이 잘 되어있어요',
   PARKING: '주차가 편해요',
-};
+} as { [key in tagKey]: tagValue };
+
+export const tagsToKey = {
+  '사진이 잘 나와요': 'PICTURE',
+  '조명이 좋아요': 'LIGHT',
+  '보정이 자연스러워요': 'RETOUCH',
+  '소품이 다양해요': 'VARIOUS',
+  '소품이 깨끗해요': 'CLEAN',
+  '부스 구성이 다양해요': 'BOOTH',
+  '시설이 깔끔해요': 'FACILITY',
+  '파우더룸이 잘 되어있어요': 'POWDER_ROOM',
+  '주차가 편해요': 'PARKING',
+} as { [key in tagValue]: tagKey };
 
 export type tagKey =
   | 'PICTURE'
@@ -31,15 +43,16 @@ export type tagKey =
   | 'POWDER_ROOM'
   | 'PARKING';
 
-/**
- * 수정 예정
- */
-// export enum userTag {
-//   clear = '시설이 깔끔해요',
-//   dark = '어둡게 나와요',
-//   variety = '소품이 다양해요',
-//   parkingless = '주차공간이 없어요',
-// }
+export type tagValue =
+  | '사진이 잘 나와요'
+  | '조명이 좋아요'
+  | '보정이 자연스러워요'
+  | '소품이 다양해요'
+  | '소품이 깨끗해요'
+  | '부스 구성이 다양해요'
+  | '시설이 깔끔해요'
+  | '파우더룸이 잘 되어있어요'
+  | '주차가 편해요';
 
 export interface BoothDetail {
   id: number;
@@ -58,14 +71,20 @@ export interface BoothDetail {
 
 export interface Review {
   user: string;
-  date: Date;
+  date: Date | undefined;
   content: string;
+  score: number;
   imgUrl: string;
-  userTags: Array<tagKey>;
+  userTags: Array<tagValue>;
 }
+
+export type userTags = {
+  [key in tagValue]?: number;
+};
 
 export interface PhotoBooth {
   boothDetail: Pick<BoothDetail, 'id' | 'brand' | 'name' | 'address' | 'score' | 'reviewNum'>;
+  userTags: userTags;
   review: Review[];
 }
 

@@ -20,11 +20,11 @@ export default function Review({ name, score, review }: ReviewProps) {
   return (
     <Wrapper>
       <Header>
-        <Image src={LogoBright} alt="" width="30" />
+        <Image src={LogoBright} alt="" width="44" />
         <div className="meta">
           <Box
             sx={{
-              width: 100,
+              width: 110,
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'center',
@@ -38,19 +38,19 @@ export default function Review({ name, score, review }: ReviewProps) {
               size="small"
               icon={
                 <StarIcon
-                  style={{ color: '#FFC700', width: '1rem', height: '1rem' }}
+                  style={{ color: '#FFC700', width: '1.2rem', height: '1.2rem' }}
                   fontSize="inherit"
                 />
               }
               emptyIcon={
                 <StarIcon
-                  style={{ opacity: 0.5, color: '#F2F2F280', width: '1rem', height: '1rem' }}
+                  style={{ opacity: 0.5, color: '#F2F2F280', width: '1.2rem', height: '1.2rem' }}
                   fontSize="inherit"
                 />
               }
             />
           </Box>
-          <p className="date">{review.date?.toString()}</p>
+          <p className="date">{'2023.03.26'}</p>
         </div>
         <div className="name_wrapper">
           <p className="name">{name}</p>
@@ -67,27 +67,65 @@ export default function Review({ name, score, review }: ReviewProps) {
           })}
         </div>
       </Body>
-      <Footer></Footer>
     </Wrapper>
   );
 }
 
 const Wrapper = styled.div`
   background-color: rgba(26, 26, 26, 0.7);
+  padding: 1rem;
+  border-radius: 12px;
 `;
 
 const Header = styled.div`
   display: flex;
   flex-direction: row;
   align-items: center;
+  & {
+    img {
+      flex: 0 0 auto;
+      object-fit: contain;
+    }
+
+    div.meta {
+      text-align: center;
+      p.date {
+        font-size: 16px;
+        font-weight: 400;
+        color: rgba(242, 242, 242, 0.5);
+      }
+    }
+
+    div.name_wrapper {
+      width: 100%;
+      text-align: right;
+      p.name {
+        display: inline;
+        font-size: 14px;
+        font-weight: 400;
+        color: #f2f2f2;
+        background-color: #242424;
+        padding: 0.5rem 1rem;
+        border-radius: 16px;
+      }
+    }
+  }
 `;
 
 const Body = styled.div`
+  padding-top: 1rem;
+
   p.content {
+    padding: 0.5rem;
+    font-size: 16px;
+    font-weight: 400;
   }
 
   div.tag_grid {
+    padding-top: 0.5rem;
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    grid-row-gap: 8px;
+    grid-column-gap: 8px;
   }
 `;
-
-const Footer = styled.div``;

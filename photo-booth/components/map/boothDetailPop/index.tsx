@@ -1,14 +1,16 @@
 import styled from 'styled-components';
 
-import { PhotoBooth, photoBooth, tagKey } from '@utils/interface/photoBooth';
+import { PhotoBooth, photoBooth, tagValue, tagsToKey } from '@utils/interface/photoBooth';
 import Image from 'next/image';
+import { useRouter } from 'next/router';
 
 import Review from '@components/map/review';
 import LogoBright from '@image/logo_bright.png';
+import PlusIcon from '@image/plus_icon.png';
 import StarIcon from '@image/star_icon.png';
 import StarsGrey from '@image/stars_grey.png';
 
-import { useMemo } from 'react';
+import { useMemo, useState } from 'react';
 import HeaderArrow from '/public/image/header_arrow.png';
 
 interface BoothDetailPopProps {
@@ -24,7 +26,11 @@ export default function BoothDetailPop({
   setCurBoothDetail,
   setBoothDetailUp,
 }: BoothDetailPopProps) {
-  const testData = useMemo(() => {
+  const navigation = useRouter();
+
+  const [totalReviews, setTotalReviews] = useState<number>(999);
+
+  const testData: PhotoBooth = useMemo(() => {
     return {
       boothDetail: {
         id: 3,
@@ -34,20 +40,65 @@ export default function BoothDetailPop({
         score: 4.5,
         reviewNum: 10,
       },
+      userTags: {
+        '사진이 잘 나와요': 82,
+        '보정이 자연스러워요': 65,
+        '파우더룸이 잘 되어있어요': 27,
+      },
       review: [
         {
           user: 'test name',
           date: undefined,
           content:
             '여기 사진 진짜 잘 나오네요. 만족스러운 시간이었습니다. 다음에도 꼭 가고싶어요...',
+          score: 4.5,
           imgUrl: '',
-          userTags: ['PICTURE', 'LIGHT', 'VARIOUS'] as tagKey[],
+          userTags: ['사진이 잘 나와요', '조명이 좋아요', '파우더룸이 잘 되어있어요'] as tagValue[],
+        },
+        {
+          user: 'test name',
+          date: undefined,
+          content:
+            '여기 사진 진짜 잘 나오네요. 만족스러운 시간이었습니다. 다음에도 꼭 가고싶어요...',
+          score: 4.5,
+          imgUrl: '',
+          userTags: ['사진이 잘 나와요', '조명이 좋아요', '파우더룸이 잘 되어있어요'] as tagValue[],
+        },
+        {
+          user: 'test name',
+          date: undefined,
+          content:
+            '여기 사진 진짜 잘 나오네요. 만족스러운 시간이었습니다. 다음에도 꼭 가고싶어요...',
+          score: 4.5,
+          imgUrl: '',
+          userTags: ['사진이 잘 나와요', '조명이 좋아요', '파우더룸이 잘 되어있어요'] as tagValue[],
+        },
+        {
+          user: 'test name',
+          date: undefined,
+          content:
+            '여기 사진 진짜 잘 나오네요. 만족스러운 시간이었습니다. 다음에도 꼭 가고싶어요...',
+          score: 4.5,
+          imgUrl: '',
+          userTags: ['사진이 잘 나와요', '조명이 좋아요', '파우더룸이 잘 되어있어요'] as tagValue[],
         },
       ],
     };
   }, []);
 
-  const { boothDetail, review } = useMemo(() => boothInfo ?? testData, []);
+  const { boothDetail, userTags, review } = useMemo(() => {
+    const { boothDetail, userTags, review } = boothInfo ?? testData;
+    let total = 0;
+
+    const curKeys = Object.keys(userTags!) as Array<tagValue>;
+    curKeys.forEach((key) => {
+      if (userTags!.hasOwnProperty(key)) {
+        total += userTags![key] ?? 0;
+      }
+    });
+    setTotalReviews(total);
+    return { boothDetail, userTags, review };
+  }, []);
 
   return (
     <Wrapper state={state}>
@@ -65,6 +116,7 @@ export default function BoothDetailPop({
         <p className="appbar_sentence">{boothDetail!.name}</p>
         <div className="blank"></div>
       </AppBar>
+
       <Header>
         <p className="header_title">{boothDetail!.name}</p>
         <p className="header_subtitle">{boothDetail!.address}</p>
@@ -76,6 +128,37 @@ export default function BoothDetailPop({
           <div className="review">{`리뷰 ${boothDetail!.reviewNum}`}</div>
         </div>
       </Header>
+      <UserReview>
+        <div className="user_review_header">
+          <p className="content">User Reviews</p>
+          <p className="number">{'(' + totalReviews + ')'}</p>
+        </div>
+        <div className="user_review_body">
+          {(Object.keys(userTags!) as tagValue[]).map((userTag) => {
+            const tagKey = tagsToKey[userTag];
+            const value = userTags![userTag];
+            return (
+              <div className="review_row">
+                <div className="row_left">
+                  <Image
+                    src={`/common/review/tag/${tagKey}.svg`}
+                    width={24}
+                    height={24}
+                    alt={`${userTag}`}
+                  />
+                  <div className={`text-s font-semibold text-[#F2F2F2]`}>{userTag}</div>
+                </div>
+                <div className="row_right">
+                  <Stick width={150} rate={value! / totalReviews}>
+                    <div className="stick"></div>
+                  </Stick>
+                  <div className="rate">{`${value}/${totalReviews}`}</div>
+                </div>
+              </div>
+            );
+          })}
+        </div>
+      </UserReview>
       {/* <MetaWrapper>
         <div className="meta_line">
           <Image src={ClockIcon} alt="" width="14" />
@@ -97,9 +180,9 @@ export default function BoothDetailPop({
       <Pictures></Pictures> */}
       <ReviewWrapper>
         <ReviewHeader>
-          <Image src={LogoBright} alt="" width="30" />
+          <Image src={LogoBright} alt="" width="44" />
           <p>{`${boothDetail!.name} 어떠셨나요`}</p>
-          <Image src={StarsGrey} alt="" width="100" />
+          <Image src={StarsGrey} alt="" width="130" />
         </ReviewHeader>
         <ReviewBody>
           {review?.map((reviewInfo) => {
@@ -108,6 +191,14 @@ export default function BoothDetailPop({
             );
           })}
         </ReviewBody>
+        <Footer
+          onClick={() => {
+            navigation.push(`/booth/${boothDetail!.id}/detail`);
+          }}
+        >
+          <span>리뷰 더보기</span>
+          <Image src={PlusIcon} alt="" height="16" />
+        </Footer>
       </ReviewWrapper>
     </Wrapper>
   );
@@ -123,13 +214,14 @@ const Wrapper = styled.div<WrapperProps>`
   justify-content: start;
   background-color: #242424;
   width: 100%;
-  min-height: 100vh;
+  height: 100vh;
   z-index: 999;
   position: absolute;
   top: ${({ state }) => (state ? 0 : '100vh')};
   left: 0;
   transition: all 0.3s ease-in-out;
   padding-top: 20px;
+  overflow-y: scroll;
 `;
 
 const AppBar = styled.div`
@@ -226,20 +318,95 @@ const MetaWrapper = styled.div`
 
 const Pictures = styled.div``;
 
+const UserReview = styled.div`
+  padding: 1rem;
+  & {
+    div.user_review_header {
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+      gap: 0.25rem;
+
+      p.content {
+        font-size: 18px;
+        font-weight: 700;
+      }
+      p.number {
+        font-size: 12px;
+        color: rgba(242, 242, 242, 0.7);
+      }
+    }
+    div.user_review_body {
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+      padding-top: 1rem;
+
+      div.review_row {
+        display: flex;
+        flex-direction: row;
+        justify-content: space-between;
+        align-items: center;
+        gap: 0.5rem;
+        & {
+          div.row_left {
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+            gap: 0.5rem;
+          }
+          div.row_right {
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+            div.rate {
+              font-size: 12px;
+              color: rgba(242, 242, 242, 0.7);
+            }
+          }
+        }
+      }
+    }
+  }
+`;
+
+interface StickProps {
+  width: number;
+  rate: number;
+}
+
+const Stick = styled.div<StickProps>`
+  width: ${({ width }) => `${width}px`};
+  height: 12px;
+  color: rgba(42, 42, 42, 1);
+  & {
+    div.stick {
+      width: ${({ width, rate }) => `${width * rate}px`};
+      height: 100%;
+      color: rgba(255, 199, 0, 1);
+    }
+  }
+`;
+
 const ReviewWrapper = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
+  gap: 0.5rem;
   width: 100%;
   padding: 1rem;
+  border-radius: 0.5rem;
 `;
 
 const ReviewHeader = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
+  gap: 0.5rem;
   width: 100%;
   background-color: rgba(26, 26, 26, 0.7);
+  padding: 1.25rem 0rem;
+  border-radius: 12px;
 
   img {
     flex: 0 0 auto;
@@ -248,6 +415,7 @@ const ReviewHeader = styled.div`
 
   p {
     color: white;
+    font-size: 18px;
     font-weight: 600;
   }
 `;
@@ -255,4 +423,21 @@ const ReviewHeader = styled.div`
 const ReviewBody = styled.div`
   display: flex;
   flex-direction: column;
+  gap: 0.5rem;
+`;
+
+const Footer = styled.div`
+  width: 100%;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  padding: 1em;
+  background-color: rgba(26, 26, 26, 0.7);
+  border-radius: 0.5rem;
+  & {
+    span {
+      font-size: 18px;
+    }
+  }
 `;

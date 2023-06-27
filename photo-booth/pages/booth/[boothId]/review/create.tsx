@@ -81,7 +81,7 @@ const BoothReviewCreatePage = () => {
             >
               <div className={`font-semibold`}>{router.query.boothName} 어떠셨나요?</div>
               <StarRate starRate={starRate} setStarRate={setStarRate}></StarRate>
-            </div>
+            </div> 
             <div className={`flex flex-col`}>
               <div className={`flex flex-col p-4`}>
                 <div className={`font-semibold`}>어떤 점이 좋았나요?</div>
