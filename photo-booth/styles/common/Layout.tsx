@@ -7,6 +7,7 @@ export const GlobalLayout = styled.section`
     max-width: 28.125rem;
 
     min-height: 100vh;
+    height: 100vh;
     margin: 0 auto;
 
     position: relative;

@@ -6,7 +6,7 @@ import { useMapStore } from '@store/map';
 
 import { mapRepository } from '@repositories/map';
 import { Coordinate } from '@utils/interface/basic';
-import { photoBooth } from '@utils/interface/photoBooth';
+import { PhotoBooth, photoBooth } from '@utils/interface/photoBooth';
 
 import markBluedMap from '@image/blue_mark_map.png';
 import markDarkGreyMap from '@image/darkgrey_mark_map.png';
@@ -17,13 +17,14 @@ import markRedMap from '@image/red_mark_map.png';
 import markYellowMap from '@image/yellow_mark_map.png';
 
 import { useState } from 'react';
+import BoothDetailPop from '../boothDetailPop';
 import MapHeader from '../header';
 import PreviewsWrapper from '../previewsWrapper';
 
 function latLngConstructor(kakaoLatLng: any) {
   return {
     lat: kakaoLatLng.getLat() as number,
-    long: kakaoLatLng.getLng() as number,
+    lng: kakaoLatLng.getLng() as number,
   };
 }
 
@@ -37,17 +38,24 @@ export default function Map() {
   const [userCor, setUserCor] = useMapStore((state) => [state.initialPosition, state.setInitialPostion]);
   const [curCor, setCurCor] = useMapStore((state) => [state.curPosition, state.setCurPosition]);
   const boothFilters = useBoothStore((state) => state.boothFilters);
+  const [isGettingMarker, setIsGettingMarker] = useBoothStore((state) => [
+    state.isGettingMarker,
+    state.setIsGettingMarker,
+  ]);
 
-  const [curLevel, setCurLevel] = useState<number>(3);
+  const [curBoothDetail, setCurBoothDetail] = useState<PhotoBooth | null>(null);
+  const [boothDetailUp, setBoothDetailUp] = useState<boolean>(false);
+
+  const [curLevel, setCurLevel] = useState<number | null>(null);
   const [curBoundDistance, setCurBoundDistance] = useState<number>(Number.POSITIVE_INFINITY);
   const [curSearchType, setCurSearchType] = useState<searchType | null>(null);
+  const [curMarkers, setCurMarkers] = useState<Array<any>>([]);
 
   const ref = useRef<any>(null);
   const curMap = useRef<any>(null);
 
   useEffect(() => {
     if (ref.current === null) {
-      console.log('hereh');
       return;
     }
     const script = document.createElement('script');
@@ -59,7 +67,7 @@ export default function Map() {
       window.kakao.maps.load(() => {
         const container = ref.current;
         const options = {
-          center: new window.kakao.maps.LatLng(curCor.lat, curCor.long),
+          center: new window.kakao.maps.LatLng(curCor.lat, curCor.lng),
           level: 3,
         };
         const map = new window.kakao.maps.Map(container, options);
@@ -74,135 +82,247 @@ export default function Map() {
       var level = (curMap.current as any).getLevel();
       setCurLevel(level);
     });
+    setCurLevel(3);
+    console.log('here');
   }, [curMap.current]);
 
-  const getDistanceByCor = useCallback(
-    (cor1: Coordinate, cor2: Coordinate) => {
-      if (curMap.current === null) return;
-      const linePath = [
-        new window.kakao.maps.LatLng(cor1.lat, cor1.long),
-        new window.kakao.maps.LatLng(cor2.lat, cor2.long),
-      ];
-      const polyline = new window.kakao.maps.Polyline({
-        map: curMap.current,
-        path: linePath,
-        strokeOpacity: 0,
-      });
-      return polyline.getLength();
-    },
-    [curMap.current],
-  );
+  const getDistanceByCor = (cor1: Coordinate, cor2: Coordinate) => {
+    if (curMap.current === null) return;
+    const linePath = [
+      new window.kakao.maps.LatLng(cor1.lat, cor1.lng),
+      new window.kakao.maps.LatLng(cor2.lat, cor2.lng),
+    ];
+    const polyline = new window.kakao.maps.Polyline({
+      map: curMap.current,
+      path: linePath,
+      strokeOpacity: 0,
+    });
+    return polyline.getLength();
+  };
 
-  const getDistanceByLatLng = useCallback(
-    (cor1: any, cor2: any) => {
-      if (curMap.current === null) return;
-      const linePath = [cor1, cor2];
-      const polyline = new window.kakao.maps.Polyline({
-        map: curMap.current,
-        path: linePath,
-        strokeOpacity: 0,
-      });
-      return polyline.getLength();
-    },
-    [curMap.current],
-  );
+  const getDistanceByLatLng = (cor1: any, cor2: any) => {
+    if (curMap.current === null) return;
+    const linePath = [cor1, cor2];
+    const polyline = new window.kakao.maps.Polyline({
+      map: curMap.current,
+      path: linePath,
+      strokeOpacity: 0,
+    });
+    return polyline.getLength();
+  };
 
-  const setMarkers = useCallback(
-    (id: number, boothName: photoBooth, latLng: Coordinate) => {
-      let boothIcon;
-      switch (boothName) {
-        case photoBooth.하루필름:
-          boothIcon = markBluedMap;
-          break;
-        case photoBooth.포토이즘:
-          boothIcon = markYellowMap;
-          break;
-        case photoBooth.포토매틱:
-          boothIcon = markRedMap;
-          break;
-        case photoBooth.포토그레이:
-          boothIcon = markGreyMap;
-          break;
-        case photoBooth.인생네컷:
-          boothIcon = markPinkMap;
-          break;
-        case photoBooth.셀픽스:
-          boothIcon = markGreenMap;
-          break;
-        case photoBooth.기타:
-          boothIcon = markDarkGreyMap;
-          break;
+  // 마커 등록
+  const setMarkers = (id: number, boothName: photoBooth, latLng: Coordinate) => {
+    let boothIcon;
+    console.log('...set marker..');
+    console.log(id);
+    console.log(boothName);
+    console.log(latLng);
+    console.log(',,,,');
+
+    switch (boothName) {
+      case photoBooth.하루필름:
+        boothIcon = markBluedMap;
+        break;
+
+      case photoBooth.포토이즘:
+        boothIcon = markYellowMap;
+        break;
+
+      case photoBooth.포토매틱:
+        boothIcon = markRedMap;
+        break;
+
+      case photoBooth.포토그레이:
+        boothIcon = markGreyMap;
+        break;
+
+      case photoBooth.인생네컷:
+        boothIcon = markPinkMap;
+        break;
+
+      case photoBooth.셀픽스:
+        boothIcon = markGreenMap;
+        break;
+
+      case photoBooth.기타:
+        boothIcon = markDarkGreyMap;
+        break;
+    }
+
+    const markerPosition = new window.kakao.maps.LatLng(latLng.lat, latLng.lng);
+
+    // const icon = new window.kakao.maps.MarkerImage(boothIcon, new window.kakao.maps.Size(30, 30), {
+    //   offset: new window.kakao.maps.Point(16, 34),
+    //   coords: '1,20,1,9,5,2,10,0,21,0,27,3,30,9,30,20,17,33,14,33',
+    // });
+
+    const marker = new window.kakao.maps.Marker({
+      title: id,
+      position: markerPosition,
+      // image: icon,
+    });
+
+    console.log(marker);
+    console.log(curMap.current);
+    marker.setMap(curMap.current);
+    console.log('is setted');
+
+    // window.kakao.maps.event.addListener(marker, 'click', () => {});
+
+    return marker;
+  };
+
+  const getMarkersByCor = async (centerCor: Coordinate, neCor: Coordinate) => {
+    const response = await mapRepository.getMarkers(centerCor, neCor, boothFilters);
+    const markerList: Array<any> = [];
+    response?.forEach((booth) => {
+      const { id, brand, coordinate } = booth;
+      const curMarker = setMarkers(id, brand, coordinate);
+      markerList.push(curMarker);
+    });
+    setCurMarkers(markerList);
+  };
+
+  const searchByBooth = useCallback(async (keyword: string) => {
+    const bounds = curMap.current.getBounds();
+    const curCor = curMap.current.getCenter();
+    const neCor = bounds.getNorthEast();
+    const response = await mapRepository.searchBooth(curCor, neCor, keyword);
+  }, []);
+
+  const searchByPlace = useCallback((keyword: string) => {
+    const ps = new window.kakao.maps.services.Places();
+    ps.keywordSearch(keyword, async (data: any, status: any, pagination: any) => {
+      if (window.kakao.maps.services.Status.OK) {
+        let lngSum = 0;
+        let latSum = 0;
+        let cnt = 0;
+        for (let position of data) {
+          lngSum += Number.parseFloat(position.x);
+          latSum += Number.parseFloat(position.y);
+          cnt += 1;
+        }
+
+        const latAvg = latSum / cnt;
+        const lngAvg = lngSum / cnt;
+
+        await curMap.current.setCenter(new window.kakao.maps.LatLng(latAvg, lngAvg));
+
+        const bounds = curMap.current.getBounds();
+
+        const curCor = curMap.current.getCenter();
+        const neCor = bounds.getNorthEast();
+
+        await getMarkersByCor(latLngConstructor(curCor), latLngConstructor(neCor));
+
+        getMarkersByCor(latLngConstructor(curCor), latLngConstructor(neCor));
+        setCurCor(curCor);
+      } else {
       }
+    });
+  }, []);
 
-      const markerPosition = new window.kakao.maps.LatLng(latLng.lat, latLng.long);
-
-      const icon = new window.kakao.maps.MarkerImage(
-        boothIcon,
-        new window.kakao.maps.Size(30, 30),
-        {
-          offset: new window.kakao.maps.Point(16, 34),
-          coords: '1,20,1,9,5,2,10,0,21,0,27,3,30,9,30,20,17,33,14,33',
-        },
-      );
-      const marker = new window.kakao.maps.Marker({
-        title: id,
-        position: markerPosition,
-        image: icon,
-      }).setMap(curMap.current);
-
-      new window.kakao.maps.event.addListener(marker, 'click', () => {});
-    },
-    [curMap.current],
-  );
-
+  // 줌 in,out 시 bound 거리 다시 계산
   useEffect(() => {
     if (curMap.current === null) return;
-
     const centerLatLng = (curMap.current as any).getCenter();
     const bounds = (curMap.current as any).getBounds();
     const neLatLng = bounds.getNorthEast();
     const boundDistance = getDistanceByLatLng(centerLatLng, neLatLng);
     setCurBoundDistance(boundDistance);
+    console.log(boundDistance);
   }, [curMap.current, curLevel]);
 
+  // 이동시에 일정 거리 이동시 부스 정보 업데이트
   useEffect(() => {
-    if (curMap.current === null) {
+    if (curMap.current === null || isGettingMarker) {
       return;
     }
+    console.log('is getting');
+    window.kakao.maps.event.removeListener(curMap.current, 'center_changed', centerChangeEvent);
 
-    window.kakao.maps.event.addListener(curMap.current, 'center_changed', async () => {
+    async function centerChangeEvent() {
+      window.kakao.maps.event.removeListener(curMap.current, 'center_changed', centerChangeEvent);
       const map = curMap.current as any;
       const latLng = map.getCenter();
       const curDistance = getDistanceByCor(latLngConstructor(latLng), curCor);
-      if (curDistance >= curBoundDistance) {
-        const bounds = (map as any).getBounds();
-        const neLatLng = bounds.getNorthEast();
-        const response = await mapRepository.getMarkers(
-          latLngConstructor(latLng),
-          latLngConstructor(neLatLng),
-          boothFilters,
-        );
-        response?.forEach((booth) => {
-          const { id, brand, coordinate } = booth;
-          setMarkers(id!, brand!, coordinate!);
+      if (curDistance >= curBoundDistance && !isGettingMarker) {
+        setIsGettingMarker(true);
+        //기존 마커 제거
+        curMarkers.forEach((marker) => {
+          marker.setMap(null);
         });
 
+        const bounds = (map as any).getBounds();
+        const neLatLng = bounds.getNorthEast();
+        try {
+          await getMarkersByCor(latLngConstructor(latLng), latLngConstructor(neLatLng));
+        } catch (e) {
+          console.log(e);
+        } finally {
+          setIsGettingMarker(false);
+          setCurCor(latLngConstructor(latLng));
+          window.kakao.maps.event.addListener(curMap.current, 'center_changed', centerChangeEvent);
+        }
+      }
+    }
+    // 좌표 정보 바뀔시 이벤트 변경
+
+    window.kakao.maps.event.addListener(curMap.current, 'center_changed', centerChangeEvent);
+  }, [curMap.current, curCor, curBoundDistance, isGettingMarker]);
+
+  useEffect(() => {
+    if (curMap.current === null) return;
+    async function getMarkers() {
+      const map = curMap.current as any;
+      const latLng = map.getCenter();
+      const curDistance = getDistanceByCor(latLngConstructor(latLng), curCor);
+
+      setIsGettingMarker(true);
+      //기존 마커 제거
+      curMarkers.forEach((marker) => {
+        marker.setMap(null);
+      });
+
+      const bounds = (map as any).getBounds();
+      const neLatLng = bounds.getNorthEast();
+      try {
+        await getMarkersByCor(latLngConstructor(latLng), latLngConstructor(neLatLng));
+      } catch (e) {
+        console.log(e);
+      } finally {
+        setIsGettingMarker(false);
         setCurCor(latLngConstructor(latLng));
       }
-    });
-  }, [curMap.current, curCor, curBoundDistance]);
+    }
+    getMarkers();
+  }, [curMap.current]);
 
   return (
     <Wrapper>
-      <MapHeader curSearchType={curSearchType} setCurSearchType={setCurSearchType} />
+      <MapHeader
+        curSearchType={curSearchType}
+        setCurSearchType={setCurSearchType}
+        searchByPlace={searchByPlace}
+      />
       <MapWrapper ref={ref!} />
-      <PreviewsWrapper />
+      <PreviewsWrapper setCurBoothDetail={setCurBoothDetail} setBoothDetailUp={setBoothDetailUp} />
+      <BoothDetailPop
+        state={boothDetailUp}
+        boothInfo={curBoothDetail}
+        setCurBoothDetail={setCurBoothDetail}
+        setBoothDetailUp={setBoothDetailUp}
+      />
     </Wrapper>
   );
 }
 
 const Wrapper = styled.div`
   width: 100%;
+  height: 100vh;
+  overflow: hidden;
+  position: relative;
   flex-grow: 1;
 `;
 

@@ -4,10 +4,9 @@ config.autoAddCss = false;
 
 import type { AppProps } from 'next/app';
 
-import '../styles/globals.css';
 import { GlobalLayout } from '@styles/common/Layout';
-import Hamburger from '@components/common/Hamburger';
 import Script from 'next/script';
+import '../styles/globals.css';
 
 declare global {
   // Kakao 함수를 전역에서 사용할 수 있도록 선언

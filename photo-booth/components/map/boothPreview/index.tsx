@@ -1,7 +1,13 @@
 import { BoothColor } from '@assets/const';
-import { BoothPreview as BoothPreviewProps, photoBooth } from '@utils/interface/photoBooth';
+import { boothRepository } from '@repositories/booth';
+import {
+  BoothPreview as BoothPreviewInfo,
+  PhotoBooth,
+  photoBooth,
+} from '@utils/interface/photoBooth';
+
 import Image, { StaticImageData } from 'next/image';
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import styled from 'styled-components';
 
 import markBlued from '@image/blue_mark.png';
@@ -13,6 +19,35 @@ import markRed from '@image/red_mark.png';
 import starIcon from '@image/star_icon.png';
 import markYellow from '@image/yellow_mark.png';
 
+interface BoothPreviewProps extends BoothPreviewInfo {
+  setCurBoothDetail: (value: PhotoBooth) => void;
+  setBoothDetailUp: (value: boolean) => void;
+}
+
+const testBooth = {
+  boothDetail: {
+    id: 3,
+    brand: photoBooth.포토그레이,
+    name: '테스트 네임',
+    address: '서울 강남구 강남대로 102길 31 1층 4호',
+    call: '010-2732-7375',
+    distance: 300,
+    score: 4.2,
+    reviewNum: 10,
+    homepage: 'https://www.google.com',
+    status: '영업 중 24시간 운영',
+    coordinate: {
+      lat: 30,
+      lng: 30,
+    },
+    frame: {
+      shape: null,
+      price: null,
+    },
+  },
+  review: [],
+};
+
 export default function BoothPreview({
   id,
   brand,
@@ -21,6 +56,8 @@ export default function BoothPreview({
   address,
   score,
   reviewNum,
+  setCurBoothDetail,
+  setBoothDetailUp,
 }: BoothPreviewProps) {
   const [curIcon, setCurIcon] = useState<StaticImageData | null>(null);
 
@@ -52,22 +89,28 @@ export default function BoothPreview({
     setCurIcon(boothIcon);
   }, []);
 
+  const getDetail = useCallback(async () => {
+    const response = await boothRepository.getBooth(id!);
+    setCurBoothDetail(response ?? testBooth);
+    setBoothDetailUp(true);
+  }, []);
+
   return (
-    <Wrapper>
+    <Wrapper onClick={() => getDetail()}>
       <Body>
         <p className="title">{name}</p>
         <p className="address">{address}</p>
         <div className="review_wrapper">
           <div className="score_wrapper">
-            <Image src={starIcon} alt="" />
+            <Image src={starIcon} alt="" height="14" />
             <p className="score">{score}</p>
           </div>
           <div className="review">{`리뷰 ${reviewNum}`}</div>
         </div>
       </Body>
       <BoothIconWrapper color={BoothColor[brand!]}>
-        <Image src={curIcon ?? ''} alt="" />
-        <p className="distance">{distance}</p>
+        <Image src={curIcon ?? ''} alt="" height="40" />
+        <p className="distance">{distance + 'm'}</p>
       </BoothIconWrapper>
     </Wrapper>
   );
@@ -76,8 +119,9 @@ export default function BoothPreview({
 const Wrapper = styled.div`
   display: flex;
   flex-direction: row;
-  justify-content: center;
-  border-bottom: 1px solid #ffffff;
+  justify-content: space-between;
+  padding: 1rem 1.5rem;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
 `;
 
 const Body = styled.div`
@@ -86,16 +130,43 @@ const Body = styled.div`
   justify-content: start;
   & {
     > p.title {
+      font-style: normal;
+      font-size: 16px;
+      line-height: 19px;
+      font-weight: 600;
+      margin-bottom: 6px;
     }
 
     > p.address {
+      font-size: 14px;
+      font-weight: 400;
+      line-height: 17px;
+      margin-bottom: 8px;
+      color: #c9c9c9;
     }
 
     > div.review_wrapper {
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+      font-size: 14px;
+
       > div.score_wrapper {
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        border-right: 2px solid #666666;
+        gap: 8px;
+        height: 16px;
+        font-size: 14px;
+        padding-right: 10px;
       }
 
       > p.score {
+      }
+
+      > div.review {
+        padding-left: 0.5rem;
       }
     }
   }
@@ -109,8 +180,11 @@ const BoothIconWrapper = styled.div<BoothIconWrapperProps>`
   display: flex;
   flex-direction: column;
   justify-content: center;
+  align-items: center;
+  gap: 5px;
   & {
-    > div.distance {
+    > p.distance {
+      font-size: 14px;
       color: ${({ color }) => color};
     }
   }

@@ -31,11 +31,11 @@ export interface BoothDetail {
   status: string;
   coordinate: {
     lat: number;
-    long: number;
+    lng: number;
   };
   frame: {
     shape: string | null;
-    price: number;
+    price: number | null;
   };
 }
 
@@ -52,7 +52,7 @@ export interface PhotoBooth {
   review: Review[];
 }
 
-export interface BoothMarker extends Partial<Pick<BoothDetail, 'id' | 'brand' | 'coordinate'>> {}
+export interface BoothMarker extends Pick<BoothDetail, 'id' | 'brand' | 'coordinate'> {}
 
 export interface BoothPreview
   extends Partial<
