@@ -79,7 +79,7 @@ export default function BoothPreview({
       case photoBooth.셀픽스:
         boothIcon = markGreen;
         break;
-      case photoBooth.기타:
+      default:
         boothIcon = markDarkGrey;
         break;
     }

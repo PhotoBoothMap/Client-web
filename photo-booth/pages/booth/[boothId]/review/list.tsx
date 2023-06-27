@@ -1,7 +1,8 @@
-import { ArrowBack } from '@mui/icons-material';
+import Image from 'next/image';
 import styled from 'styled-components';
 
 import ReviewComp from '@components/map/review';
+import ArrowBack from '@image/arrow_back.png';
 import { requestReviewApi } from '@repositories/booth/review';
 import { useOnScreen } from '@utils/hook/useOnScreen';
 import { Review } from '@utils/interface/photoBooth';
@@ -45,7 +46,7 @@ export default function BoothReviewList() {
   return (
     <Wrapper>
       <Header>
-        <ArrowBack />
+        <Image src={ArrowBack} alt="" />
         <p></p>
       </Header>
       <Body>
@@ -73,9 +74,8 @@ const Wrapper = styled.div`
 const Header = styled.div``;
 
 const Body = styled.div`
-    display : flex;
-    flex-direction: column;
-    
+  display: flex;
+  flex-direction: column;
 `;
 
 const LastLine = styled.div`

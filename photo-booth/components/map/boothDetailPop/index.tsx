@@ -8,8 +8,8 @@ import Review from '@components/map/review';
 import LogoBright from '@image/logo_bright.png';
 import PlusIcon from '@image/plus_icon.png';
 import StarIcon from '@image/star_icon.png';
-import StarsGrey from '@image/stars_grey.png';
 
+import StarRate from '@components/review/StarRate';
 import { useMemo, useState } from 'react';
 import HeaderArrow from '/public/image/header_arrow.png';
 
@@ -134,11 +134,11 @@ export default function BoothDetailPop({
           <p className="number">{'(' + totalReviews + ')'}</p>
         </div>
         <div className="user_review_body">
-          {(Object.keys(userTags!) as tagValue[]).map((userTag) => {
+          {(Object.keys(userTags!) as tagValue[]).map((userTag, idx) => {
             const tagKey = tagsToKey[userTag];
             const value = userTags![userTag];
             return (
-              <div className="review_row">
+              <div className="review_row" key={`${userTag}${idx}`}>
                 <div className="row_left">
                   <Image
                     src={`/common/review/tag/${tagKey}.svg`}
@@ -182,7 +182,7 @@ export default function BoothDetailPop({
         <ReviewHeader>
           <Image src={LogoBright} alt="" width="44" />
           <p>{`${boothDetail!.name} 어떠셨나요`}</p>
-          <Image src={StarsGrey} alt="" width="130" />
+          <StarRate starRate={0} setStarRate={(a: number) => {}} />
         </ReviewHeader>
         <ReviewBody>
           {review?.map((reviewInfo) => {
@@ -193,7 +193,7 @@ export default function BoothDetailPop({
         </ReviewBody>
         <Footer
           onClick={() => {
-            navigation.push(`/booth/${boothDetail!.id}/detail`);
+            navigation.push(`/booth/${boothDetail!.id}/review/list`);
           }}
         >
           <span>리뷰 더보기</span>

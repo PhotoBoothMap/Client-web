@@ -23,26 +23,7 @@ interface BoothAction {
 
 export const useBoothStore = create<BoothState & BoothAction>((set) => ({
   curBoothMakers: [],
-  curBoothPreviews: [
-    {
-      id: 0,
-      brand: photoBooth.인생네컷,
-      name: '테스트 이름',
-      distance: 500,
-      address: '서울 강남구 강남대로102길 31 1층 4호',
-      score: 4.5,
-      reviewNum: 16,
-    },
-    {
-      id: 1,
-      brand: photoBooth.인생네컷,
-      name: '테스트 이름',
-      distance: 500,
-      address: '서울 강남구 강남대로102길 31 1층 4호',
-      score: 4.5,
-      reviewNum: 16,
-    },
-  ],
+  curBoothPreviews: [],
   boothFilters: new Set([...(Object.keys(photoBooth) as Array<photoBooth>)]),
   isGettingMarker: false,
   setCurBoothMakers: (boothMarkers: BoothMarker[]) => {
