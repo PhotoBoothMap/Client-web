@@ -7,7 +7,7 @@ import { deletePhotoApi, registerPhotoApi, registerReviewApi } from '@repositori
 import { PreviewPhotoBoxStyle, RegisterPhotoBoxStyle } from '@styles/review/ReviewStyle';
 import Image from 'next/image';
 import { useRouter } from 'next/router';
-import React, { useCallback, useRef, useState } from 'react';
+import { useCallback, useState } from 'react';
 
 const reviewTagSelectionKey: ['PICTURE', 'BOOTH', 'FACILITY'] = ['PICTURE', 'BOOTH', 'FACILITY'];
 
@@ -19,6 +19,8 @@ const BoothReviewCreatePage = () => {
   const [userTags, setUserTags] = useState<tagKey[]>([]);
   const [photos, setPhotos] = useState<string[]>([]);
   const [content, setContent] = useState('');
+
+  console.log(router.query);
 
   const registerPhoto = useCallback(
     async (e: any) => {
@@ -81,7 +83,7 @@ const BoothReviewCreatePage = () => {
             >
               <div className={`font-semibold`}>{router.query.boothName} 어떠셨나요?</div>
               <StarRate starRate={starRate} setStarRate={setStarRate}></StarRate>
-            </div> 
+            </div>
             <div className={`flex flex-col`}>
               <div className={`flex flex-col p-4`}>
                 <div className={`font-semibold`}>어떤 점이 좋았나요?</div>
