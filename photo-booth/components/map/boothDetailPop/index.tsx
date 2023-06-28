@@ -1,18 +1,21 @@
 import styled from 'styled-components';
 
-import { PhotoBooth, photoBooth } from '@utils/interface/photoBooth';
+import { PhotoBooth, photoBooth, tagValue, tagsToKey } from '@utils/interface/photoBooth';
 import Image from 'next/image';
+import { useRouter } from 'next/router';
 
-import CardIcon from '@image/card_icon.png';
-import ClockIcon from '@image/clock_icon.png';
-import FrameIcon from '@image/frame_icon.png';
-import PhoneIcon from '@image/phone_icon.png';
+import Review from '@components/map/review';
+import LogoBright from '@image/logo_bright.png';
+import PlusIcon from '@image/plus_icon.png';
 import StarIcon from '@image/star_icon.png';
+
+import StarRate from '@components/review/StarRate';
+import { useMemo, useState } from 'react';
 import HeaderArrow from '/public/image/header_arrow.png';
 
 interface BoothDetailPopProps {
   state: boolean;
-  boothInfo: PhotoBooth | null;
+  boothInfo: Partial<PhotoBooth> | null;
   setCurBoothDetail: (value: PhotoBooth | null) => void;
   setBoothDetailUp: (value: boolean) => void;
 }
@@ -23,29 +26,88 @@ export default function BoothDetailPop({
   setCurBoothDetail,
   setBoothDetailUp,
 }: BoothDetailPopProps) {
-  const { boothDetail, review } = boothInfo ?? {
-    boothDetail: {
-      id: 3,
-      brand: photoBooth.포토그레이,
-      name: '테스트 네임',
-      address: '서울 강남구 강남대로 102길 31 1층 4호',
-      call: '010-2732-7375',
-      distance: 300,
-      score: 4.2,
-      reviewNum: 10,
-      homepage: 'https://www.google.com',
-      status: '영업 중 24시간 운영',
-      coordinate: {
-        lat: 30,
-        lng: 30,
+  const navigation = useRouter();
+
+  const [totalReviews, setTotalReviews] = useState<number>(999);
+
+  const testData: PhotoBooth = useMemo(() => {
+    return {
+      boothDetail: {
+        id: 3,
+        brand: photoBooth.포토그레이,
+        name: '테스트 네임',
+        address: '서울 강남구 강남대로 102길 31 1층 4호',
+        score: 4.5,
+        reviewNum: 10,
       },
-      frame: {
-        shape: null,
-        price: null,
+      userTags: {
+        '사진이 잘 나와요': 82,
+        '보정이 자연스러워요': 65,
+        '파우더룸이 잘 되어있어요': 27,
       },
-    },
-    review: [],
-  };
+      review: [
+        {
+          user: 'test name',
+          brand: photoBooth.포토그레이,
+          name: '테스트 네임',
+          date: undefined,
+          content:
+            '여기 사진 진짜 잘 나오네요. 만족스러운 시간이었습니다. 다음에도 꼭 가고싶어요...',
+          score: 4.5,
+          imgUrl: '',
+          userTags: ['사진이 잘 나와요', '조명이 좋아요', '파우더룸이 잘 되어있어요'] as tagValue[],
+        },
+        {
+          user: 'test name',
+          brand: photoBooth.포토그레이,
+          name: '테스트 네임',
+          date: undefined,
+
+          content:
+            '여기 사진 진짜 잘 나오네요. 만족스러운 시간이었습니다. 다음에도 꼭 가고싶어요...',
+          score: 4.5,
+          imgUrl: '',
+          userTags: ['사진이 잘 나와요', '조명이 좋아요', '파우더룸이 잘 되어있어요'] as tagValue[],
+        },
+        {
+          user: 'test name',
+          brand: photoBooth.포토그레이,
+          name: '테스트 네임',
+          date: undefined,
+          content:
+            '여기 사진 진짜 잘 나오네요. 만족스러운 시간이었습니다. 다음에도 꼭 가고싶어요...',
+          score: 4.5,
+          imgUrl: '',
+          userTags: ['사진이 잘 나와요', '조명이 좋아요', '파우더룸이 잘 되어있어요'] as tagValue[],
+        },
+        {
+          user: 'test name',
+          brand: photoBooth.포토그레이,
+          name: '테스트 네임',
+          date: undefined,
+          content:
+            '여기 사진 진짜 잘 나오네요. 만족스러운 시간이었습니다. 다음에도 꼭 가고싶어요...',
+          score: 4.5,
+          imgUrl: '',
+          userTags: ['사진이 잘 나와요', '조명이 좋아요', '파우더룸이 잘 되어있어요'] as tagValue[],
+        },
+      ],
+    };
+  }, []);
+
+  const { boothDetail, userTags, review } = useMemo(() => {
+    const { boothDetail, userTags, review } = boothInfo ?? testData;
+    let total = 0;
+
+    const curKeys = Object.keys(userTags!) as Array<tagValue>;
+    curKeys.forEach((key) => {
+      if (userTags!.hasOwnProperty(key)) {
+        total += userTags![key] ?? 0;
+      }
+    });
+    setTotalReviews(total);
+    return { boothDetail, userTags, review };
+  }, []);
 
   return (
     <Wrapper state={state}>
@@ -60,21 +122,53 @@ export default function BoothDetailPop({
             setBoothDetailUp(false);
           }}
         />
-        <p className="appbar_sentence">{boothDetail.name}</p>
+        <p className="appbar_sentence">{boothDetail!.name}</p>
         <div className="blank"></div>
       </AppBar>
+
       <Header>
-        <p className="header_title">{boothDetail.name}</p>
-        <p className="header_subtitle">{boothDetail.address}</p>
+        <p className="header_title">{boothDetail!.name}</p>
+        <p className="header_subtitle">{boothDetail!.address}</p>
         <div className="review_wrapper">
           <div className="score_wrapper">
             <Image src={StarIcon} alt="" height="14" />
-            <p className="score">{boothDetail.score}</p>
+            <p className="score">{boothDetail!.score}</p>
           </div>
-          <div className="review">{`리뷰 ${boothDetail.reviewNum}`}</div>
+          <div className="review">{`리뷰 ${boothDetail!.reviewNum}`}</div>
         </div>
       </Header>
-      <MetaWrapper>
+      <UserReview>
+        <div className="user_review_header">
+          <p className="content">User Reviews</p>
+          <p className="number">{'(' + totalReviews + ')'}</p>
+        </div>
+        <div className="user_review_body">
+          {(Object.keys(userTags!) as tagValue[]).map((userTag, idx) => {
+            const tagKey = tagsToKey[userTag];
+            const value = userTags![userTag];
+            return (
+              <div className="review_row" key={`${userTag}${idx}`}>
+                <div className="row_left">
+                  <Image
+                    src={`/common/review/tag/${tagKey}.svg`}
+                    width={24}
+                    height={24}
+                    alt={`${userTag}`}
+                  />
+                  <div className={`text-s font-semibold text-[#F2F2F2]`}>{userTag}</div>
+                </div>
+                <div className="row_right">
+                  <Stick width={150} rate={value! / totalReviews}>
+                    <div className="stick"></div>
+                  </Stick>
+                  <div className="rate">{`${value}/${totalReviews}`}</div>
+                </div>
+              </div>
+            );
+          })}
+        </div>
+      </UserReview>
+      {/* <MetaWrapper>
         <div className="meta_line">
           <Image src={ClockIcon} alt="" width="14" />
 
@@ -92,7 +186,29 @@ export default function BoothDetailPop({
           <Image src={FrameIcon} alt="" width="14" />
         </div>
       </MetaWrapper>
-      <Pictures></Pictures>
+      <Pictures></Pictures> */}
+      <ReviewWrapper>
+        <ReviewHeader>
+          <Image src={LogoBright} alt="" width="44" />
+          <p>{`${boothDetail!.name} 어떠셨나요`}</p>
+          <StarRate starRate={0} setStarRate={(a: number) => {}} />
+        </ReviewHeader>
+        <ReviewBody>
+          {review?.map((reviewInfo) => {
+            return (
+              <Review name={boothDetail!.name} score={boothDetail!.score} review={reviewInfo} />
+            );
+          })}
+        </ReviewBody>
+        <Footer
+          onClick={() => {
+            navigation.push(`/booth/${boothDetail!.id}/review/list`);
+          }}
+        >
+          <span>리뷰 더보기</span>
+          <Image src={PlusIcon} alt="" height="16" />
+        </Footer>
+      </ReviewWrapper>
     </Wrapper>
   );
 }
@@ -107,13 +223,14 @@ const Wrapper = styled.div<WrapperProps>`
   justify-content: start;
   background-color: #242424;
   width: 100%;
-  min-height: 100vh;
+  height: 100vh;
   z-index: 999;
   position: absolute;
   top: ${({ state }) => (state ? 0 : '100vh')};
   left: 0;
   transition: all 0.3s ease-in-out;
   padding-top: 20px;
+  overflow-y: scroll;
 `;
 
 const AppBar = styled.div`
@@ -209,3 +326,127 @@ const MetaWrapper = styled.div`
 `;
 
 const Pictures = styled.div``;
+
+const UserReview = styled.div`
+  padding: 1rem;
+  & {
+    div.user_review_header {
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+      gap: 0.25rem;
+
+      p.content {
+        font-size: 18px;
+        font-weight: 700;
+      }
+      p.number {
+        font-size: 12px;
+        color: rgba(242, 242, 242, 0.7);
+      }
+    }
+    div.user_review_body {
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+      padding-top: 1rem;
+
+      div.review_row {
+        display: flex;
+        flex-direction: row;
+        justify-content: space-between;
+        align-items: center;
+        gap: 0.5rem;
+        & {
+          div.row_left {
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+            gap: 0.5rem;
+          }
+          div.row_right {
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+            div.rate {
+              font-size: 12px;
+              color: rgba(242, 242, 242, 0.7);
+            }
+          }
+        }
+      }
+    }
+  }
+`;
+
+interface StickProps {
+  width: number;
+  rate: number;
+}
+
+const Stick = styled.div<StickProps>`
+  width: ${({ width }) => `${width}px`};
+  height: 12px;
+  color: rgba(42, 42, 42, 1);
+  & {
+    div.stick {
+      width: ${({ width, rate }) => `${width * rate}px`};
+      height: 100%;
+      color: rgba(255, 199, 0, 1);
+    }
+  }
+`;
+
+const ReviewWrapper = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
+  width: 100%;
+  padding: 1rem;
+  border-radius: 0.5rem;
+`;
+
+const ReviewHeader = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
+  width: 100%;
+  background-color: rgba(26, 26, 26, 0.7);
+  padding: 1.25rem 0rem;
+  border-radius: 12px;
+
+  img {
+    flex: 0 0 auto;
+    object-fit: contain;
+  }
+
+  p {
+    color: white;
+    font-size: 18px;
+    font-weight: 600;
+  }
+`;
+
+const ReviewBody = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+`;
+
+const Footer = styled.div`
+  width: 100%;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  padding: 1em;
+  background-color: rgba(26, 26, 26, 0.7);
+  border-radius: 0.5rem;
+  & {
+    span {
+      font-size: 18px;
+    }
+  }
+`;
