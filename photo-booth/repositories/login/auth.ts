@@ -1,41 +1,84 @@
+import axios from 'axios';
+import { HOST_URL } from '@assets/url';
 import { deleteCookie, getCookie, setCookie } from 'cookies-next';
 
-export const setRefreshTokenCookie = (token: any) => {
-  setCookie('refreshToken', token, { httpOnly: true });
-};
+export const authAPI = axios.create({
+  baseURL: `${HOST_URL}`,
+});
+authAPI.defaults.withCredentials = true;
 
-export const setAccessTokenCookie = (token: any) => {
-  setCookie('accessToken', token);
-};
+// const getRefreshToken = async (): Promise<string | void> => {
+//   try {
+//     const {
+//       data: { accessToken, refreshToken },
+//     } = await axios.get<{ accessToken: string; refreshToken: string | null }>('/auth/reissue/');
 
-export const getTokenCookie = (type: 'refresh' | 'access') => {
-  getCookie(`${type}Token`);
-};
+//     localStorage.setItem('accessToken', accessToken);
 
-export const deleteTokenCookie = (type: 'refresh' | 'access') => {
-  deleteCookie(`${type}Token`);
-};
+//     if (refreshToken !== null) {
+//       localStorage.setItem('refreshToken', refreshToken);
+//     }
+
+//     return accessToken;
+//   } catch (e) {
+//     localStorage.removeItem('accessToken');
+//     localStorage.removeItem('refreshToken');
+//   }
+// };
+
+axios.interceptors.request.use(
+  (config) => {
+    // 요청이 전달되기 전에 작업 수행 (성공하면 그냥 지나감)
+    return config;
+  },
+  async (err) => {
+    // 요청 오류가 있는 작업 수행
+    const {
+      config,
+      response: { status },
+    } = err;
+
+    /** 1 */
+    if (config.url === '/auth/reissue/' || status !== 401 || config.sent) {
+      return Promise.reject(err);
+    }
+
+    /** 2 */
+    config.sent = true;
+    const reIssueResponse = await reIssueApi();
+    const accessToken = reIssueResponse.headers.get('Authorization');
+
+    if (accessToken) {
+      config.headers.Authorization = `Bearer ${accessToken}`;
+    }
+
+    return axios(config);
+  },
+);
 
 export const kakaoLoginApi = async (code: string) => {
-  const response = await fetch(`${process.env.NEXT_PUBLIC_API_HOST}/auth/kakao/`, {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-    },
-    credentials: 'same-origin',
-    body: JSON.stringify({
-      authorizationCode: code,
-    }),
-  });
-  // 성공하면 rt, at 저장
-  setRefreshTokenCookie(response.headers.get('refresh-token'));
-  setAccessTokenCookie(response.headers.get('Authorization'));
+  const response = axios
+    .post(
+      `${HOST_URL}/auth/kakao/`,
+      JSON.stringify({
+        authorizationCode: code,
+      }),
+      {
+        headers: { 'Content-Type': 'application/json' },
+      },
+    )
+    .then((response) => {
+      return response;
+    })
+    .catch((error) => {
+      return error.response;
+    });
 
-  return response.json();
+  return response;
 };
 
 export const validateApi = async () => {
-  const at = getTokenCookie('access');
+  const at = authAPI.defaults.headers.common['Authorization'];
 
   const response = await fetch(`${process.env.NEXT_PUBLIC_API_HOST}/members/validate/`, {
     method: 'PUT',
@@ -49,8 +92,7 @@ export const validateApi = async () => {
 };
 
 export const reIssueApi = async () => {
-  const at = getTokenCookie('access');
-  const rt = getTokenCookie('refresh');
+  const at = authAPI.defaults.headers.common['Authorization'];
 
   const response = await fetch(`${process.env.NEXT_PUBLIC_API_HOST}/auth/reissue/`, {
     method: 'GET',
