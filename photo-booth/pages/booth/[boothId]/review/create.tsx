@@ -7,7 +7,7 @@ import { deletePhotoApi, registerPhotoApi, registerReviewApi } from '@repositori
 import { PreviewPhotoBoxStyle, RegisterPhotoBoxStyle } from '@styles/review/ReviewStyle';
 import Image from 'next/image';
 import { useRouter } from 'next/router';
-import React, { useCallback, useRef, useState } from 'react';
+import { useCallback, useState } from 'react';
 
 const reviewTagSelectionKey: ['PICTURE', 'BOOTH', 'FACILITY'] = ['PICTURE', 'BOOTH', 'FACILITY'];
 
@@ -19,6 +19,8 @@ const BoothReviewCreatePage = () => {
   const [userTags, setUserTags] = useState<tagKey[]>([]);
   const [photos, setPhotos] = useState<string[]>([]);
   const [content, setContent] = useState('');
+
+  console.log(router.query);
 
   const registerPhoto = useCallback(
     async (e: any) => {

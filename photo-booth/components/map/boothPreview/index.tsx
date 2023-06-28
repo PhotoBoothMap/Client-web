@@ -30,20 +30,17 @@ const testBooth = {
     brand: photoBooth.포토그레이,
     name: '테스트 네임',
     address: '서울 강남구 강남대로 102길 31 1층 4호',
-    call: '010-2732-7375',
-    distance: 300,
     score: 4.2,
     reviewNum: 10,
-    homepage: 'https://www.google.com',
-    status: '영업 중 24시간 운영',
     coordinate: {
       lat: 30,
       lng: 30,
     },
-    frame: {
-      shape: null,
-      price: null,
-    },
+  },
+  userTags: {
+    '소품이 다양해요': 82,
+    '사진이 잘 나와요': 65,
+    '시설이 깔끔해요': 27,
   },
   review: [],
 };
@@ -82,7 +79,7 @@ export default function BoothPreview({
       case photoBooth.셀픽스:
         boothIcon = markGreen;
         break;
-      case photoBooth.기타:
+      default:
         boothIcon = markDarkGrey;
         break;
     }

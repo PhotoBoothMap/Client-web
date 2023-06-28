@@ -35,7 +35,7 @@ class MapRepository {
     curCor: Coordinate,
     count: number,
     filter: Set<photoBooth>,
-  ): Promise<Array<BoothPreview> | null> {
+  ): Promise<Array<BoothPreview> | []> {
     const { lat: curLat, lng: curLng } = curCor;
     const filterToString = Array.from(filter).join(',');
     try {
@@ -47,15 +47,11 @@ class MapRepository {
       const result = response.data['result'];
       return result['boothList'];
     } catch (e) {
-      return null;
+      return [];
     }
   }
 
-  async searchBooth(
-    curCor: Coordinate,
-    neCor: Coordinate,
-    keyword: string,
-  ) {
+  async searchBooth(curCor: Coordinate, neCor: Coordinate, keyword: string) {
     try {
       const response: Response<{
         boothList: Array<BoothMarker>;
