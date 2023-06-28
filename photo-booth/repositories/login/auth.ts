@@ -1,30 +1,14 @@
 import axios from 'axios';
 import { HOST_URL } from '@assets/url';
 import { deleteCookie, getCookie, setCookie } from 'cookies-next';
+import { useRouter } from 'next/router';
+
+const router = useRouter();
 
 export const authAPI = axios.create({
   baseURL: `${HOST_URL}`,
 });
 authAPI.defaults.withCredentials = true;
-
-// const getRefreshToken = async (): Promise<string | void> => {
-//   try {
-//     const {
-//       data: { accessToken, refreshToken },
-//     } = await axios.get<{ accessToken: string; refreshToken: string | null }>('/auth/reissue/');
-
-//     localStorage.setItem('accessToken', accessToken);
-
-//     if (refreshToken !== null) {
-//       localStorage.setItem('refreshToken', refreshToken);
-//     }
-
-//     return accessToken;
-//   } catch (e) {
-//     localStorage.removeItem('accessToken');
-//     localStorage.removeItem('refreshToken');
-//   }
-// };
 
 axios.interceptors.request.use(
   (config) => {
@@ -40,6 +24,7 @@ axios.interceptors.request.use(
 
     /** 1 */
     if (config.url === '/auth/reissue/' || status !== 401 || config.sent) {
+      router.push('/account/login');
       return Promise.reject(err);
     }
 
