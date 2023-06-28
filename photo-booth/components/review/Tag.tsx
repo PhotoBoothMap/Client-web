@@ -42,7 +42,7 @@ const Tag = ({ tagKey, selected = false }: props) => {
         height={24}
         alt={`${tags[tagKey]}`}
       />
-      <div className={`text-s font-semibold text-[#F2F2F2]`}>{tags[tagKey]}</div>
+      <div className={`text-xs font-semibold text-[#F2F2F2]`}>{tags[tagKey]}</div>
     </Wrapper>
   );
 };

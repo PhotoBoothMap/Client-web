@@ -75,6 +75,8 @@ export interface Review {
   content: string;
   score: number;
   imgUrl: string;
+  brand: string;
+  name: string;
   userTags: Array<tagValue>;
 }
 

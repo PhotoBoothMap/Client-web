@@ -289,6 +289,7 @@ export default function Map() {
     async (curBooth: BoothPreview[]) => {
       if (curMap.current === null) return;
       const previews = await mapRepository.getBoothList(curCor, curPreviews.current, boothFilters);
+      console.log([previews]);
       setCurBoothPreviews([...curBooth, ...previews]);
       curPreviews.current += 10;
     },
