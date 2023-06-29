@@ -40,7 +40,7 @@ const BoothReviewCreatePage = () => {
 
   const deletePhoto = useCallback(
     async (photoIndex: number) => {
-      const response = await deletePhotoApi(Number(router.query.boothId), photos[photoIndex]);
+      const response = await deletePhotoApi(photos[photoIndex]);
 
       if (response.success) {
         const _photos = [...photos];
@@ -73,7 +73,7 @@ const BoothReviewCreatePage = () => {
         <BasicHeader
           type={'close'}
           text={'리뷰쓰기'}
-          onClickEvent={() => router.push('/sdfwerfwefwefwef e')}
+          onClickEvent={() => router.push(`/booth/${router.query.boothId}/review/list`)}
         />
 
         {page === 1 ? (

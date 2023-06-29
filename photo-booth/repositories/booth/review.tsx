@@ -16,9 +16,9 @@ export const registerPhotoApi = (boothId: number, file: any) => {
   return data;
 };
 
-export const deletePhotoApi = (boothId: number, imageUrl: string) => {
+export const deletePhotoApi = (imageUrl: string) => {
   const data = axios
-    .delete(`${HOST_URL}/booth/${boothId}/image?imageUrl=${imageUrl}`)
+    .delete(`${HOST_URL}/image?imageUrl=${imageUrl}`)
     .then((response) => {
       return response.data;
     })
