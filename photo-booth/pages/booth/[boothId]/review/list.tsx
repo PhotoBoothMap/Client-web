@@ -12,7 +12,6 @@ import { useCallback, useEffect, useRef, useState } from 'react';
 
 export default function BoothReviewList() {
   const navigation = useRouter();
-
   const [curReviews, setCurReviews] = useState<Array<Review>>([
     {
       user: 'test name',
@@ -95,9 +94,11 @@ export default function BoothReviewList() {
 
   const getReviews = async () => {
     setIsRequesting(true);
+    console.log('is getting reviews');
     try {
       console.log(navigation.query);
       const { review } = await requestReviewApi(Number(navigation.query.boothId), curPage.current);
+
       if (review.length === 0) {
         curPage.current = -1;
       } else {
@@ -122,10 +123,16 @@ export default function BoothReviewList() {
   useEffect(() => {
     if (!navigation.query.boothId) return;
 
+    console.log('is here');
     if (isOnScreen && !isRequesting && curPage.current !== -1) {
+      console.log('is getting reviews...');
       getReviews();
     }
   }, [curPage, navigation.query.boothId, isOnScreen, isRequesting]);
+
+  useEffect(() => {
+    getReviews();
+  }, []);
 
   return (
     <Wrapper>
@@ -142,8 +149,15 @@ export default function BoothReviewList() {
         <div className="blank"></div>
       </AppBar>
       <Body ref={bodyRef}>
-        {curReviews.map((review) => {
-          return <ReviewComp name={review.name} score={review.score} review={review} />;
+        {curReviews.map((review, idx) => {
+          return (
+            <ReviewComp
+              key={`${review.name}${idx}`}
+              name={review.name}
+              score={review.score}
+              review={review}
+            />
+          );
         })}
         <LastLine ref={curPage.current === -1 ? null : elementRef}></LastLine>
       </Body>
@@ -202,6 +216,7 @@ const LastLine = styled.div`
   opacity: 0;
   width: 10px;
   height: 10px;
+  flex: 0 0 auto;
 `;
 
 const ScrollButton = styled.div`

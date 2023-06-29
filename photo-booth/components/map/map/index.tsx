@@ -101,10 +101,14 @@ export default function Map() {
 
   useEffect(() => {
     if (curMap.current == null) return;
-    window.kakao.maps.event.addListener(curMap.current, 'zoom_changed', () => {
-      var level = (curMap.current as any).getLevel();
-      setCurLevel(level);
-    });
+    window.kakao.maps.event.addListener(
+      curMap.current,
+      'zoom_changed',
+      debounce(() => {
+        var level = (curMap.current as any).getLevel();
+        setCurLevel(level);
+      }, 500),
+    );
     setCurLevel(5);
   }, [curMap.current]);
 
@@ -183,7 +187,8 @@ export default function Map() {
 
     window.kakao.maps.event.addListener(marker, 'click', async () => {
       const response = await boothRepository.getBooth(id!);
-      setCurBoothDetail(response ?? testBooth);
+      // setCurBoothDetail(response ?? testBooth);
+      setCurBoothDetail(testBooth);
       setBoothDetailUp(true);
     });
 
@@ -201,12 +206,22 @@ export default function Map() {
     setCurMarkers(markerList);
   };
 
-  const searchByBooth = useCallback(async (keyword: string) => {
+  const searchByBooth = async (keyword: string) => {
     const bounds = curMap.current.getBounds();
     const curCor = curMap.current.getCenter();
     const neCor = bounds.getNorthEast();
     const response = await mapRepository.searchBooth(curCor, neCor, keyword);
-  }, []);
+    curMarkers.forEach((marker) => {
+      marker.setMap(null);
+    });
+    const markerList: Array<any> = [];
+    response.forEach((booth) => {
+      const { id, brand, coordinate } = booth;
+      const curMarker = setMarkers(id, brand, coordinate);
+      markerList.push(curMarker);
+    });
+    setCurMarkers(markerList);
+  };
 
   const searchByPlace = (keyword: string) => {
     const ps = new window.kakao.maps.services.Places();
@@ -253,7 +268,6 @@ export default function Map() {
 
   const centerChangeEvent = useCallback(
     debounce(() => {
-      console.log('is debounced');
       if (isGettingMarker) return;
 
       const map = curMap.current as any;
@@ -289,7 +303,6 @@ export default function Map() {
     async (curBooth: BoothPreview[]) => {
       if (curMap.current === null) return;
       const previews = await mapRepository.getBoothList(curCor, curPreviews.current, boothFilters);
-      console.log([previews]);
       setCurBoothPreviews([...curBooth, ...previews]);
       curPreviews.current += 10;
     },
@@ -301,8 +314,6 @@ export default function Map() {
     if (curMap.current === null || isGettingMarker) {
       return;
     }
-
-    console.log('is center change event changed');
 
     const curMoveFunction = curMoveFunctionRef.current;
 
@@ -324,7 +335,6 @@ export default function Map() {
 
   useEffect(() => {
     if (!isGettingMarker) return;
-    console.log('is getting marker');
     async function toAsync(fn: any) {
       await fn();
       setIsGettingMarker(false);
@@ -339,6 +349,7 @@ export default function Map() {
         curSearchType={curSearchType}
         setCurSearchType={setCurSearchType}
         searchByPlace={searchByPlace}
+        searchByBooth={searchByBooth}
       />
       <MapWrapper ref={ref!} />
       <PreviewsWrapper

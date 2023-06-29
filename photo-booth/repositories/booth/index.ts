@@ -10,11 +10,10 @@ interface Response<T> {
 class BoothRepository {
   async getBooth(id: number): Promise<PhotoBooth | null> {
     try {
-      const response: Response<{ photobooth: PhotoBooth }> = await axios.get(
-        `${HOST_URL}/booth/${id}`,
-      );
+      const response: Response<PhotoBooth> = await axios.get(`${HOST_URL}/booth/${id}`);
+      console.log(response);
       const result = response.data['result'];
-      return result['photobooth'];
+      return result;
     } catch (e) {
       return null;
     }
