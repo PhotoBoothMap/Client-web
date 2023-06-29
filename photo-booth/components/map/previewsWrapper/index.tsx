@@ -1,26 +1,35 @@
 import { useBoothStore } from '@store/booth';
 
-import { PhotoBooth } from '@utils/interface/photoBooth';
+import { BoothPreview, PhotoBooth } from '@utils/interface/photoBooth';
 
+import { useOnScreen } from '@utils/hook/useOnScreen';
 import Image from 'next/image';
-import { MouseEvent, useEffect, useState } from 'react';
+import { MouseEvent, useEffect, useRef, useState } from 'react';
 import styled from 'styled-components';
-import BoothPreview from '../boothPreview';
+import BoothPreviewComp from '../boothPreview';
 import hamburgetScroll from '/public/image/hamburger_scroll.png';
 
 interface PreviewWrapperProps {
   setCurBoothDetail: (value: PhotoBooth) => void;
   setBoothDetailUp: (value: boolean) => void;
+  getPreviews: (value: BoothPreview[]) => void;
 }
 
 export default function PreviewsWrapper({
   setCurBoothDetail,
   setBoothDetailUp,
+  getPreviews,
 }: PreviewWrapperProps) {
   const curBoothPreviews = useBoothStore((state) => state.curBoothPreviews);
   const [curOffset, setCurOffset] = useState<number>(0);
   const [mouseBeforePosition, setMouseBeforePosition] = useState<number>(0);
   const [isDragging, setIsDragging] = useState(false);
+
+  //무한 스크롤에 필요한 훅들
+  const curPage = useRef<number>(0);
+  const elementRef = useRef<HTMLDivElement>(null);
+  const isOnScreen = useOnScreen(elementRef);
+  const [isRequesting, setIsRequesting] = useState<boolean>(false);
 
   const handleMouseDown = (e: MouseEvent<HTMLImageElement>) => {
     setIsDragging(true);
@@ -66,6 +75,12 @@ export default function PreviewsWrapper({
     setCurOffset(window.innerHeight * 0.9);
   }, []);
 
+  useEffect(() => {
+    if (isOnScreen && !isRequesting && curPage.current !== -1) {
+      getPreviews(curBoothPreviews);
+    }
+  }, [isOnScreen, isRequesting]);
+
   return (
     <Wrapper
       state={isDragging}
@@ -90,7 +105,7 @@ export default function PreviewsWrapper({
         {curBoothPreviews.map((previewInfo) => {
           const { id, brand, name, distance, address, score, reviewNum } = previewInfo;
           return (
-            <BoothPreview
+            <BoothPreviewComp
               key={id}
               id={id}
               brand={brand}
@@ -104,6 +119,8 @@ export default function PreviewsWrapper({
             />
           );
         })}
+        <LastLine ref={curPage.current === -1 ? null : elementRef}></LastLine>
+        <Vacant state={curPage.current === -1} height={1000} />
       </Body>
     </Wrapper>
   );
@@ -164,4 +181,23 @@ const Body = styled.ul`
   flex-direction: column;
   justify-content: start;
   z-index: 0;
+  overflow-y: scroll;
+`;
+
+const LastLine = styled.div`
+  opacity: 0;
+  width: 10px;
+  height: 10px;
+  flex: 0 0 auto;
+`;
+
+interface VacantProps {
+  state: boolean;
+  height: number;
+}
+
+const Vacant = styled.div<VacantProps>`
+  display: ${({ state }) => (state ? 'none' : 'block')};
+  height: ${({ height }) => `${height}px`};
+  flex: 0 0 auto;
 `;

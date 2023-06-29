@@ -1,4 +1,3 @@
-import React from 'react';
 import Tag, { tagKey } from './Tag';
 
 type props = {

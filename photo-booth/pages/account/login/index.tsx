@@ -1,14 +1,14 @@
 import React from 'react';
 import Image from 'next/image';
 import SocialLoginButton from '@components/common/button/SocialLoginButton';
+import { useRouter } from 'next/router';
 
 const loginPage = () => {
+  const router = useRouter();
   // 등록한 redirectUri를 매개변수로 넣어준다.
   const kakaoLogin = () => {
     window.Kakao.Auth.authorize({
       redirectUri: `${process.env.NEXT_PUBLIC_HOST}/account/login/kakao`,
-      //        'https://kauth.kakao.com/oauth/authorize?client_id=cf552915e52ec7012b72a272c81c1244&redirect_uri=https://api.photohere.co.kr/login/oauth2/code/kakao&response_type=code',
-      //`${process.env.NEXT_PUBLIC_HOST}/account/login/kakao`,
     });
   };
 
@@ -27,20 +27,20 @@ const loginPage = () => {
           <SocialLoginButton
             type={'kakao'}
             onClickEvent={() => {
-              console.log('kakao');
               kakaoLogin();
             }}
           />
-          <SocialLoginButton
+          {/* <SocialLoginButton
             type={'google'}
             onClickEvent={() => {
               console.log('google');
             }}
-          />
+          /> */}
         </div>
         <div
           className={`mt-6 text-[#FFFFFF] font-medium text-sm opacity-[0.85] underline cursor-pointer`}
           style={{ textUnderlinePosition: 'under' }}
+          onClick={() => router.push('/map')}
         >
           로그인 없이 둘러볼게요.
         </div>
