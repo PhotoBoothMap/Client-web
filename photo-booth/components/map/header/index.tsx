@@ -15,12 +15,14 @@ interface MapHeaderProps {
   curSearchType: searchType | null;
   setCurSearchType: (value: searchType | null) => void;
   searchByPlace: (keyword: string) => void;
+  searchByBooth: (keyword : string) => void;
 }
 
 export default function MapHeader({
   curSearchType,
   setCurSearchType,
   searchByPlace,
+  searchByBooth
 }: MapHeaderProps) {
   const [boothFilters, toggleFilter, resetFilter] = useBoothStore((store) => [
     store.boothFilters,
@@ -50,6 +52,7 @@ export default function MapHeader({
         curSearchType={curSearchType}
         setCurSearchType={setCurSearchType}
         searchByPlace={searchByPlace}
+        searchByBooth={searchByBooth}
       />
       <HeaderWrapper>
         <FilterSlide>

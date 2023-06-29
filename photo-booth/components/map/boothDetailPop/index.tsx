@@ -97,7 +97,8 @@ export default function BoothDetailPop({
   }, []);
 
   const { boothDetail, userTags, review } = useMemo(() => {
-    const { boothDetail, userTags, review } = boothInfo ?? testData;
+    // const { boothDetail, userTags, review } = boothInfo ?? testData;
+    const { boothDetail, userTags, review } = testData;
     let total = 0;
 
     const curKeys = Object.keys(userTags!) as Array<tagValue>;
@@ -106,9 +107,10 @@ export default function BoothDetailPop({
         total += userTags![key] ?? 0;
       }
     });
+    if (total === 0) total = 1;
     setTotalReviews(total);
     return { boothDetail, userTags, review };
-  }, []);
+  }, [boothInfo]);
 
   useEffect(() => {
     if (boothDetail && starRate > 0) {
@@ -395,13 +397,15 @@ interface StickProps {
 
 const Stick = styled.div<StickProps>`
   width: ${({ width }) => `${width}px`};
-  height: 12px;
-  color: rgba(42, 42, 42, 1);
+  height: 6px;
+  background-color: rgba(42, 42, 42, 1);
+  flex: 0 0 auto;
   & {
     div.stick {
       width: ${({ width, rate }) => `${width * rate}px`};
       height: 100%;
-      color: rgba(255, 199, 0, 1);
+      background-color: rgba(255, 199, 0, 1);
+      flex: 0 0 auto;
     }
   }
 `;
