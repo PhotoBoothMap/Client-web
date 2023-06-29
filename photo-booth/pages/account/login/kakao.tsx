@@ -13,7 +13,6 @@ const kakaoLoginPage = () => {
       const response = await kakaoLoginApi(code);
       const accessToken = response.headers.get('Authorization');
       authAPI.defaults.headers.common['Authorization'] = `${accessToken}`;
-      // setRefreshTokenCookie(response.headers.get('refresh-token'));
 
       if (response.data.success) {
         setId(response.data.result.userId);
