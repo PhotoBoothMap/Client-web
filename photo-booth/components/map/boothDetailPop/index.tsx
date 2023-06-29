@@ -10,7 +10,7 @@ import PlusIcon from '@image/plus_icon.png';
 import StarIcon from '@image/star_icon.png';
 
 import StarRate from '@components/review/StarRate';
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import HeaderArrow from '/public/image/header_arrow.png';
 
 interface BoothDetailPopProps {
@@ -29,6 +29,7 @@ export default function BoothDetailPop({
   const navigation = useRouter();
 
   const [totalReviews, setTotalReviews] = useState<number>(999);
+  const [starRate, setStarRate] = useState<number>(0);
 
   const testData: PhotoBooth = useMemo(() => {
     return {
@@ -108,6 +109,14 @@ export default function BoothDetailPop({
     setTotalReviews(total);
     return { boothDetail, userTags, review };
   }, []);
+
+  useEffect(() => {
+    if (boothDetail && starRate > 0) {
+      navigation.push(
+        `/booth/${boothDetail.id}/review/create?starRate=${starRate}&boothName=${boothDetail.name}`,
+      );
+    }
+  }, [starRate]);
 
   return (
     <Wrapper state={state}>
@@ -191,7 +200,7 @@ export default function BoothDetailPop({
         <ReviewHeader>
           <Image src={LogoBright} alt="" width="44" />
           <p>{`${boothDetail!.name} 어떠셨나요`}</p>
-          <StarRate starRate={0} setStarRate={(a: number) => {}} />
+          <StarRate starRate={starRate} setStarRate={setStarRate} />
         </ReviewHeader>
         <ReviewBody>
           {review?.map((reviewInfo) => {
