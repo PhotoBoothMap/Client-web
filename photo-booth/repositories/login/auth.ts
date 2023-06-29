@@ -1,9 +1,5 @@
 import axios from 'axios';
 import { HOST_URL } from '@assets/url';
-import { deleteCookie, getCookie, setCookie } from 'cookies-next';
-import { useRouter } from 'next/router';
-
-const router = useRouter();
 
 export const authAPI = axios.create({
   baseURL: `${HOST_URL}`,
@@ -24,7 +20,7 @@ axios.interceptors.request.use(
 
     /** 1 */
     if (config.url === '/auth/reissue/' || status !== 401 || config.sent) {
-      router.push('/account/login');
+      window.location.replace('/account/login');
       return Promise.reject(err);
     }
 
