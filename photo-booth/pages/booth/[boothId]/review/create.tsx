@@ -190,9 +190,19 @@ const BoothReviewCreatePage = () => {
           }
           size={'xLarge'}
           onClickEvent={() => {
-            if (page === 1) setPage(2);
-            else registerReview();
+            if (page === 1) {
+              if (userTags.length < 1) {
+                alert('태그를 선택해주세요');
+              } else {
+                setPage(2);
+              }
+            } else registerReview();
           }}
+          isActive={
+            starRate > 0 && starRate <= 5 && userTags.length > 0 && userTags.length <= 4
+              ? true
+              : false
+          }
         />
       </div>
     </div>
