@@ -72,11 +72,7 @@ const BoothReviewCreatePage = () => {
   return (
     <div className={`flex flex-col justify-between w-full h-full text-[#F2F2F2]`}>
       <div className={`flex flex-col justify-start h-1 flex-1`}>
-        <BasicHeader
-          type={'close'}
-          text={'리뷰쓰기'}
-          onClickEvent={() => router.push(`/booth/${router.query.boothId}/review/list`)}
-        />
+        <BasicHeader type={'close'} text={'리뷰쓰기'} onClickEvent={() => router.back()} />
 
         {page === 1 ? (
           <div className={`flex flex-col h-1 flex-1 overflow-scroll`}>
