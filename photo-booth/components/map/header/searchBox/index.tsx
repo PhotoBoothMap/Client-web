@@ -19,6 +19,7 @@ export default function SearchBox({
   searchByPlace,
   searchByBooth,
 }: SearchBoxProps) {
+  
   const [isSelectView, setIsSelectView] = useState<boolean>(false);
   const [curInput, setCurInput] = useState<string>('');
 
