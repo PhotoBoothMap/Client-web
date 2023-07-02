@@ -68,6 +68,8 @@ export default function Map() {
   const [curSearchType, setCurSearchType] = useState<searchType | null>(searchType.지역);
   const [curMarkers, setCurMarkers] = useState<Array<any>>([]);
 
+  const [markerUpdate, setMarkerUpdate] = useState<number>(0);
+
   const [curBoothPreviews, setCurBoothPreviews] = useBoothStore((state) => [
     state.curBoothPreviews,
     state.setCurBoothPreviews,
@@ -110,6 +112,7 @@ export default function Map() {
         console.log('zoom changd');
         var level = (curMap.current as any).getLevel();
         setCurLevel(level);
+        setIsGettingMarker(true);
       }, 500),
     );
     setCurLevel(5);
@@ -269,6 +272,7 @@ export default function Map() {
   // 줌 in,out 시 bound 거리 다시 계산
   useEffect(() => {
     if (curMap.current === null) return;
+    console.log('getting bound distance');
     const centerLatLng = (curMap.current as any).getCenter();
     const bounds = (curMap.current as any).getBounds();
     const neLatLng = bounds.getNorthEast();
@@ -297,6 +301,10 @@ export default function Map() {
     });
     const bounds = (map as any).getBounds();
     const neLatLng = bounds.getNorthEast();
+
+    console.log(markerUpdate);
+    setMarkerUpdate(markerUpdate + 1);
+
     try {
       await getMarkersByCor(latLngConstructor(latLng), latLngConstructor(neLatLng));
       await getPreviews([]);
@@ -323,6 +331,7 @@ export default function Map() {
     if (curMap.current === null || isGettingMarker) {
       return;
     }
+    console.log('is center change event change');
 
     const curMoveFunction = curMoveFunctionRef.current;
 
