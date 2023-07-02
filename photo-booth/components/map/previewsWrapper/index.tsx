@@ -135,24 +135,21 @@ export default function PreviewsWrapper({
       }}
     >
       <div className="blank"></div>
-      <Header state={isDragging}>
+      <Header
+        state={isDragging}
+        onMouseDown={handleMouseDown}
+        onMouseUp={handleMouseUp}
+        onTouchStart={(e) => {
+          const height = e.changedTouches[0].pageY;
+          handleTouchDown(height);
+        }}
+        onTouchEnd={(e) => {
+          const height = e.changedTouches[0].pageY;
+          handleTouchEnd(height);
+        }}
+      >
         <HamburgerScroll>
-          <Image
-            width="40"
-            src={hamburgetScroll}
-            alt=""
-            draggable="false"
-            onMouseDown={handleMouseDown}
-            onMouseUp={handleMouseUp}
-            onTouchStart={(e) => {
-              const height = e.changedTouches[0].pageY;
-              handleTouchDown(height);
-            }}
-            onTouchEnd={(e) => {
-              const height = e.changedTouches[0].pageY;
-              handleTouchEnd(height);
-            }}
-          />
+          <Image width="40" src={hamburgetScroll} alt="" />
         </HamburgerScroll>
       </Header>
       <Body>
