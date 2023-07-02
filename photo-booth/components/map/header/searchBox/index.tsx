@@ -120,14 +120,12 @@ const SearchBoxWrapper = styled.div`
   flex-direction: row;
   align-items: center;
   width: 100%;
-  flex: 0 0 auto;
   height: 42px;
   padding: 0rem 1.5rem;
 
   background-color: #242424;
   border-radius: 40px;
   & > .input_wrapper {
-    width: 100%;
     display: flex;
     flex-direction: row;
     justify-content: space-between;
