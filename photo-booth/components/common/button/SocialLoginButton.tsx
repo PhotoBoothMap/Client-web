@@ -13,6 +13,7 @@ const SocialLoginButton = ({ type, onClickEvent }: socialLoginButtonInterface) =
       size={'large'}
       color={type === 'kakao' ? 'yellow' : 'white'}
       onClick={() => onClickEvent()}
+      isActive={true}
     >
       <Image
         src={`/common/${type}-logo.svg`}
