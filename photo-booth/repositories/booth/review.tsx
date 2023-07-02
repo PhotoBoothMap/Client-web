@@ -1,9 +1,10 @@
 import { HOST_URL } from '@assets/url';
+import { authAPI } from '@repositories/login/auth';
 import { Review } from '@utils/interface/photoBooth';
 import axios from 'axios';
 
 export const registerPhotoApi = (boothId: number, file: any) => {
-  const data = axios
+  const data = authAPI
     .post(`${HOST_URL}/booth/${boothId}/image`, file, {
       headers: { 'Content-Type': 'multipart/form-data' },
     })
