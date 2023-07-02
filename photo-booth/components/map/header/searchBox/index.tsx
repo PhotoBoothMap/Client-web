@@ -119,6 +119,7 @@ const SearchBoxWrapper = styled.div`
   display: flex;
   flex-direction: row;
   align-items: center;
+  position: relative;
   width: 100%;
   height: 42px;
   padding: 0rem 1.5rem;
@@ -131,16 +132,17 @@ const SearchBoxWrapper = styled.div`
     justify-content: space-between;
 
     input {
-      width: 200px;
+      width: 100%;
+      flex: 0 0 auto;
       background-color: inherit;
       border: none;
       outline: none;
-      font-size: 16px;
+      font-size: 14px;
       color: #f2f2f2;
     }
 
     input::placeholder {
-      font-size: 16px;
+      font-size: 14px;
       color: #f2f2f2;
       opacity: 0.5;
     }
@@ -148,6 +150,10 @@ const SearchBoxWrapper = styled.div`
     img {
       flex: 0 0 auto;
       object-fit: contain;
+      position: absolute;
+      top: 50%;
+      right: 0.5rem;
+      transform: translate(-50%, -50%);
     }
   }
 `;
@@ -159,7 +165,7 @@ interface DropDownProps {
 const DropDown = styled.button<DropDownProps>`
   width: 80px;
   height: 36px;
-  font-size: 16px;
+  font-size: 14px;
   position: relative;
   color: #979797;
   background-color: #242424;

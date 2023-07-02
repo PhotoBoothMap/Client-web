@@ -58,7 +58,7 @@ export default function Map() {
     state.setIsGettingMarker,
   ]);
 
-  const [isLoading, setIsLoading] = useState<boolean>(true);
+  const [isLoading, setIsLoading] = useState<boolean>(false);
 
   const [curBoothDetail, setCurBoothDetail] = useState<PhotoBooth | null>(null);
   const [boothDetailUp, setBoothDetailUp] = useState<boolean>(false);
