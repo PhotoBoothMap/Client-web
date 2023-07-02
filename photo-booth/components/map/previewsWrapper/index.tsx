@@ -36,9 +36,48 @@ export default function PreviewsWrapper({
     setMouseBeforePosition(e.clientY);
   };
 
+  const handleTouchDown = (v: number) => {
+    setIsDragging(true);
+    setMouseBeforePosition(v);
+  };
+
   const handleMouseUp = (e: MouseEvent<HTMLImageElement>) => {
     setIsDragging(false);
     setMouseBeforePosition(e.clientY);
+  };
+
+  const handleTouchEnd = (v: number) => {
+    setIsDragging(false);
+    setMouseBeforePosition(v);
+  };
+
+  const handleTouchMove = (v: number) => {
+    if (isDragging) {
+      const dy = v - mouseBeforePosition;
+      const neOffset = curOffset + dy;
+      if (dy < 0 && neOffset < window.innerHeight * 0.7 && neOffset > window.innerHeight * 0.6) {
+        setCurOffset(window.innerHeight * 0.2);
+        setIsDragging(false);
+        return;
+      }
+
+      if (dy > 0 && neOffset > window.innerHeight * 0.3 && neOffset < window.innerHeight * 0.35) {
+        setCurOffset(window.innerHeight * 0.9);
+        setIsDragging(false);
+        return;
+      }
+
+      if (neOffset < window.innerHeight * 0.2) {
+        return;
+      }
+
+      if (neOffset > window.innerHeight * 0.9) {
+        return;
+      }
+
+      setCurOffset(curOffset + dy);
+      setMouseBeforePosition(v);
+    }
   };
 
   const handleMouseMove = (e: MouseEvent<HTMLImageElement>) => {
@@ -85,7 +124,15 @@ export default function PreviewsWrapper({
       state={isDragging}
       offset={curOffset}
       onMouseMove={handleMouseMove}
+      onTouchMove={(e) => {
+        const height = e.changedTouches[0].pageY;
+        handleTouchMove(height);
+      }}
       onMouseUp={handleMouseUp}
+      onTouchEnd={(e) => {
+        const height = e.changedTouches[0].pageY;
+        handleTouchEnd(height);
+      }}
     >
       <div className="blank"></div>
       <Header state={isDragging}>
@@ -97,6 +144,14 @@ export default function PreviewsWrapper({
             draggable="false"
             onMouseDown={handleMouseDown}
             onMouseUp={handleMouseUp}
+            onTouchStart={(e) => {
+              const height = e.changedTouches[0].pageY;
+              handleTouchDown(height);
+            }}
+            onTouchEnd={(e) => {
+              const height = e.changedTouches[0].pageY;
+              handleTouchEnd(height);
+            }}
           />
         </HamburgerScroll>
       </Header>
