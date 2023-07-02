@@ -109,7 +109,6 @@ export default function Map() {
       curMap.current,
       'zoom_changed',
       debounce(() => {
-        console.log('zoom changd');
         var level = (curMap.current as any).getLevel();
         setCurLevel(level);
         setIsGettingMarker(true);
@@ -302,7 +301,6 @@ export default function Map() {
     const bounds = (map as any).getBounds();
     const neLatLng = bounds.getNorthEast();
 
-    console.log(markerUpdate);
     setMarkerUpdate(markerUpdate + 1);
 
     try {
