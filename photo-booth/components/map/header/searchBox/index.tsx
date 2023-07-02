@@ -19,7 +19,6 @@ export default function SearchBox({
   searchByPlace,
   searchByBooth,
 }: SearchBoxProps) {
-  
   const [isSelectView, setIsSelectView] = useState<boolean>(false);
   const [curInput, setCurInput] = useState<string>('');
 
@@ -121,6 +120,7 @@ const SearchBoxWrapper = styled.div`
   flex-direction: row;
   align-items: center;
   width: 100%;
+  flex: 0 0 auto;
   height: 42px;
   padding: 0rem 1.5rem;
 

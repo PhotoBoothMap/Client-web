@@ -11,12 +11,12 @@ import { useCallback, useEffect, useRef } from 'react';
 import styled from 'styled-components';
 
 import markBlued from '@image/blue_mark.png';
-import markDarkGrey from '@image/darkgrey_mark.png';
 import markGreen from '@image/green_mark.png';
 import markGrey from '@image/grey_mark.png';
 import markPink from '@image/pink_mark.png';
 import markRed from '@image/red_mark.png';
 import starIcon from '@image/star_icon.png';
+import markWhite from '@image/white_mark.png';
 import markYellow from '@image/yellow_mark.png';
 
 interface BoothPreviewProps extends BoothPreviewInfo {
@@ -56,8 +56,6 @@ export default function BoothPreview({
   setCurBoothDetail,
   setBoothDetailUp,
 }: BoothPreviewProps) {
-  // const [curIcon, setCurIcon] = useState<StaticImageData | null>(null);
-
   const curIcon = useRef<StaticImageData | null>(null);
 
   useEffect(() => {
@@ -82,11 +80,10 @@ export default function BoothPreview({
         boothIcon = markGreen;
         break;
       default:
-        boothIcon = markDarkGrey;
+        boothIcon = markWhite;
         break;
     }
     curIcon.current = boothIcon;
-    // setCurIcon(boothIcon);
   }, []);
 
   const getDetail = useCallback(async () => {

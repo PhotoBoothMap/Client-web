@@ -107,6 +107,7 @@ export default function Map() {
       curMap.current,
       'zoom_changed',
       debounce(() => {
+        console.log('zoom changd');
         var level = (curMap.current as any).getLevel();
         setCurLevel(level);
       }, 500),
@@ -168,7 +169,7 @@ export default function Map() {
         break;
 
       default:
-        boothIcon = '/image/darkgrey_mark_map.png';
+        boothIcon = '/image/white_mark_map.png';
         break;
     }
 
@@ -273,15 +274,11 @@ export default function Map() {
     const neLatLng = bounds.getNorthEast();
     const boundDistance = getDistanceByLatLng(centerLatLng, neLatLng);
     setCurBoundDistance(boundDistance);
-    getMarkers();
   }, [curMap.current, curLevel]);
 
   const centerChangeEvent = useCallback(
     debounce(() => {
       if (isGettingMarker) return;
-      console.log('is triggered');
-      console.log(curCor);
-      console.log('__________ end ________');
       const map = curMap.current as any;
       const latLng = map.getCenter();
       const curDistance = getDistanceByCor(latLngConstructor(latLng), curCor);
@@ -289,7 +286,7 @@ export default function Map() {
         setIsGettingMarker(true);
       }
     }, 500),
-    [curMap.current, isGettingMarker, curCor, curBoundDistance],
+    [curMap.current, isGettingMarker, curCor.lat, curCor.lng, curBoundDistance],
   );
 
   async function getMarkers() {
@@ -348,28 +345,27 @@ export default function Map() {
   useEffect(() => {
     if (!isGettingMarker) return;
 
-    console.log('_________ is on useEffect _______________');
-    console.log(isGettingMarker);
-    console.log(getMarkers);
-    console.log('____________ useEffect end ______________');
-
     async function toAsync(fn: any) {
       await fn();
       setIsGettingMarker(false);
     }
 
     toAsync(getMarkers);
-  }, [curMap.current, isGettingMarker, getMarkers]);
+  }, [curMap.current, isGettingMarker]);
 
   useEffect(() => {
     if (curMap.current === null) return;
     async function toAsync(fn: any) {
       setIsLoading(true);
-      await fn();
-      setIsGettingMarker(false);
-      setIsLoading(false);
+      try {
+        await fn();
+      } catch (e) {
+        console.log(e);
+      } finally {
+        setIsGettingMarker(false);
+        setIsLoading(false);
+      }
     }
-
     toAsync(getMarkers);
   }, [curMap.current]);
 
