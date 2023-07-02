@@ -205,9 +205,14 @@ export default function BoothDetailPop({
           <StarRate starRate={starRate} setStarRate={setStarRate} />
         </ReviewHeader>
         <ReviewBody>
-          {review?.map((reviewInfo) => {
+          {review?.map((reviewInfo, idx) => {
             return (
-              <Review name={boothDetail!.name} score={boothDetail!.score} review={reviewInfo} />
+              <Review
+                key={`${reviewInfo.name}${idx}`}
+                name={boothDetail!.name}
+                score={boothDetail!.score}
+                review={reviewInfo}
+              />
             );
           })}
         </ReviewBody>
@@ -242,6 +247,7 @@ const Wrapper = styled.div<WrapperProps>`
   transition: all 0.3s ease-in-out;
   padding-top: 20px;
   overflow-y: scroll;
+  color: white;
 `;
 
 const AppBar = styled.div`

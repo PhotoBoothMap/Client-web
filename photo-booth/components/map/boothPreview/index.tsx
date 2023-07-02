@@ -140,6 +140,7 @@ const Body = styled.div`
       line-height: 19px;
       font-weight: 600;
       margin-bottom: 6px;
+      color: white;
     }
 
     > p.address {
@@ -168,10 +169,12 @@ const Body = styled.div`
       }
 
       > p.score {
+        color: white;
       }
 
       > div.review {
         padding-left: 0.5rem;
+        color: white;
       }
     }
   }
