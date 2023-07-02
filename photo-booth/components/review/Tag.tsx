@@ -50,6 +50,6 @@ const Tag = ({ tagKey, selected = false }: props) => {
 export default Tag;
 
 const Wrapper = styled.div`
-  width: 180px;
-  padding: 0.75rem 0.75rem;
+  width: 165px;
+  padding: 0.5rem;
 `;

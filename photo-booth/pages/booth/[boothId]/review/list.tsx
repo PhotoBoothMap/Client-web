@@ -4,85 +4,88 @@ import styled from 'styled-components';
 import ReviewComp from '@components/map/review';
 import ArrowBack from '@image/arrow_back.png';
 import ArrowUpper from '@image/arrow_upper.png';
+import { boothRepository } from '@repositories/booth';
 import { requestReviewApi } from '@repositories/booth/review';
 import { useOnScreen } from '@utils/hook/useOnScreen';
-import { Review, photoBooth, tagValue } from '@utils/interface/photoBooth';
+import { PhotoBooth, Review } from '@utils/interface/photoBooth';
 import { useRouter } from 'next/router';
 import { useCallback, useEffect, useRef, useState } from 'react';
 
 export default function BoothReviewList() {
   const navigation = useRouter();
+
+  const [curBooth, setCurBooth] = useState<PhotoBooth | null>(null);
   const [curReviews, setCurReviews] = useState<Array<Review>>([
-    {
-      user: 'test name',
-      brand: photoBooth.포토그레이,
-      name: '테스트 네임',
-      date: undefined,
-      content: '여기 사진 진짜 잘 나오네요. 만족스러운 시간이었습니다. 다음에도 꼭 가고싶어요...',
-      score: 4.5,
-      imgUrl: '',
-      userTags: ['사진이 잘 나와요', '조명이 좋아요', '파우더룸이 잘 되어있어요'] as tagValue[],
-    },
-    {
-      user: 'test name',
-      brand: photoBooth.포토그레이,
-      name: '테스트 네임',
-      date: undefined,
-      content: '여기 사진 진짜 잘 나오네요. 만족스러운 시간이었습니다. 다음에도 꼭 가고싶어요...',
-      score: 4.5,
-      imgUrl: '',
-      userTags: ['사진이 잘 나와요', '조명이 좋아요', '파우더룸이 잘 되어있어요'] as tagValue[],
-    },
-    {
-      user: 'test name',
-      brand: photoBooth.포토그레이,
-      name: '테스트 네임',
-      date: undefined,
-      content: '여기 사진 진짜 잘 나오네요. 만족스러운 시간이었습니다. 다음에도 꼭 가고싶어요...',
-      score: 4.5,
-      imgUrl: '',
-      userTags: ['사진이 잘 나와요', '조명이 좋아요', '파우더룸이 잘 되어있어요'] as tagValue[],
-    },
-    {
-      user: 'test name',
-      brand: photoBooth.포토그레이,
-      name: '테스트 네임',
-      date: undefined,
-      content: '여기 사진 진짜 잘 나오네요. 만족스러운 시간이었습니다. 다음에도 꼭 가고싶어요...',
-      score: 4.5,
-      imgUrl: '',
-      userTags: ['사진이 잘 나와요', '조명이 좋아요', '파우더룸이 잘 되어있어요'] as tagValue[],
-    },
-    {
-      user: 'test name',
-      brand: photoBooth.포토그레이,
-      name: '테스트 네임',
-      date: undefined,
-      content: '여기 사진 진짜 잘 나오네요. 만족스러운 시간이었습니다. 다음에도 꼭 가고싶어요...',
-      score: 4.5,
-      imgUrl: '',
-      userTags: ['사진이 잘 나와요', '조명이 좋아요', '파우더룸이 잘 되어있어요'] as tagValue[],
-    },
-    {
-      user: 'test name',
-      brand: photoBooth.포토그레이,
-      name: '테스트 네임',
-      date: undefined,
-      content: '여기 사진 진짜 잘 나오네요. 만족스러운 시간이었습니다. 다음에도 꼭 가고싶어요...',
-      score: 4.5,
-      imgUrl: '',
-      userTags: ['사진이 잘 나와요', '조명이 좋아요', '파우더룸이 잘 되어있어요'] as tagValue[],
-    },
-    {
-      user: 'test name',
-      brand: photoBooth.포토그레이,
-      name: '테스트 네임',
-      date: undefined,
-      content: '여기 사진 진짜 잘 나오네요. 만족스러운 시간이었습니다. 다음에도 꼭 가고싶어요...',
-      score: 4.5,
-      imgUrl: '',
-      userTags: ['사진이 잘 나와요', '조명이 좋아요', '파우더룸이 잘 되어있어요'] as tagValue[],
-    },
+    // {
+    //   user: 'test name',
+    //   brand: photoBooth.포토그레이,
+    //   name: '테스트 네임',
+    //   date: undefined,
+    //   content: '여기 사진 진짜 잘 나오네요. 만족스러운 시간이었습니다. 다음에도 꼭 가고싶어요...',
+    //   score: 4.5,
+    //   imgUrl: '',
+    //   userTags: ['사진이 잘 나와요', '조명이 좋아요', '파우더룸이 잘 되어있어요'] as tagValue[],
+    // },
+    // {
+    //   user: 'test name',
+    //   brand: photoBooth.포토그레이,
+    //   name: '테스트 네임',
+    //   date: undefined,
+    //   content: '여기 사진 진짜 잘 나오네요. 만족스러운 시간이었습니다. 다음에도 꼭 가고싶어요...',
+    //   score: 4.5,
+    //   imgUrl: '',
+    //   userTags: ['사진이 잘 나와요', '조명이 좋아요', '파우더룸이 잘 되어있어요'] as tagValue[],
+    // },
+    // {
+    //   user: 'test name',
+    //   brand: photoBooth.포토그레이,
+    //   name: '테스트 네임',
+    //   date: undefined,
+    //   content: '여기 사진 진짜 잘 나오네요. 만족스러운 시간이었습니다. 다음에도 꼭 가고싶어요...',
+    //   score: 4.5,
+    //   imgUrl: '',
+    //   userTags: ['사진이 잘 나와요', '조명이 좋아요', '파우더룸이 잘 되어있어요'] as tagValue[],
+    // },
+    // {
+    //   user: 'test name',
+    //   brand: photoBooth.포토그레이,
+    //   name: '테스트 네임',
+    //   date: undefined,
+    //   content: '여기 사진 진짜 잘 나오네요. 만족스러운 시간이었습니다. 다음에도 꼭 가고싶어요...',
+    //   score: 4.5,
+    //   imgUrl: '',
+    //   userTags: ['사진이 잘 나와요', '조명이 좋아요', '파우더룸이 잘 되어있어요'] as tagValue[],
+    // },
+    // {
+    //   user: 'test name',
+    //   brand: photoBooth.포토그레이,
+    //   name: '테스트 네임',
+    //   date: undefined,
+    //   content: '여기 사진 진짜 잘 나오네요. 만족스러운 시간이었습니다. 다음에도 꼭 가고싶어요...',
+    //   score: 4.5,
+    //   imgUrl: '',
+    //   userTags: ['사진이 잘 나와요', '조명이 좋아요', '파우더룸이 잘 되어있어요'] as tagValue[],
+    // },
+    // {
+    //   user: 'test name',
+    //   brand: photoBooth.포토그레이,
+    //   name: '테스트 네임',
+    //   date: undefined,
+    //   content: '여기 사진 진짜 잘 나오네요. 만족스러운 시간이었습니다. 다음에도 꼭 가고싶어요...',
+    //   score: 4.5,
+    //   imgUrl: '',
+    //   userTags: ['사진이 잘 나와요', '조명이 좋아요', '파우더룸이 잘 되어있어요'] as tagValue[],
+    // },
+    // {
+    //   user: 'test name',
+    //   brand: photoBooth.포토그레이,
+    //   name: '테스트 네임',
+    //   date: undefined,
+    //   content: '여기 사진 진짜 잘 나오네요. 만족스러운 시간이었습니다. 다음에도 꼭 가고싶어요...',
+    //   score: 4.5,
+    //   imgUrl: '',
+    //   userTags: ['사진이 잘 나와요', '조명이 좋아요', '파우더룸이 잘 되어있어요'] as tagValue[],
+    // },
   ]);
 
   //무한 스크롤에 필요한 훅들
@@ -94,9 +97,7 @@ export default function BoothReviewList() {
 
   const getReviews = async () => {
     setIsRequesting(true);
-    console.log('is getting reviews');
     try {
-      console.log(navigation.query);
       const { review } = await requestReviewApi(Number(navigation.query.boothId), curPage.current);
 
       if (review.length === 0) {
@@ -110,6 +111,11 @@ export default function BoothReviewList() {
     } finally {
       setIsRequesting(false);
     }
+  };
+
+  const getBoothDetail = async () => {
+    const boothDetail = await boothRepository.getBooth(Number(navigation.query.boothId));
+    setCurBooth(boothDetail);
   };
 
   const scrollTop = useCallback(() => {
@@ -132,6 +138,7 @@ export default function BoothReviewList() {
 
   useEffect(() => {
     getReviews();
+    getBoothDetail();
   }, []);
 
   return (
@@ -145,7 +152,7 @@ export default function BoothReviewList() {
             navigation.back();
           }}
         />
-        <p className="appbar_sentence">{'테스트 네임'}</p>
+        <p className="appbar_sentence">{curBooth?.boothDetail.name}</p>
         <div className="blank"></div>
       </AppBar>
       <Body ref={bodyRef}>

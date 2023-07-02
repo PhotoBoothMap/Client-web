@@ -153,11 +153,11 @@ export default function BoothDetailPop({
                 <div className="row_left">
                   <Image
                     src={`/common/review/tag/${tagKey}.svg`}
-                    width={24}
-                    height={24}
+                    width={18}
+                    height={18}
                     alt={`${userTag}`}
                   />
-                  <div className={`text-s font-semibold text-[#F2F2F2]`}>{userTag}</div>
+                  <div className={`review_text font-semibold text-[#F2F2F2]`}>{userTag}</div>
                 </div>
                 <div className="row_right">
                   <Stick width={150} rate={value! / totalReviews}>
@@ -371,6 +371,9 @@ const UserReview = styled.div`
             flex-direction: row;
             align-items: center;
             gap: 0.5rem;
+            div.review_text {
+              font-size: 14px;
+            }
           }
           div.row_right {
             display: flex;
@@ -434,7 +437,7 @@ const ReviewHeader = styled.div`
 
   p {
     color: white;
-    font-size: 18px;
+    font-size: 14px;
     font-weight: 600;
   }
 `;

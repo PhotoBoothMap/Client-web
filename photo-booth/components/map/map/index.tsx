@@ -279,9 +279,6 @@ export default function Map() {
   const centerChangeEvent = useCallback(
     debounce(() => {
       if (isGettingMarker) return;
-      console.log('is triggered');
-      console.log(curCor);
-      console.log('__________ end ________');
       const map = curMap.current as any;
       const latLng = map.getCenter();
       const curDistance = getDistanceByCor(latLngConstructor(latLng), curCor);
@@ -348,11 +345,6 @@ export default function Map() {
   useEffect(() => {
     if (!isGettingMarker) return;
 
-    console.log('_________ is on useEffect _______________');
-    console.log(isGettingMarker);
-    console.log(getMarkers);
-    console.log('____________ useEffect end ______________');
-
     async function toAsync(fn: any) {
       await fn();
       setIsGettingMarker(false);
@@ -365,9 +357,14 @@ export default function Map() {
     if (curMap.current === null) return;
     async function toAsync(fn: any) {
       setIsLoading(true);
-      await fn();
-      setIsGettingMarker(false);
-      setIsLoading(false);
+      try {
+        await fn();
+      } catch (e) {
+        console.log(e);
+      } finally {
+        setIsGettingMarker(false);
+        setIsLoading(false);
+      }
     }
     toAsync(getMarkers);
   }, [curMap.current]);
