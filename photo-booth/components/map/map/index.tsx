@@ -107,6 +107,7 @@ export default function Map() {
       curMap.current,
       'zoom_changed',
       debounce(() => {
+        console.log('zoom changd');
         var level = (curMap.current as any).getLevel();
         setCurLevel(level);
       }, 500),
@@ -168,7 +169,7 @@ export default function Map() {
         break;
 
       default:
-        boothIcon = '/image/darkgrey_mark_map.png';
+        boothIcon = '/image/white_mark_map.png';
         break;
     }
 
@@ -273,7 +274,6 @@ export default function Map() {
     const neLatLng = bounds.getNorthEast();
     const boundDistance = getDistanceByLatLng(centerLatLng, neLatLng);
     setCurBoundDistance(boundDistance);
-    getMarkers();
   }, [curMap.current, curLevel]);
 
   const centerChangeEvent = useCallback(
@@ -289,7 +289,7 @@ export default function Map() {
         setIsGettingMarker(true);
       }
     }, 500),
-    [curMap.current, isGettingMarker, curCor, curBoundDistance],
+    [curMap.current, isGettingMarker, curCor.lat, curCor.lng, curBoundDistance],
   );
 
   async function getMarkers() {
@@ -359,7 +359,7 @@ export default function Map() {
     }
 
     toAsync(getMarkers);
-  }, [curMap.current, isGettingMarker, getMarkers]);
+  }, [curMap.current, isGettingMarker]);
 
   useEffect(() => {
     if (curMap.current === null) return;
@@ -369,7 +369,6 @@ export default function Map() {
       setIsGettingMarker(false);
       setIsLoading(false);
     }
-
     toAsync(getMarkers);
   }, [curMap.current]);
 
