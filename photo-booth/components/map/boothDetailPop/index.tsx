@@ -19,6 +19,7 @@ interface BoothDetailPopProps {
   boothInfo: Partial<PhotoBooth> | null;
   setCurBoothDetail: (value: PhotoBooth | null) => void;
   setBoothDetailUp: (value: boolean) => void;
+
 }
 
 export default function BoothDetailPop({
@@ -26,6 +27,7 @@ export default function BoothDetailPop({
   boothInfo,
   setCurBoothDetail,
   setBoothDetailUp,
+
 }: BoothDetailPopProps) {
   const navigation = useRouter();
   const user = useLoginUserStore();
@@ -49,40 +51,6 @@ export default function BoothDetailPop({
         '파우더룸이 잘 되어있어요': 27,
       },
       review: [
-        {
-          user: 'test name',
-          brand: photoBooth.포토그레이,
-          name: '테스트 네임',
-          date: undefined,
-          content:
-            '여기 사진 진짜 잘 나오네요. 만족스러운 시간이었습니다. 다음에도 꼭 가고싶어요...',
-          score: 4.5,
-          imgUrl: '',
-          userTags: ['사진이 잘 나와요', '조명이 좋아요', '파우더룸이 잘 되어있어요'] as tagValue[],
-        },
-        {
-          user: 'test name',
-          brand: photoBooth.포토그레이,
-          name: '테스트 네임',
-          date: undefined,
-
-          content:
-            '여기 사진 진짜 잘 나오네요. 만족스러운 시간이었습니다. 다음에도 꼭 가고싶어요...',
-          score: 4.5,
-          imgUrl: '',
-          userTags: ['사진이 잘 나와요', '조명이 좋아요', '파우더룸이 잘 되어있어요'] as tagValue[],
-        },
-        {
-          user: 'test name',
-          brand: photoBooth.포토그레이,
-          name: '테스트 네임',
-          date: undefined,
-          content:
-            '여기 사진 진짜 잘 나오네요. 만족스러운 시간이었습니다. 다음에도 꼭 가고싶어요...',
-          score: 4.5,
-          imgUrl: '',
-          userTags: ['사진이 잘 나와요', '조명이 좋아요', '파우더룸이 잘 되어있어요'] as tagValue[],
-        },
         {
           user: 'test name',
           brand: photoBooth.포토그레이,
@@ -129,6 +97,7 @@ export default function BoothDetailPop({
 
   return (
     <Wrapper state={state}>
+     
       <AppBar>
         <Image
           src={HeaderArrow}

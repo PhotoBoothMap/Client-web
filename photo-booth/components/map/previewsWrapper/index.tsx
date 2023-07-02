@@ -1,8 +1,9 @@
 import { useBoothStore } from '@store/booth';
 
+import RefreshButton from '@image/button_refresh.png';
+import { useOnScreen } from '@utils/hook/useOnScreen';
 import { BoothPreview, PhotoBooth } from '@utils/interface/photoBooth';
 
-import { useOnScreen } from '@utils/hook/useOnScreen';
 import Image from 'next/image';
 import { MouseEvent, useEffect, useRef, useState } from 'react';
 import styled from 'styled-components';
@@ -13,12 +14,14 @@ interface PreviewWrapperProps {
   setCurBoothDetail: (value: PhotoBooth) => void;
   setBoothDetailUp: (value: boolean) => void;
   getPreviews: (value: BoothPreview[]) => void;
+  getMarkers: () => void;
 }
 
 export default function PreviewsWrapper({
   setCurBoothDetail,
   setBoothDetailUp,
   getPreviews,
+  getMarkers,
 }: PreviewWrapperProps) {
   const curBoothPreviews = useBoothStore((state) => state.curBoothPreviews);
   const [curOffset, setCurOffset] = useState<number>(0);
@@ -134,6 +137,11 @@ export default function PreviewsWrapper({
         handleTouchEnd(height);
       }}
     >
+      <div className="re_finder" onClick={getMarkers}>
+        {/* <Image src={IconRefresh} alt="" width={14} height={14} />
+        <p>이 지역 재탐색</p> */}
+        <Image src={RefreshButton} alt="" height={40} />
+      </div>
       <div className="blank"></div>
       <Header
         state={isDragging}
@@ -194,6 +202,17 @@ const Wrapper = styled.div<WrapperProps>`
   z-index: 99;
   border-radius: 30px 30px 0 0;
   background-color: #242424;
+
+  & {
+    div.re_finder {
+      position: absolute;
+      left: 50%;
+      top: -58px;
+      transform: translate(-50%, 0);
+      z-index: 100;
+    }
+  }
+
   & > .blank {
     position: fixed;
     top: 0;
