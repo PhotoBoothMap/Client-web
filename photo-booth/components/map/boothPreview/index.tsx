@@ -7,16 +7,16 @@ import {
 } from '@utils/interface/photoBooth';
 
 import Image, { StaticImageData } from 'next/image';
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useEffect, useRef } from 'react';
 import styled from 'styled-components';
 
 import markBlued from '@image/blue_mark.png';
-import markDarkGrey from '@image/darkgrey_mark.png';
 import markGreen from '@image/green_mark.png';
 import markGrey from '@image/grey_mark.png';
 import markPink from '@image/pink_mark.png';
 import markRed from '@image/red_mark.png';
 import starIcon from '@image/star_icon.png';
+import markWhite from '@image/white_mark.png';
 import markYellow from '@image/yellow_mark.png';
 
 interface BoothPreviewProps extends BoothPreviewInfo {
@@ -56,7 +56,7 @@ export default function BoothPreview({
   setCurBoothDetail,
   setBoothDetailUp,
 }: BoothPreviewProps) {
-  const [curIcon, setCurIcon] = useState<StaticImageData | null>(null);
+  const curIcon = useRef<StaticImageData | null>(null);
 
   useEffect(() => {
     let boothIcon = null;
@@ -80,14 +80,15 @@ export default function BoothPreview({
         boothIcon = markGreen;
         break;
       default:
-        boothIcon = markDarkGrey;
+        boothIcon = markWhite;
         break;
     }
-    setCurIcon(boothIcon);
+    curIcon.current = boothIcon;
   }, []);
 
   const getDetail = useCallback(async () => {
     const response = await boothRepository.getBooth(id!);
+    console.log(response);
     setCurBoothDetail(response ?? testBooth);
     setBoothDetailUp(true);
   }, []);
@@ -106,7 +107,11 @@ export default function BoothPreview({
         </div>
       </Body>
       <BoothIconWrapper color={BoothColor[brand!]}>
-        <Image src={curIcon ?? ''} alt="" height="40" />
+        {curIcon.current !== null ? (
+          <Image src={curIcon.current} alt="" height="40" />
+        ) : (
+          <div></div>
+        )}
         <p className="distance">{distance + 'm'}</p>
       </BoothIconWrapper>
     </Wrapper>
@@ -132,6 +137,7 @@ const Body = styled.div`
       line-height: 19px;
       font-weight: 600;
       margin-bottom: 6px;
+      color: white;
     }
 
     > p.address {
@@ -160,10 +166,12 @@ const Body = styled.div`
       }
 
       > p.score {
+        color: white;
       }
 
       > div.review {
         padding-left: 0.5rem;
+        color: white;
       }
     }
   }

@@ -15,17 +15,20 @@ interface MapHeaderProps {
   curSearchType: searchType | null;
   setCurSearchType: (value: searchType | null) => void;
   searchByPlace: (keyword: string) => void;
+  searchByBooth: (keyword: string) => void;
 }
 
 export default function MapHeader({
   curSearchType,
   setCurSearchType,
   searchByPlace,
+  searchByBooth,
 }: MapHeaderProps) {
-  const [boothFilters, toggleFilter, resetFilter] = useBoothStore((store) => [
+  const [boothFilters, toggleFilter, resetFilter, deleteFilterAll] = useBoothStore((store) => [
     store.boothFilters,
     store.toggleFilter,
-    store.resetFilter
+    store.resetFilter,
+    store.deleteFilterAll,
   ]);
 
   const [boothes, setBoothes] = useState([...(Object.keys(photoBooth) as Array<photoBooth>)]);
@@ -50,15 +53,42 @@ export default function MapHeader({
         curSearchType={curSearchType}
         setCurSearchType={setCurSearchType}
         searchByPlace={searchByPlace}
+        searchByBooth={searchByBooth}
       />
       <HeaderWrapper>
         <FilterSlide>
-          <Filter state={true} color="white" style={{ color: 'black' }}
-            onClick={() =>{
-              resetFilter()          
+          <Filter
+            state={true}
+            color="white"
+            style={{ color: 'black' }}
+            onClick={() => {
+              console.log('______________');
+              console.log(Array.from(boothFilters).length);
+              console.log((Object.keys(photoBooth) as Array<photoBooth>).length);
+              if (
+                Array.from(boothFilters).length ===
+                (Object.keys(photoBooth) as Array<photoBooth>).length
+              ) {
+                deleteFilterAll();
+                console.log(' K K K K K K  K K');
+                console.log(
+                  Array.from(boothFilters).length,
+                  (Object.keys(photoBooth) as Array<photoBooth>).length,
+                );
+              } else {
+                resetFilter();
+                console.log(' hhhhhhhhhhhh');
+                console.log(
+                  Array.from(boothFilters).length,
+                  (Object.keys(photoBooth) as Array<photoBooth>).length,
+                );
+              }
             }}
           >
-            전체 해제
+            {Array.from(boothFilters).length ===
+            (Object.keys(photoBooth) as Array<photoBooth>).length
+              ? '전체 해제'
+              : '전체 선택'}
           </Filter>
           {boothes.map((booth, idx) => {
             return (

@@ -7,7 +7,7 @@ import { deletePhotoApi, registerPhotoApi, registerReviewApi } from '@repositori
 import { PreviewPhotoBoxStyle, RegisterPhotoBoxStyle } from '@styles/review/ReviewStyle';
 import Image from 'next/image';
 import { useRouter } from 'next/router';
-import { useCallback, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 
 const reviewTagSelectionKey: ['PICTURE', 'BOOTH', 'FACILITY'] = ['PICTURE', 'BOOTH', 'FACILITY'];
 
@@ -19,8 +19,6 @@ const BoothReviewCreatePage = () => {
   const [userTags, setUserTags] = useState<tagKey[]>([]);
   const [photos, setPhotos] = useState<string[]>([]);
   const [content, setContent] = useState('');
-
-  console.log(router.query);
 
   const registerPhoto = useCallback(
     async (e: any) => {
@@ -40,7 +38,7 @@ const BoothReviewCreatePage = () => {
 
   const deletePhoto = useCallback(
     async (photoIndex: number) => {
-      const response = await deletePhotoApi(Number(router.query.boothId), photos[photoIndex]);
+      const response = await deletePhotoApi(photos[photoIndex]);
 
       if (response.success) {
         const _photos = [...photos];
@@ -67,13 +65,17 @@ const BoothReviewCreatePage = () => {
     }
   }, [starRate, userTags, content]);
 
+  useEffect(() => {
+    if (router.isReady) setStarRate(Number(router.query.starRate));
+  }, [router]);
+
   return (
     <div className={`flex flex-col justify-between w-full h-full text-[#F2F2F2]`}>
       <div className={`flex flex-col justify-start h-1 flex-1`}>
         <BasicHeader
           type={'close'}
           text={'리뷰쓰기'}
-          onClickEvent={() => router.push('/sdfwerfwefwefwef e')}
+          onClickEvent={() => router.push(`/booth/${router.query.boothId}/review/list`)}
         />
 
         {page === 1 ? (

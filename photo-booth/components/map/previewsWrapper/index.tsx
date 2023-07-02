@@ -37,7 +37,6 @@ export default function PreviewsWrapper({
   };
 
   const handleMouseUp = (e: MouseEvent<HTMLImageElement>) => {
-    console.log('is mouse up');
     setIsDragging(false);
     setMouseBeforePosition(e.clientY);
   };
@@ -102,11 +101,11 @@ export default function PreviewsWrapper({
         </HamburgerScroll>
       </Header>
       <Body>
-        {curBoothPreviews.map((previewInfo) => {
+        {curBoothPreviews.map((previewInfo, idx) => {
           const { id, brand, name, distance, address, score, reviewNum } = previewInfo;
           return (
             <BoothPreviewComp
-              key={id}
+              key={`${id}${idx}`}
               id={id}
               brand={brand}
               name={name}

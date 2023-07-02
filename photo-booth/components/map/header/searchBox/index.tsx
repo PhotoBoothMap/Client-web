@@ -10,12 +10,14 @@ interface SearchBoxProps {
   curSearchType: searchType | null;
   setCurSearchType: (value: searchType | null) => void;
   searchByPlace: (keyword: string) => void;
+  searchByBooth: (keyword: string) => void;
 }
 
 export default function SearchBox({
   curSearchType,
   setCurSearchType,
   searchByPlace,
+  searchByBooth,
 }: SearchBoxProps) {
   const [isSelectView, setIsSelectView] = useState<boolean>(false);
   const [curInput, setCurInput] = useState<string>('');
@@ -87,6 +89,7 @@ export default function SearchBox({
             onClick={() => {
               switch (curSearchType) {
                 case searchType.부스:
+                  searchByBooth(curInput);
                   break;
                 case searchType.지역:
                   searchByPlace(curInput);
@@ -117,6 +120,7 @@ const SearchBoxWrapper = styled.div`
   flex-direction: row;
   align-items: center;
   width: 100%;
+  flex: 0 0 auto;
   height: 42px;
   padding: 0rem 1.5rem;
 
