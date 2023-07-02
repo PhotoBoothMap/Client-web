@@ -149,27 +149,27 @@ export default function Map() {
         break;
 
       case photoBooth.포토이즘:
-        boothIcon = '/image/yellow_mark_map.png';
+        boothIcon = 'image/yellow_mark_map.png';
         break;
 
       case photoBooth.포토매틱:
-        boothIcon = '/image/red_mark_map.png';
+        boothIcon = 'image/red_mark_map.png';
         break;
 
       case photoBooth.포토그레이:
-        boothIcon = '/image/grey_mark_map.png';
+        boothIcon = 'image/grey_mark_map.png';
         break;
 
       case photoBooth.인생네컷:
-        boothIcon = '/image/pink_mark_map.png';
+        boothIcon = 'image/pink_mark_map.png';
         break;
 
       case photoBooth.셀픽스:
-        boothIcon = '/image/green_mark_map.png';
+        boothIcon = 'image/green_mark_map.png';
         break;
 
       default:
-        boothIcon = '/image/white_mark_map.png';
+        boothIcon = 'image/white_mark_map.png';
         break;
     }
 
