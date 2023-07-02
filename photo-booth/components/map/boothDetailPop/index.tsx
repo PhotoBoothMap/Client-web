@@ -99,8 +99,8 @@ export default function BoothDetailPop({
   }, []);
 
   const { boothDetail, userTags, review } = useMemo(() => {
-    // const { boothDetail, userTags, review } = boothInfo ?? testData;
-    const { boothDetail, userTags, review } = testData;
+    const { boothDetail, userTags, review } = boothInfo ?? testData;
+    // const { boothDetail, userTags, review } = testData;
     let total = 0;
 
     const curKeys = Object.keys(userTags!) as Array<tagValue>;
