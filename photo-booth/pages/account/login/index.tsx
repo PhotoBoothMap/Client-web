@@ -33,7 +33,6 @@ const loginPage = () => {
           {/* <SocialLoginButton
             type={'google'}
             onClickEvent={() => {
-              console.log('google');
             }}
           /> */}
         </div>

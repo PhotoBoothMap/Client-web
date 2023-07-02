@@ -7,7 +7,7 @@ import {
 } from '@utils/interface/photoBooth';
 
 import Image, { StaticImageData } from 'next/image';
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useEffect, useRef } from 'react';
 import styled from 'styled-components';
 
 import markBlued from '@image/blue_mark.png';
@@ -56,7 +56,9 @@ export default function BoothPreview({
   setCurBoothDetail,
   setBoothDetailUp,
 }: BoothPreviewProps) {
-  const [curIcon, setCurIcon] = useState<StaticImageData | null>(null);
+  // const [curIcon, setCurIcon] = useState<StaticImageData | null>(null);
+
+  const curIcon = useRef<StaticImageData | null>(null);
 
   useEffect(() => {
     let boothIcon = null;
@@ -83,11 +85,13 @@ export default function BoothPreview({
         boothIcon = markDarkGrey;
         break;
     }
-    setCurIcon(boothIcon);
+    curIcon.current = boothIcon;
+    // setCurIcon(boothIcon);
   }, []);
 
   const getDetail = useCallback(async () => {
     const response = await boothRepository.getBooth(id!);
+    console.log(response);
     setCurBoothDetail(response ?? testBooth);
     setBoothDetailUp(true);
   }, []);
@@ -106,7 +110,11 @@ export default function BoothPreview({
         </div>
       </Body>
       <BoothIconWrapper color={BoothColor[brand!]}>
-        <Image src={curIcon ?? ''} alt="" height="40" />
+        {curIcon.current !== null ? (
+          <Image src={curIcon.current} alt="" height="40" />
+        ) : (
+          <div></div>
+        )}
         <p className="distance">{distance + 'm'}</p>
       </BoothIconWrapper>
     </Wrapper>
@@ -132,6 +140,7 @@ const Body = styled.div`
       line-height: 19px;
       font-weight: 600;
       margin-bottom: 6px;
+      color: white;
     }
 
     > p.address {
@@ -160,10 +169,12 @@ const Body = styled.div`
       }
 
       > p.score {
+        color: white;
       }
 
       > div.review {
         padding-left: 0.5rem;
+        color: white;
       }
     }
   }

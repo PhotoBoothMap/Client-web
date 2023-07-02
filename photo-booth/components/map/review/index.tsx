@@ -59,11 +59,11 @@ export default function Review({ name, score, review }: ReviewProps) {
       <Body>
         <p className="content">{review.content}</p>
         <div className="tag_grid">
-          {review.userTags!.map((userTag) => {
+          {review.userTags!.map((userTag, idx) => {
             const curKey = tagKeys.filter((key) => {
               return userTag === tags[key];
             })[0];
-            return <Tag tagKey={curKey} />;
+            return <Tag key={`${userTag}${idx}`} tagKey={curKey} />;
           })}
         </div>
       </Body>
