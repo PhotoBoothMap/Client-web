@@ -11,11 +11,12 @@ type buttonProps = {
   color: buttonColorType;
   size: buttonSizeype;
   onClickEvent?: any;
+  isActive?: boolean;
 };
 
-const BasicButton = ({ size, text, color, onClickEvent }: buttonProps) => {
+const BasicButton = ({ size, text, color, onClickEvent, isActive = true }: buttonProps) => {
   return (
-    <BasicButtonStyle size={size} color={color} onClick={() => onClickEvent()}>
+    <BasicButtonStyle size={size} color={color} isActive={isActive} onClick={() => onClickEvent()}>
       <div>{text}</div>
     </BasicButtonStyle>
   );

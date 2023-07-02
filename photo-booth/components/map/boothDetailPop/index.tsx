@@ -12,6 +12,7 @@ import StarIcon from '@image/star_icon.png';
 import StarRate from '@components/review/StarRate';
 import { useEffect, useMemo, useState } from 'react';
 import HeaderArrow from '/public/image/header_arrow.png';
+import { useLoginUserStore } from '@store/login';
 
 interface BoothDetailPopProps {
   state: boolean;
@@ -27,6 +28,7 @@ export default function BoothDetailPop({
   setBoothDetailUp,
 }: BoothDetailPopProps) {
   const navigation = useRouter();
+  const user = useLoginUserStore();
 
   const [totalReviews, setTotalReviews] = useState<number>(999);
   const [starRate, setStarRate] = useState<number>(0);
@@ -114,9 +116,14 @@ export default function BoothDetailPop({
 
   useEffect(() => {
     if (boothDetail && starRate > 0) {
-      navigation.push(
-        `/booth/${boothDetail.id}/review/create?starRate=${starRate}&boothName=${boothDetail.name}`,
-      );
+      if (user.id) {
+        navigation.push(
+          `/booth/${boothDetail.id}/review/create?starRate=${starRate}&boothName=${boothDetail.name}`,
+        );
+      } else {
+        alert('로그인이 필요한 서비스입니다.');
+        navigation.push('/account/login');
+      }
     }
   }, [starRate]);
 
