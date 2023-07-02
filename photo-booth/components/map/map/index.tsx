@@ -148,31 +148,31 @@ export default function Map() {
     let boothIcon;
     switch (boothName) {
       case photoBooth.하루필름:
-        boothIcon = '/image/blue_mark_map.svg';
+        boothIcon = '/image/blue_mark_map.png';
         break;
 
       case photoBooth.포토이즘:
-        boothIcon = 'image/yellow_mark_map.svg';
+        boothIcon = 'image/yellow_mark_map.png';
         break;
 
       case photoBooth.포토매틱:
-        boothIcon = 'image/red_mark_map.svg';
+        boothIcon = 'image/red_mark_map.png';
         break;
 
       case photoBooth.포토그레이:
-        boothIcon = 'image/grey_mark_map.svg';
+        boothIcon = 'image/grey_mark_map.png';
         break;
 
       case photoBooth.인생네컷:
-        boothIcon = 'image/pink_mark_map.svg';
+        boothIcon = 'image/pink_mark_map.png';
         break;
 
       case photoBooth.셀픽스:
-        boothIcon = 'image/green_mark_map.svg';
+        boothIcon = 'image/green_mark_map.png';
         break;
 
       default:
-        boothIcon = 'image/white_mark_map.svg';
+        boothIcon = 'image/white_mark_map.png';
         break;
     }
 
@@ -272,7 +272,7 @@ export default function Map() {
   // 줌 in,out 시 bound 거리 다시 계산
   useEffect(() => {
     if (curMap.current === null) return;
-    console.log('getting bound distance');
+
     const centerLatLng = (curMap.current as any).getCenter();
     const bounds = (curMap.current as any).getBounds();
     const neLatLng = bounds.getNorthEast();
@@ -331,7 +331,6 @@ export default function Map() {
     if (curMap.current === null || isGettingMarker) {
       return;
     }
-    console.log('is center change event change');
 
     const curMoveFunction = curMoveFunctionRef.current;
 
@@ -362,21 +361,21 @@ export default function Map() {
     toAsync(getMarkers);
   }, [curMap.current, isGettingMarker]);
 
-  useEffect(() => {
-    if (curMap.current === null) return;
-    async function toAsync(fn: any) {
-      setIsLoading(true);
-      try {
-        await fn();
-      } catch (e) {
-        console.log(e);
-      } finally {
-        setIsGettingMarker(false);
-        setIsLoading(false);
-      }
-    }
-    toAsync(getMarkers);
-  }, [curMap.current]);
+  // useEffect(() => {
+  //   if (curMap.current === null) return;
+  //   async function toAsync(fn: any) {
+  //     setIsLoading(true);
+  //     try {
+  //       await fn();
+  //     } catch (e) {
+  //       console.log(e);
+  //     } finally {
+  //       setIsGettingMarker(false);
+  //       setIsLoading(false);
+  //     }
+  //   }
+  //   toAsync(getMarkers);
+  // }, [curMap.current]);
 
   return (
     <Wrapper>
@@ -391,6 +390,7 @@ export default function Map() {
         setCurBoothDetail={setCurBoothDetail}
         setBoothDetailUp={setBoothDetailUp}
         getPreviews={getPreviews}
+        getMarkers={getMarkers}
       />
       <BoothDetailPop
         state={boothDetailUp}

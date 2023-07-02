@@ -18,6 +18,7 @@ interface BoothDetailPopProps {
   boothInfo: Partial<PhotoBooth> | null;
   setCurBoothDetail: (value: PhotoBooth | null) => void;
   setBoothDetailUp: (value: boolean) => void;
+
 }
 
 export default function BoothDetailPop({
@@ -25,6 +26,7 @@ export default function BoothDetailPop({
   boothInfo,
   setCurBoothDetail,
   setBoothDetailUp,
+
 }: BoothDetailPopProps) {
   const navigation = useRouter();
 
@@ -79,6 +81,7 @@ export default function BoothDetailPop({
 
   return (
     <Wrapper state={state}>
+     
       <AppBar>
         <Image
           src={HeaderArrow}
