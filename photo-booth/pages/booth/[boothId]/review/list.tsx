@@ -129,9 +129,9 @@ export default function BoothReviewList() {
   useEffect(() => {
     if (!navigation.query.boothId) return;
 
-    console.log('is here');
+
     if (isOnScreen && !isRequesting && curPage.current !== -1) {
-      console.log('is getting reviews...');
+
       getReviews();
     }
   }, [curPage, navigation.query.boothId, isOnScreen, isRequesting]);

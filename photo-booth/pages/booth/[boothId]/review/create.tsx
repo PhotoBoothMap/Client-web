@@ -20,8 +20,6 @@ const BoothReviewCreatePage = () => {
   const [photos, setPhotos] = useState<string[]>([]);
   const [content, setContent] = useState('');
 
-  console.log(router.query);
-
   const registerPhoto = useCallback(
     async (e: any) => {
       const file = e.target.files[0];

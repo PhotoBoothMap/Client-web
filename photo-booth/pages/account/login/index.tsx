@@ -1,6 +1,5 @@
-import React from 'react';
-import Image from 'next/image';
 import SocialLoginButton from '@components/common/button/SocialLoginButton';
+import Image from 'next/image';
 import { useRouter } from 'next/router';
 
 const loginPage = () => {

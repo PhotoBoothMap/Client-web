@@ -88,7 +88,6 @@ export default function BoothPreview({
 
   const getDetail = useCallback(async () => {
     const response = await boothRepository.getBooth(id!);
-    console.log(response);
     setCurBoothDetail(response ?? testBooth);
     setBoothDetailUp(true);
   }, []);
