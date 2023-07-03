@@ -196,8 +196,8 @@ export default function Map() {
 
     window.kakao.maps.event.addListener(marker, 'click', async () => {
       const response = await boothRepository.getBooth(id!);
-      // setCurBoothDetail(response ?? testBooth);
-      setCurBoothDetail(testBooth);
+      setCurBoothDetail(response ?? testBooth);
+      // setCurBoothDetail(testBooth);
       setBoothDetailUp(true);
     });
 
