@@ -28,7 +28,10 @@ export default function PreviewsWrapper({
   const [mouseBeforePosition, setMouseBeforePosition] = useState<number>(0);
   const [isDragging, setIsDragging] = useState(false);
 
-  //무한 스크롤에 필요한 훅들
+  // 새로고침 버튼 opacity
+  const [curButtonOpacity, setCurButtonOpacity] = useState<number>(1);
+
+  // 무한 스크롤에 필요한 훅들
   const curPage = useRef<number>(0);
   const elementRef = useRef<HTMLDivElement>(null);
   const isOnScreen = useOnScreen(elementRef);
@@ -107,10 +110,22 @@ export default function PreviewsWrapper({
         return;
       }
 
-      setCurOffset(curOffset + dy);
+      setCurOffset(neOffset);
       setMouseBeforePosition(e.clientY);
     }
   };
+
+  useEffect(() => {
+    if (curOffset === 0) return;
+    const maxHeight = window.innerHeight * 0.2;
+    const heightTresh = window.innerHeight * 0.3;
+
+    const interval = heightTresh - maxHeight;
+    if (curOffset > heightTresh) return;
+    const distance = Math.max(curOffset - maxHeight, 0);
+    const opacity = distance / interval;
+    setCurButtonOpacity(opacity);
+  }, [curOffset]);
 
   useEffect(() => {
     setCurOffset(window.innerHeight * 0.9);
@@ -137,11 +152,11 @@ export default function PreviewsWrapper({
         handleTouchEnd(height);
       }}
     >
-      <div className="re_finder" onClick={getMarkers}>
+      <Refinder className="re_finder" onClick={getMarkers} opacity={curButtonOpacity}>
         {/* <Image src={IconRefresh} alt="" width={14} height={14} />
         <p>이 지역 재탐색</p> */}
         <Image src={RefreshButton} alt="" height={40} />
-      </div>
+      </Refinder>
       <div className="blank"></div>
       <Header
         state={isDragging}
@@ -157,7 +172,7 @@ export default function PreviewsWrapper({
         }}
       >
         <HamburgerScroll>
-          <Image width="40" src={hamburgetScroll} alt="" />
+          <Image width="40" src={hamburgetScroll} alt="" draggable={false} />
         </HamburgerScroll>
       </Header>
       <Body>
@@ -203,16 +218,6 @@ const Wrapper = styled.div<WrapperProps>`
   border-radius: 30px 30px 0 0;
   background-color: #242424;
 
-  & {
-    div.re_finder {
-      position: absolute;
-      left: 50%;
-      top: -58px;
-      transform: translate(-50%, 0);
-      z-index: 100;
-    }
-  }
-
   & > .blank {
     position: fixed;
     top: 0;
@@ -223,6 +228,19 @@ const Wrapper = styled.div<WrapperProps>`
 
     display: ${({ state }) => (state ? 'block' : 'none')};
   }
+`;
+
+interface RefinderProps {
+  opacity: number;
+}
+
+const Refinder = styled.div<RefinderProps>`
+  position: absolute;
+  left: 50%;
+  top: -58px;
+  transform: translate(-50%, 0);
+  z-index: 100;
+  opacity: ${({ opacity }) => opacity};
 `;
 
 interface HeaderProps {
