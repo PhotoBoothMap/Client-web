@@ -118,7 +118,7 @@ export default function PreviewsWrapper({
   useEffect(() => {
     if (curOffset === 0) return;
     const maxHeight = window.innerHeight * 0.2;
-    const heightTresh = window.innerHeight * 0.3;
+    const heightTresh = window.innerHeight * 0.25;
 
     const interval = heightTresh - maxHeight;
     if (curOffset > heightTresh) return;

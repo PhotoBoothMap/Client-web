@@ -10,9 +10,9 @@ import PlusIcon from '@image/plus_icon.png';
 import StarIcon from '@image/star_icon.png';
 
 import StarRate from '@components/review/StarRate';
+import { useLoginUserStore } from '@store/login';
 import { useEffect, useMemo, useState } from 'react';
 import HeaderArrow from '/public/image/header_arrow.png';
-import { useLoginUserStore } from '@store/login';
 
 interface BoothDetailPopProps {
   state: boolean;
@@ -77,7 +77,6 @@ export default function BoothDetailPop({
         total += userTags![key] ?? 0;
       }
     });
-    if (total === 0) total = 1;
     setTotalReviews(total);
     return { boothDetail, userTags, review };
   }, [boothInfo]);
@@ -145,7 +144,7 @@ export default function BoothDetailPop({
                   <div className={`review_text font-semibold text-[#F2F2F2]`}>{userTag}</div>
                 </div>
                 <div className="row_right">
-                  <Stick width={150} rate={value! / totalReviews}>
+                  <Stick width={150} rate={value! / (totalReviews === 0 ? 1 : totalReviews)}>
                     <div className="stick"></div>
                   </Stick>
                   <div className="rate">{`${value}/${totalReviews}`}</div>
