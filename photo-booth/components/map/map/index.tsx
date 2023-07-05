@@ -349,7 +349,7 @@ export default function Map() {
   }, [curMap.current, Array.from(boothFilters).length]);
 
   useEffect(() => {
-    if (!isGettingMarker) return;
+    if (curMap.current !== null || !isGettingMarker) return;
 
     async function toAsync(fn: any) {
       await fn();
@@ -357,7 +357,7 @@ export default function Map() {
     }
 
     toAsync(getMarkers);
-  }, [curMap.current, isGettingMarker]);
+  }, [isGettingMarker]);
 
   // useEffect(() => {
   //   if (curMap.current === null) return;
