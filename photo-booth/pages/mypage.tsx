@@ -19,7 +19,6 @@ type reviewType = {
 
 const mypage = () => {
   const router = useRouter();
-  // const [id, nickName] = useLoginUserStore((state) => [state.id, state.nickName]);
   const user = useLoginUserStore();
   const [reviewList, setReviewList] = useState<reviewType[] | null>(null);
 
@@ -36,15 +35,16 @@ const mypage = () => {
   }, []);
 
   useEffect(() => {
-    if (router.isReady) {
+    if (router.isReady && hydrated) {
       if (user.id) {
         getMyReviews();
+        // console.log(user);
       } else {
         alert('로그인이 필요한 서비스입니다.');
         router.push('/account/login');
       }
     }
-  }, [router]);
+  }, [router, hydrated]);
 
   if (!hydrated) {
     // Returns null on first render, so the client and server match
