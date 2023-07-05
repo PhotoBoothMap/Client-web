@@ -6,12 +6,22 @@ import React, { useCallback, useEffect, useState } from 'react';
 import ReviewComp from '@components/map/review';
 import Image from 'next/image';
 import LogoBright from '@image/logo_bright.png';
+import { tagKey } from '@utils/interface/photoBooth';
+
+type reviewType = {
+  starRate: number;
+  boothName: string;
+  date: string;
+  imageUrls: string[];
+  userTags: tagKey[];
+  content: string;
+};
 
 const mypage = () => {
   const router = useRouter();
   // const [id, nickName] = useLoginUserStore((state) => [state.id, state.nickName]);
   const user = useLoginUserStore();
-  const [reviewList, setReviewList] = useState<[] | null>(null);
+  const [reviewList, setReviewList] = useState<reviewType[] | null>(null);
 
   const [hydrated, setHydrated] = React.useState(false);
   React.useEffect(() => {
@@ -60,9 +70,23 @@ const mypage = () => {
           <section className={`flex flex-col p-4`}>
             <div className={`w-full`}>
               {reviewList &&
-                reviewList.map((review) => (
-                  <ReviewComp name={review.name} score={review.score} review={review} />
-                ))}
+                reviewList.map((review) => {
+                  if (typeof user.nickName === 'string') {
+                    const _review = {
+                      user: user.nickName,
+                      date: new Date(review.date),
+                      content: review.content,
+                      score: review.starRate,
+                      imgUrl: review.imageUrls,
+                      brand: review.boothName,
+                      name: user.nickName,
+                      userTags: review.userTags,
+                    };
+                    return (
+                      <ReviewComp name={user.nickName} score={review.starRate} review={_review} />
+                    );
+                  }
+                })}
             </div>
           </section>
         </section>

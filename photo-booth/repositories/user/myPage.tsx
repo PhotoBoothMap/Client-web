@@ -1,8 +1,8 @@
-import axios from 'axios';
 import { HOST_URL } from '@assets/url';
+import { authAPI } from '@repositories/login/auth';
 
 export const getMyReviewsApi = () => {
-  const data = axios
+  const data = authAPI
     .get(`${HOST_URL}/mypage`)
     .then((response) => {
       return response.data;
