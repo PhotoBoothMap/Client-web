@@ -58,7 +58,7 @@ export default function Map() {
     state.setIsGettingMarker,
   ]);
 
-  const [isLoading, setIsLoading] = useState<boolean>(true);
+  const [isLoading, setIsLoading] = useState<boolean>(false);
 
   const [curBoothDetail, setCurBoothDetail] = useState<PhotoBooth | null>(null);
   const [boothDetailUp, setBoothDetailUp] = useState<boolean>(false);
@@ -67,6 +67,8 @@ export default function Map() {
   const [curBoundDistance, setCurBoundDistance] = useState<number>(Number.POSITIVE_INFINITY);
   const [curSearchType, setCurSearchType] = useState<searchType | null>(searchType.지역);
   const [curMarkers, setCurMarkers] = useState<Array<any>>([]);
+
+  const [markerUpdate, setMarkerUpdate] = useState<number>(0);
 
   const [curBoothPreviews, setCurBoothPreviews] = useBoothStore((state) => [
     state.curBoothPreviews,
@@ -107,9 +109,9 @@ export default function Map() {
       curMap.current,
       'zoom_changed',
       debounce(() => {
-        console.log('zoom changd');
         var level = (curMap.current as any).getLevel();
         setCurLevel(level);
+        setIsGettingMarker(true);
       }, 500),
     );
     setCurLevel(5);
@@ -149,27 +151,27 @@ export default function Map() {
         break;
 
       case photoBooth.포토이즘:
-        boothIcon = '/image/yellow_mark_map.png';
+        boothIcon = 'image/yellow_mark_map.png';
         break;
 
       case photoBooth.포토매틱:
-        boothIcon = '/image/red_mark_map.png';
+        boothIcon = 'image/red_mark_map.png';
         break;
 
       case photoBooth.포토그레이:
-        boothIcon = '/image/grey_mark_map.png';
+        boothIcon = 'image/grey_mark_map.png';
         break;
 
       case photoBooth.인생네컷:
-        boothIcon = '/image/pink_mark_map.png';
+        boothIcon = 'image/pink_mark_map.png';
         break;
 
       case photoBooth.셀픽스:
-        boothIcon = '/image/green_mark_map.png';
+        boothIcon = 'image/green_mark_map.png';
         break;
 
       default:
-        boothIcon = '/image/white_mark_map.png';
+        boothIcon = 'image/white_mark_map.png';
         break;
     }
 
@@ -194,8 +196,8 @@ export default function Map() {
 
     window.kakao.maps.event.addListener(marker, 'click', async () => {
       const response = await boothRepository.getBooth(id!);
-      // setCurBoothDetail(response ?? testBooth);
-      setCurBoothDetail(testBooth);
+      setCurBoothDetail(response ?? testBooth);
+      // setCurBoothDetail(testBooth);
       setBoothDetailUp(true);
     });
 
@@ -269,6 +271,7 @@ export default function Map() {
   // 줌 in,out 시 bound 거리 다시 계산
   useEffect(() => {
     if (curMap.current === null) return;
+
     const centerLatLng = (curMap.current as any).getCenter();
     const bounds = (curMap.current as any).getBounds();
     const neLatLng = bounds.getNorthEast();
@@ -297,6 +300,9 @@ export default function Map() {
     });
     const bounds = (map as any).getBounds();
     const neLatLng = bounds.getNorthEast();
+
+    setMarkerUpdate(markerUpdate + 1);
+
     try {
       await getMarkersByCor(latLngConstructor(latLng), latLngConstructor(neLatLng));
       await getPreviews([]);
@@ -353,21 +359,21 @@ export default function Map() {
     toAsync(getMarkers);
   }, [curMap.current, isGettingMarker]);
 
-  useEffect(() => {
-    if (curMap.current === null) return;
-    async function toAsync(fn: any) {
-      setIsLoading(true);
-      try {
-        await fn();
-      } catch (e) {
-        console.log(e);
-      } finally {
-        setIsGettingMarker(false);
-        setIsLoading(false);
-      }
-    }
-    toAsync(getMarkers);
-  }, [curMap.current]);
+  // useEffect(() => {
+  //   if (curMap.current === null) return;
+  //   async function toAsync(fn: any) {
+  //     setIsLoading(true);
+  //     try {
+  //       await fn();
+  //     } catch (e) {
+  //       console.log(e);
+  //     } finally {
+  //       setIsGettingMarker(false);
+  //       setIsLoading(false);
+  //     }
+  //   }
+  //   toAsync(getMarkers);
+  // }, [curMap.current]);
 
   return (
     <Wrapper>
@@ -382,6 +388,7 @@ export default function Map() {
         setCurBoothDetail={setCurBoothDetail}
         setBoothDetailUp={setBoothDetailUp}
         getPreviews={getPreviews}
+        getMarkers={getMarkers}
       />
       <BoothDetailPop
         state={boothDetailUp}

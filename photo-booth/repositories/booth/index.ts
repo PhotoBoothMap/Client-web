@@ -11,7 +11,7 @@ class BoothRepository {
   async getBooth(id: number): Promise<PhotoBooth | null> {
     try {
       const response: Response<PhotoBooth> = await axios.get(`${HOST_URL}/booth/${id}`);
-      console.log(response);
+
       const result = response.data['result'];
       return result;
     } catch (e) {

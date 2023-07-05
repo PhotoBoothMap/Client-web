@@ -62,26 +62,13 @@ export default function MapHeader({
             color="white"
             style={{ color: 'black' }}
             onClick={() => {
-              console.log('______________');
-              console.log(Array.from(boothFilters).length);
-              console.log((Object.keys(photoBooth) as Array<photoBooth>).length);
               if (
                 Array.from(boothFilters).length ===
                 (Object.keys(photoBooth) as Array<photoBooth>).length
               ) {
                 deleteFilterAll();
-                console.log(' K K K K K K  K K');
-                console.log(
-                  Array.from(boothFilters).length,
-                  (Object.keys(photoBooth) as Array<photoBooth>).length,
-                );
               } else {
                 resetFilter();
-                console.log(' hhhhhhhhhhhh');
-                console.log(
-                  Array.from(boothFilters).length,
-                  (Object.keys(photoBooth) as Array<photoBooth>).length,
-                );
               }
             }}
           >

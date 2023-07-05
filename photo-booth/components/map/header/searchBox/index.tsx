@@ -3,6 +3,7 @@ import LogoDark from '@image/logo_dark.png';
 import SearchIcon from '@image/search_icon.png';
 import YellowArrow from '@image/yellow_arrow.png';
 import Image from 'next/image';
+import { useRouter } from 'next/router';
 import { useMemo, useState } from 'react';
 import styled from 'styled-components';
 
@@ -19,6 +20,8 @@ export default function SearchBox({
   searchByPlace,
   searchByBooth,
 }: SearchBoxProps) {
+  const navigation = useRouter();
+
   const [isSelectView, setIsSelectView] = useState<boolean>(false);
   const [curInput, setCurInput] = useState<string>('');
 
@@ -35,7 +38,15 @@ export default function SearchBox({
 
   return (
     <Wrapper>
-      <Image src={LogoDark} alt="" width="42" height="42" />
+      <Image
+        src={LogoDark}
+        alt=""
+        width="42"
+        height="42"
+        onClick={() => {
+          navigation.push('/account/login');
+        }}
+      />
       <SearchBoxWrapper>
         <DropDown
           state={isSelectView}
@@ -119,30 +130,30 @@ const SearchBoxWrapper = styled.div`
   display: flex;
   flex-direction: row;
   align-items: center;
+  position: relative;
   width: 100%;
-  flex: 0 0 auto;
   height: 42px;
   padding: 0rem 1.5rem;
 
   background-color: #242424;
   border-radius: 40px;
   & > .input_wrapper {
-    width: 100%;
     display: flex;
     flex-direction: row;
     justify-content: space-between;
 
     input {
-      width: 200px;
+      width: 100%;
+      flex: 0 0 auto;
       background-color: inherit;
       border: none;
       outline: none;
-      font-size: 16px;
+      font-size: 14px;
       color: #f2f2f2;
     }
 
     input::placeholder {
-      font-size: 16px;
+      font-size: 14px;
       color: #f2f2f2;
       opacity: 0.5;
     }
@@ -150,6 +161,10 @@ const SearchBoxWrapper = styled.div`
     img {
       flex: 0 0 auto;
       object-fit: contain;
+      position: absolute;
+      top: 50%;
+      right: 0.5rem;
+      transform: translate(-50%, -50%);
     }
   }
 `;
@@ -161,7 +176,7 @@ interface DropDownProps {
 const DropDown = styled.button<DropDownProps>`
   width: 80px;
   height: 36px;
-  font-size: 16px;
+  font-size: 14px;
   position: relative;
   color: #979797;
   background-color: #242424;

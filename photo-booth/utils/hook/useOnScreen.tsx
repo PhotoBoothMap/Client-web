@@ -14,7 +14,7 @@ export function useOnScreen(ref: RefObject<HTMLElement>) {
     if (observerRef.current === null || ref.current === null) {
       return;
     }
-    console.log(isOnScreen);
+
     observerRef.current.observe(ref.current);
 
     return () => {

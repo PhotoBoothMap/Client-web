@@ -1,8 +1,9 @@
 import { useBoothStore } from '@store/booth';
 
+import RefreshButton from '@image/button_refresh.png';
+import { useOnScreen } from '@utils/hook/useOnScreen';
 import { BoothPreview, PhotoBooth } from '@utils/interface/photoBooth';
 
-import { useOnScreen } from '@utils/hook/useOnScreen';
 import Image from 'next/image';
 import { MouseEvent, useEffect, useRef, useState } from 'react';
 import styled from 'styled-components';
@@ -13,19 +14,24 @@ interface PreviewWrapperProps {
   setCurBoothDetail: (value: PhotoBooth) => void;
   setBoothDetailUp: (value: boolean) => void;
   getPreviews: (value: BoothPreview[]) => void;
+  getMarkers: () => void;
 }
 
 export default function PreviewsWrapper({
   setCurBoothDetail,
   setBoothDetailUp,
   getPreviews,
+  getMarkers,
 }: PreviewWrapperProps) {
   const curBoothPreviews = useBoothStore((state) => state.curBoothPreviews);
   const [curOffset, setCurOffset] = useState<number>(0);
   const [mouseBeforePosition, setMouseBeforePosition] = useState<number>(0);
   const [isDragging, setIsDragging] = useState(false);
 
-  //무한 스크롤에 필요한 훅들
+  // 새로고침 버튼 opacity
+  const [curButtonOpacity, setCurButtonOpacity] = useState<number>(1);
+
+  // 무한 스크롤에 필요한 훅들
   const curPage = useRef<number>(0);
   const elementRef = useRef<HTMLDivElement>(null);
   const isOnScreen = useOnScreen(elementRef);
@@ -36,9 +42,48 @@ export default function PreviewsWrapper({
     setMouseBeforePosition(e.clientY);
   };
 
+  const handleTouchDown = (v: number) => {
+    setIsDragging(true);
+    setMouseBeforePosition(v);
+  };
+
   const handleMouseUp = (e: MouseEvent<HTMLImageElement>) => {
     setIsDragging(false);
     setMouseBeforePosition(e.clientY);
+  };
+
+  const handleTouchEnd = (v: number) => {
+    setIsDragging(false);
+    setMouseBeforePosition(v);
+  };
+
+  const handleTouchMove = (v: number) => {
+    if (isDragging) {
+      const dy = v - mouseBeforePosition;
+      const neOffset = curOffset + dy;
+      if (dy < 0 && neOffset < window.innerHeight * 0.7 && neOffset > window.innerHeight * 0.6) {
+        setCurOffset(window.innerHeight * 0.2);
+        setIsDragging(false);
+        return;
+      }
+
+      if (dy > 0 && neOffset > window.innerHeight * 0.3 && neOffset < window.innerHeight * 0.35) {
+        setCurOffset(window.innerHeight * 0.9);
+        setIsDragging(false);
+        return;
+      }
+
+      if (neOffset < window.innerHeight * 0.2) {
+        return;
+      }
+
+      if (neOffset > window.innerHeight * 0.9) {
+        return;
+      }
+
+      setCurOffset(curOffset + dy);
+      setMouseBeforePosition(v);
+    }
   };
 
   const handleMouseMove = (e: MouseEvent<HTMLImageElement>) => {
@@ -65,10 +110,22 @@ export default function PreviewsWrapper({
         return;
       }
 
-      setCurOffset(curOffset + dy);
+      setCurOffset(neOffset);
       setMouseBeforePosition(e.clientY);
     }
   };
+
+  useEffect(() => {
+    if (curOffset === 0) return;
+    const maxHeight = window.innerHeight * 0.2;
+    const heightTresh = window.innerHeight * 0.3;
+
+    const interval = heightTresh - maxHeight;
+    if (curOffset > heightTresh) return;
+    const distance = Math.max(curOffset - maxHeight, 0);
+    const opacity = distance / interval;
+    setCurButtonOpacity(opacity);
+  }, [curOffset]);
 
   useEffect(() => {
     setCurOffset(window.innerHeight * 0.9);
@@ -85,19 +142,37 @@ export default function PreviewsWrapper({
       state={isDragging}
       offset={curOffset}
       onMouseMove={handleMouseMove}
+      onTouchMove={(e) => {
+        const height = e.changedTouches[0].pageY;
+        handleTouchMove(height);
+      }}
       onMouseUp={handleMouseUp}
+      onTouchEnd={(e) => {
+        const height = e.changedTouches[0].pageY;
+        handleTouchEnd(height);
+      }}
     >
+      <Refinder className="re_finder" onClick={getMarkers} opacity={curButtonOpacity}>
+        {/* <Image src={IconRefresh} alt="" width={14} height={14} />
+        <p>이 지역 재탐색</p> */}
+        <Image src={RefreshButton} alt="" height={40} />
+      </Refinder>
       <div className="blank"></div>
-      <Header state={isDragging}>
+      <Header
+        state={isDragging}
+        onMouseDown={handleMouseDown}
+        onMouseUp={handleMouseUp}
+        onTouchStart={(e) => {
+          const height = e.changedTouches[0].pageY;
+          handleTouchDown(height);
+        }}
+        onTouchEnd={(e) => {
+          const height = e.changedTouches[0].pageY;
+          handleTouchEnd(height);
+        }}
+      >
         <HamburgerScroll>
-          <Image
-            width="40"
-            src={hamburgetScroll}
-            alt=""
-            draggable="false"
-            onMouseDown={handleMouseDown}
-            onMouseUp={handleMouseUp}
-          />
+          <Image width="40" src={hamburgetScroll} alt="" draggable={false} />
         </HamburgerScroll>
       </Header>
       <Body>
@@ -142,6 +217,7 @@ const Wrapper = styled.div<WrapperProps>`
   z-index: 99;
   border-radius: 30px 30px 0 0;
   background-color: #242424;
+
   & > .blank {
     position: fixed;
     top: 0;
@@ -152,6 +228,19 @@ const Wrapper = styled.div<WrapperProps>`
 
     display: ${({ state }) => (state ? 'block' : 'none')};
   }
+`;
+
+interface RefinderProps {
+  opacity: number;
+}
+
+const Refinder = styled.div<RefinderProps>`
+  position: absolute;
+  left: 50%;
+  top: -58px;
+  transform: translate(-50%, 0);
+  z-index: 100;
+  opacity: ${({ opacity }) => opacity};
 `;
 
 interface HeaderProps {
