@@ -1,7 +1,7 @@
 import axios from 'axios';
 import { HOST_URL } from '@assets/url';
 
-export const getMyReviewsApi = (userId: number) => {
+export const getMyReviewsApi = () => {
   const data = axios
     .get(`${HOST_URL}/mypage`)
     .then((response) => {

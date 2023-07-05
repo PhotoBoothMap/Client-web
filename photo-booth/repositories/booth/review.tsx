@@ -18,7 +18,7 @@ export const registerPhotoApi = (boothId: number, file: any) => {
 };
 
 export const deletePhotoApi = (imageUrl: string) => {
-  const data = axios
+  const data = authAPI
     .delete(`${HOST_URL}/image?imageUrl=${imageUrl}`)
     .then((response) => {
       return response.data;
@@ -30,7 +30,7 @@ export const deletePhotoApi = (imageUrl: string) => {
 };
 
 export const registerReviewApi = (boothId: number, requestBody: {}) => {
-  const data = axios
+  const data = authAPI
     .post(`${HOST_URL}/booth/${boothId}/review`, requestBody)
     .then((response) => {
       return response.data;
