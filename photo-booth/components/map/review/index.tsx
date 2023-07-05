@@ -98,15 +98,19 @@ const Header = styled.div`
 
     div.name_wrapper {
       width: 100%;
+      display: flex;
+      flex-direction: row;
+      justify-content: end;
       text-align: right;
       p.name {
-        display: inline;
+        max-width: 200px;
+        text-align: center;
         font-size: 14px;
         font-weight: 400;
         color: #f2f2f2;
         background-color: #242424;
         padding: 0.5rem 1rem;
-        border-radius: 16px;
+        border-radius: 40px;
       }
     }
   }

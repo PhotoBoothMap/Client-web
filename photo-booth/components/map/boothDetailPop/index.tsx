@@ -19,7 +19,6 @@ interface BoothDetailPopProps {
   boothInfo: Partial<PhotoBooth> | null;
   setCurBoothDetail: (value: PhotoBooth | null) => void;
   setBoothDetailUp: (value: boolean) => void;
-
 }
 
 export default function BoothDetailPop({
@@ -27,7 +26,6 @@ export default function BoothDetailPop({
   boothInfo,
   setCurBoothDetail,
   setBoothDetailUp,
-
 }: BoothDetailPopProps) {
   const navigation = useRouter();
   const user = useLoginUserStore();
@@ -41,7 +39,8 @@ export default function BoothDetailPop({
         id: 3,
         brand: photoBooth.포토그레이,
         name: '테스트 네임',
-        address: '서울 강남구 강남대로 102길 31 1층 4호',
+        address:
+          '서울 강남구 강남대로 102길 31 1층 4호 서울 강남구 강남대로 102길 31 1층 4호 서울 강남구 강남대로 102길 31 1층 4호',
         score: 4.5,
         reviewNum: 10,
       },
@@ -54,7 +53,7 @@ export default function BoothDetailPop({
         {
           user: 'test name',
           brand: photoBooth.포토그레이,
-          name: '테스트 네임',
+          name: '테스트 네임 테스트 네임 테스트 네임',
           date: undefined,
           content:
             '여기 사진 진짜 잘 나오네요. 만족스러운 시간이었습니다. 다음에도 꼭 가고싶어요...',
@@ -96,7 +95,6 @@ export default function BoothDetailPop({
 
   return (
     <Wrapper state={state}>
-     
       <AppBar>
         <Image
           src={HeaderArrow}
@@ -104,7 +102,7 @@ export default function BoothDetailPop({
           width="13"
           height="7"
           onClick={() => {
-            setCurBoothDetail(null);
+            // setCurBoothDetail(null);
             setBoothDetailUp(false);
           }}
         />
@@ -184,8 +182,8 @@ export default function BoothDetailPop({
             return (
               <Review
                 key={`${reviewInfo.name}${idx}`}
-                name={boothDetail!.name}
-                score={boothDetail!.score}
+                name={reviewInfo!.name}
+                score={reviewInfo!.score}
                 review={reviewInfo}
               />
             );
@@ -265,6 +263,9 @@ const Header = styled.div`
       font-weight: 500;
       font-size: 13px;
       line-height: 16px;
+      text-align: center;
+      padding-left: 1rem;
+      padding-right: 1rem;
     }
 
     > div.review_wrapper {
