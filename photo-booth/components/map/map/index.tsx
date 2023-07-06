@@ -281,7 +281,7 @@ export default function Map() {
     const neLatLng = bounds.getNorthEast();
     const boundDistance = getDistanceByLatLng(centerLatLng, neLatLng);
     setCurBoundDistance(boundDistance);
-  }, [curMap.current, curLevel, isShowMap]);
+  }, [curLevel, isShowMap]);
 
   const centerChangeEvent = useCallback(
     debounce(() => {
@@ -353,7 +353,7 @@ export default function Map() {
   }, [curMap.current, Array.from(boothFilters).length, isShowMap]);
 
   useEffect(() => {
-    if (curMap.current !== null || !isGettingMarker || !isShowMap) return;
+    if (curMap.current === null || !isGettingMarker || !isShowMap) return;
 
     async function toAsync(fn: any) {
       await fn();
@@ -432,7 +432,7 @@ export default function Map() {
         setCurBoothDetail={setCurBoothDetail}
         setBoothDetailUp={setBoothDetailUp}
       />
-      {isLoading ? (
+      {isLoading || !isShowMap ? (
         <div role="status" className="loading">
           <svg
             aria-hidden="true"
