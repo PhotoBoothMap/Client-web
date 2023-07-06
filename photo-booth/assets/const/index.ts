@@ -5,16 +5,16 @@ const DEFAULTCOR = {
   lng: 126.9294,
 };
 
-export function defaultCor()  {
+export function defaultCor() {
   return clone(DEFAULTCOR);
 }
 
 export const BoothColor = {
   인생네컷: '#FF93D4',
-  포토이즘: '#FFC635',
-  하루필름: '#0073EB',
-  포토매틱: '#E55519',
-  셀픽스: '#00B86F',
-  포토그레이: '#C4C4C4',
-  기타: '#404040',
+  포토이즘: '#FFC700',
+  하루필름: '#0981FF',
+  포토매틱: '#FF4F06',
+  셀픽스: '#00C543',
+  포토그레이: '#888888',
+  기타: '#F2F2F2',
 };
