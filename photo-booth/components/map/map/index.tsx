@@ -65,7 +65,7 @@ export default function Map() {
   const [curBoothDetail, setCurBoothDetail] = useState<PhotoBooth | null>(null);
   const [boothDetailUp, setBoothDetailUp] = useState<boolean>(false);
 
-  const [curLevel, setCurLevel] = useState<number | null>(5);
+  const [curLevel, setCurLevel] = useState<number | null>(null);
   const [curBoundDistance, setCurBoundDistance] = useState<number>(Number.POSITIVE_INFINITY);
   const [curSearchType, setCurSearchType] = useState<searchType | null>(searchType.지역);
   const [curMarkers, setCurMarkers] = useState<Array<any>>([]);
@@ -116,6 +116,7 @@ export default function Map() {
         setIsGettingMarker(true);
       }, 500),
     );
+    setCurLevel(5);
   }, [curMap.current, isShowMap]);
 
   const getDistanceByCor = (cor1: Coordinate, cor2: Coordinate) => {
