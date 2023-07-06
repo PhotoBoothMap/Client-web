@@ -4,7 +4,7 @@ import Rating from '@mui/material/Rating';
 
 import Tag from '@components/review/Tag';
 import LogoBright from '@image/logo_bright.png';
-import { Review as RevInterface, tagKey, tags } from '@utils/interface/photoBooth';
+import { Review as RevInterface, tagKey, tagKeyArray, tags } from '@utils/interface/photoBooth';
 import Image from 'next/image';
 import styled from 'styled-components';
 
@@ -16,6 +16,9 @@ interface ReviewProps {
 
 export default function Review({ name, score, review }: ReviewProps) {
   const tagKeys = Object.keys(tags) as Array<tagKey>;
+
+  type tempTagKeyArray = (typeof tagKeyArray)[number];
+  const isTagKey = (x: any): x is tempTagKeyArray => tagKeyArray.includes(x);
 
   return (
     <Wrapper>
@@ -65,9 +68,14 @@ export default function Review({ name, score, review }: ReviewProps) {
         <p className="content">{review.content}</p>
         <div className="tag_grid">
           {review.userTags!.map((userTag, idx) => {
-            const curKey = tagKeys.filter((key) => {
-              return userTag === tags[key];
-            })[0];
+            let curKey;
+            if (isTagKey(userTag)) {
+              curKey = userTag;
+            } else {
+              curKey = tagKeys.filter((key) => {
+                return userTag === tags[key];
+              })[0];
+            }
             return <Tag key={`${userTag}${idx}`} tagKey={curKey} />;
           })}
         </div>

@@ -43,6 +43,18 @@ export type tagKey =
   | 'POWDER_ROOM'
   | 'PARKING';
 
+export const tagKeyArray: tagKey[] = [
+  'PICTURE',
+  'LIGHT',
+  'RETOUCH',
+  'VARIOUS',
+  'CLEAN',
+  'BOOTH',
+  'FACILITY',
+  'POWDER_ROOM',
+  'PARKING',
+];
+
 export type tagValue =
   | '사진이 잘 나와요'
   | '조명이 좋아요'
@@ -74,10 +86,12 @@ export interface Review {
   date: Date | undefined;
   content: string;
   score: number;
+
   imgUrl: string[];
+
   brand: string;
   name: string;
-  userTags: Array<tagValue>;
+  userTags: Array<tagValue> | Array<tagKey>;
 }
 
 export type userTags = {
