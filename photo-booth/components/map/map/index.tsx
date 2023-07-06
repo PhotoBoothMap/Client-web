@@ -24,7 +24,7 @@ function latLngConstructor(kakaoLatLng: any) {
 }
 
 export enum searchType {
-  부스 = '부스',
+  브랜드 = '브랜드',
   지역 = '지역',
 }
 
