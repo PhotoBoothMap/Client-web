@@ -58,7 +58,11 @@ export default function BoothDetailPop({
           content:
             '여기 사진 진짜 잘 나오네요. 만족스러운 시간이었습니다. 다음에도 꼭 가고싶어요...',
           score: 4.5,
-          imgUrl: [],
+          imgUrl: [
+            `${process.env.NEXT_PUBLIC_HOST}image/white_mark_map.png`,
+            `${process.env.NEXT_PUBLIC_HOST}image/white_mark_map.png`,
+            `${process.env.NEXT_PUBLIC_HOST}image/white_mark_map.png`,
+          ],
           userTags: ['사진이 잘 나와요', '조명이 좋아요', '파우더룸이 잘 되어있어요'] as tagValue[],
         },
       ],
@@ -66,8 +70,8 @@ export default function BoothDetailPop({
   }, []);
 
   const { boothDetail, userTags, review } = useMemo(() => {
-    const { boothDetail, userTags, review } = boothInfo ?? testData;
-    // const { boothDetail, userTags, review } = testData;
+    // const { boothDetail, userTags, review } = boothInfo ?? testData;
+    const { boothDetail, userTags, review } = testData;
 
     return { boothDetail, userTags, review };
   }, [boothInfo]);

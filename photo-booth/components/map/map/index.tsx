@@ -365,22 +365,6 @@ export default function Map() {
     toAsync(getMarkers);
   }, [curMap.current, isGettingMarker]);
 
-  // useEffect(() => {
-  //   if (curMap.current === null) return;
-  //   async function toAsync(fn: any) {
-  //     setIsLoading(true);
-  //     try {
-  //       await fn();
-  //     } catch (e) {
-  //       console.log(e);
-  //     } finally {
-  //       setIsGettingMarker(false);
-  //       setIsLoading(false);
-  //     }
-  //   }
-  //   toAsync(getMarkers);
-  // }, [curMap.current]);
-
   const getMyGps = () => {
     let gpsOptions = {
       enableHighAccuracy: true,

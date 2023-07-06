@@ -4,6 +4,7 @@ import Rating from '@mui/material/Rating';
 
 import Tag from '@components/review/Tag';
 import LogoBright from '@image/logo_bright.png';
+import { PreviewPhotoBoxStyle } from '@styles/review/ReviewStyle';
 import { Review as RevInterface, tagKey, tagKeyArray, tags } from '@utils/interface/photoBooth';
 import Image from 'next/image';
 import styled from 'styled-components';
@@ -61,8 +62,8 @@ export default function Review({ name, score, review }: ReviewProps) {
       </Header>
       <Body>
         <div className="image_wrapper">
-          {review.imgUrl?.map((img) => {
-            return <Image src={img} alt="" height={60} width={60} />;
+          {review.imgUrl?.map((img, idx) => {
+            return <PreviewPhotoBoxStyle photoUrl={img} key={idx}></PreviewPhotoBoxStyle>;
           })}
         </div>
         <p className="content">{review.content}</p>
@@ -132,7 +133,7 @@ const Header = styled.div`
 const Body = styled.div`
   padding-top: 1rem;
 
-  div.ImageWrapper {
+  div.image_wrapper {
     display: flex;
     flex-direction: row;
     justify-content: left;
