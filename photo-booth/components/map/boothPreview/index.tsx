@@ -32,6 +32,7 @@ const testBooth = {
     address: '서울 강남구 강남대로 102길 31 1층 4호',
     score: 4.2,
     reviewNum: 10,
+    tagNum: 200,
     coordinate: {
       lat: 30,
       lng: 30,

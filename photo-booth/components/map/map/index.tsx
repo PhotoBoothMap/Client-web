@@ -70,7 +70,7 @@ export default function Map() {
   const [curSearchType, setCurSearchType] = useState<searchType | null>(searchType.지역);
   const [curMarkers, setCurMarkers] = useState<Array<any>>([]);
 
-  const [markerUpdate, setMarkerUpdate] = useState<number>(0);
+  // const [markerUpdate, setMarkerUpdate] = useState<number>(0);
 
   const [curBoothPreviews, setCurBoothPreviews] = useBoothStore((state) => [
     state.curBoothPreviews,
@@ -305,7 +305,7 @@ export default function Map() {
     const bounds = (map as any).getBounds();
     const neLatLng = bounds.getNorthEast();
 
-    setMarkerUpdate(markerUpdate + 1);
+    // setMarkerUpdate(markerUpdate + 1);
 
     try {
       await getMarkersByCor(latLngConstructor(latLng), latLngConstructor(neLatLng));
@@ -361,7 +361,7 @@ export default function Map() {
     }
 
     toAsync(getMarkers);
-  }, [isGettingMarker, isShowMap]);
+  }, [curMap.current, isGettingMarker, isShowMap]);
 
   // useEffect(() => {
   //   if (curMap.current === null) return;
