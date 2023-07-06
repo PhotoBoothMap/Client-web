@@ -132,7 +132,7 @@ const Body = styled.div`
   flex-direction: column;
   justify-content: start;
   & {
-    > p.title {
+    p.title {
       font-style: normal;
       font-size: 16px;
       line-height: 19px;
@@ -141,7 +141,7 @@ const Body = styled.div`
       color: white;
     }
 
-    > p.address {
+    p.address {
       font-size: 14px;
       font-weight: 400;
       line-height: 17px;
@@ -149,13 +149,13 @@ const Body = styled.div`
       color: #c9c9c9;
     }
 
-    > div.review_wrapper {
+    div.review_wrapper {
       display: flex;
       flex-direction: row;
       align-items: center;
       font-size: 14px;
 
-      > div.score_wrapper {
+      div.score_wrapper {
         display: flex;
         flex-direction: row;
         align-items: center;
@@ -166,11 +166,11 @@ const Body = styled.div`
         padding-right: 10px;
       }
 
-      > p.score {
+      p.score {
         color: white;
       }
 
-      > div.review {
+      div.review {
         padding-left: 0.5rem;
         color: white;
       }
@@ -189,7 +189,7 @@ const BoothIconWrapper = styled.div<BoothIconWrapperProps>`
   align-items: center;
   gap: 5px;
   & {
-    > p.distance {
+    p.distance {
       font-size: 14px;
       color: ${({ color }) => color};
     }
