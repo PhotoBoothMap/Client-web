@@ -70,8 +70,6 @@ export default function Map() {
   const [curSearchType, setCurSearchType] = useState<searchType | null>(searchType.지역);
   const [curMarkers, setCurMarkers] = useState<Array<any>>([]);
 
-  // const [markerUpdate, setMarkerUpdate] = useState<number>(0);
-
   const [curBoothPreviews, setCurBoothPreviews] = useBoothStore((state) => [
     state.curBoothPreviews,
     state.setCurBoothPreviews,
@@ -101,6 +99,12 @@ export default function Map() {
         };
         const map = new window.kakao.maps.Map(container, options);
         curMap.current = map;
+        async function toAsync(fn: any) {
+          await fn();
+          setIsGettingMarker(false);
+        }
+
+        toAsync(getMarkers);
       });
     });
   }, [isShowMap]);
@@ -305,13 +309,10 @@ export default function Map() {
     });
     const bounds = (map as any).getBounds();
     const neLatLng = bounds.getNorthEast();
-
-    // setMarkerUpdate(markerUpdate + 1);
-
+    curPreviews.current = 0;
     try {
       await getMarkersByCor(latLngConstructor(latLng), latLngConstructor(neLatLng));
       await getPreviews([]);
-      curPreviews.current = 10;
     } catch (e) {
       console.log(e);
     } finally {
@@ -362,7 +363,7 @@ export default function Map() {
     }
 
     toAsync(getMarkers);
-  }, [curMap.current, isGettingMarker, isShowMap]);
+  }, [curMap.current, isGettingMarker]);
 
   // useEffect(() => {
   //   if (curMap.current === null) return;
