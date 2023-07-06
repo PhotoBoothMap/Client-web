@@ -70,8 +70,8 @@ export default function BoothDetailPop({
   }, []);
 
   const { boothDetail, userTags, review } = useMemo(() => {
-    // const { boothDetail, userTags, review } = boothInfo ?? testData;
-    const { boothDetail, userTags, review } = testData;
+    const { boothDetail, userTags, review } = boothInfo ?? testData;
+    // const { boothDetail, userTags, review } = testData;
 
     return { boothDetail, userTags, review };
   }, [boothInfo]);
