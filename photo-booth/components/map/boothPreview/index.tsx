@@ -107,7 +107,7 @@ export default function BoothPreview({
           <div className="review">{`리뷰 ${reviewNum}`}</div>
         </div>
       </Body>
-      <BoothIconWrapper color={BoothColor[brand!]}>
+      <BoothIconWrapper color={BoothColor[brand!] ?? '#F2F2F2'}>
         {curIcon.current !== null ? (
           <Image src={curIcon.current} alt="" height="40" />
         ) : (
