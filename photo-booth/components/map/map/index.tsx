@@ -65,12 +65,10 @@ export default function Map() {
   const [curBoothDetail, setCurBoothDetail] = useState<PhotoBooth | null>(null);
   const [boothDetailUp, setBoothDetailUp] = useState<boolean>(false);
 
-  const [curLevel, setCurLevel] = useState<number | null>(5);
+  const [curLevel, setCurLevel] = useState<number | null>(null);
   const [curBoundDistance, setCurBoundDistance] = useState<number>(Number.POSITIVE_INFINITY);
   const [curSearchType, setCurSearchType] = useState<searchType | null>(searchType.지역);
   const [curMarkers, setCurMarkers] = useState<Array<any>>([]);
-
-  // const [markerUpdate, setMarkerUpdate] = useState<number>(0);
 
   const [curBoothPreviews, setCurBoothPreviews] = useBoothStore((state) => [
     state.curBoothPreviews,
@@ -101,6 +99,12 @@ export default function Map() {
         };
         const map = new window.kakao.maps.Map(container, options);
         curMap.current = map;
+        async function toAsync(fn: any) {
+          await fn();
+          setIsGettingMarker(false);
+        }
+
+        toAsync(getMarkers);
       });
     });
   }, [isShowMap]);
@@ -116,6 +120,7 @@ export default function Map() {
         setIsGettingMarker(true);
       }, 500),
     );
+    setCurLevel(5);
   }, [curMap.current, isShowMap]);
 
   const getDistanceByCor = (cor1: Coordinate, cor2: Coordinate) => {
@@ -304,13 +309,10 @@ export default function Map() {
     });
     const bounds = (map as any).getBounds();
     const neLatLng = bounds.getNorthEast();
-
-    // setMarkerUpdate(markerUpdate + 1);
-
+    curPreviews.current = 0;
     try {
       await getMarkersByCor(latLngConstructor(latLng), latLngConstructor(neLatLng));
       await getPreviews([]);
-      curPreviews.current = 10;
     } catch (e) {
       console.log(e);
     } finally {
@@ -361,23 +363,7 @@ export default function Map() {
     }
 
     toAsync(getMarkers);
-  }, [curMap.current, isGettingMarker, isShowMap]);
-
-  // useEffect(() => {
-  //   if (curMap.current === null) return;
-  //   async function toAsync(fn: any) {
-  //     setIsLoading(true);
-  //     try {
-  //       await fn();
-  //     } catch (e) {
-  //       console.log(e);
-  //     } finally {
-  //       setIsGettingMarker(false);
-  //       setIsLoading(false);
-  //     }
-  //   }
-  //   toAsync(getMarkers);
-  // }, [curMap.current]);
+  }, [curMap.current, isGettingMarker]);
 
   const getMyGps = () => {
     let gpsOptions = {
