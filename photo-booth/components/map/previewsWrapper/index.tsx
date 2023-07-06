@@ -230,7 +230,6 @@ const Wrapper = styled.div<WrapperProps>`
     height: 100%;
     width: 100%;
     z-index: -1;
-
     display: ${({ state }) => (state ? 'block' : 'none')};
   }
 `;
