@@ -62,7 +62,7 @@ export interface BoothDetail {
   score: number;
   distance: number;
   reviewNum: number;
-  status: string;
+  tagNum: number;
   coordinate: {
     lat: number;
     lng: number;
@@ -74,7 +74,7 @@ export interface Review {
   date: Date | undefined;
   content: string;
   score: number;
-  imgUrl: string;
+  imgUrl: string[];
   brand: string;
   name: string;
   userTags: Array<tagValue>;
@@ -85,7 +85,10 @@ export type userTags = {
 };
 
 export interface PhotoBooth {
-  boothDetail: Pick<BoothDetail, 'id' | 'brand' | 'name' | 'address' | 'score' | 'reviewNum'>;
+  boothDetail: Pick<
+    BoothDetail,
+    'id' | 'brand' | 'name' | 'address' | 'score' | 'reviewNum' | 'tagNum'
+  >;
   userTags: userTags;
   review: Review[];
 }

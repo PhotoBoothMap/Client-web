@@ -30,8 +30,9 @@ export default function PreviewsWrapper({
 
   // 새로고침 버튼 opacity
   const [curButtonOpacity, setCurButtonOpacity] = useState<number>(1);
-
+  const [curButtonShow, setCurButtonShow] = useState<boolean>(true);
   // 무한 스크롤에 필요한 훅들
+  const [isInitCall, setIsInitCall] = useState<boolean>(true);
   const curPage = useRef<number>(0);
   const elementRef = useRef<HTMLDivElement>(null);
   const isOnScreen = useOnScreen(elementRef);
@@ -90,13 +91,13 @@ export default function PreviewsWrapper({
     if (isDragging) {
       const dy = e.clientY - mouseBeforePosition;
       const neOffset = curOffset + dy;
-      if (dy < 0 && neOffset < window.innerHeight * 0.7 && neOffset > window.innerHeight * 0.6) {
+      if (dy < 0 && neOffset < window.innerHeight * 0.85 && neOffset > window.innerHeight * 0.5) {
         setCurOffset(window.innerHeight * 0.2);
         setIsDragging(false);
         return;
       }
 
-      if (dy > 0 && neOffset > window.innerHeight * 0.3 && neOffset < window.innerHeight * 0.35) {
+      if (dy > 0 && neOffset > window.innerHeight * 0.25 && neOffset < window.innerHeight * 0.35) {
         setCurOffset(window.innerHeight * 0.9);
         setIsDragging(false);
         return;
@@ -117,14 +118,13 @@ export default function PreviewsWrapper({
 
   useEffect(() => {
     if (curOffset === 0) return;
-    const maxHeight = window.innerHeight * 0.2;
-    const heightTresh = window.innerHeight * 0.25;
 
-    const interval = heightTresh - maxHeight;
-    if (curOffset > heightTresh) return;
-    const distance = Math.max(curOffset - maxHeight, 0);
-    const opacity = distance / interval;
-    setCurButtonOpacity(opacity);
+    const heightTresh = window.innerHeight * 0.6;
+    if (curOffset < heightTresh) {
+      setCurButtonShow(false);
+    } else {
+      setCurButtonShow(true);
+    }
   }, [curOffset]);
 
   useEffect(() => {
@@ -152,7 +152,12 @@ export default function PreviewsWrapper({
         handleTouchEnd(height);
       }}
     >
-      <Refinder className="re_finder" onClick={getMarkers} opacity={curButtonOpacity}>
+      <Refinder
+        className="re_finder"
+        onClick={getMarkers}
+        opacity={curButtonOpacity}
+        state={curButtonShow}
+      >
         {/* <Image src={IconRefresh} alt="" width={14} height={14} />
         <p>이 지역 재탐색</p> */}
         <Image src={RefreshButton} alt="" height={40} />
@@ -232,6 +237,7 @@ const Wrapper = styled.div<WrapperProps>`
 
 interface RefinderProps {
   opacity: number;
+  state: boolean;
 }
 
 const Refinder = styled.div<RefinderProps>`
@@ -239,8 +245,9 @@ const Refinder = styled.div<RefinderProps>`
   left: 50%;
   top: -58px;
   transform: translate(-50%, 0);
+  transition-duration: 0.3s;
   z-index: 100;
-  opacity: ${({ opacity }) => opacity};
+  opacity: ${({ state }) => (state ? 1 : 0)};
 `;
 
 interface HeaderProps {

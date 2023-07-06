@@ -57,6 +57,11 @@ export default function Review({ name, score, review }: ReviewProps) {
         </div>
       </Header>
       <Body>
+        <div className="image_wrapper">
+          {review.imgUrl?.map((img) => {
+            return <Image src={img} alt="" height={60} width={60} />;
+          })}
+        </div>
         <p className="content">{review.content}</p>
         <div className="tag_grid">
           {review.userTags!.map((userTag, idx) => {
@@ -104,7 +109,7 @@ const Header = styled.div`
       text-align: right;
       p.name {
         max-width: 200px;
-        text-align: center;
+        text-align: left;
         font-size: 14px;
         font-weight: 400;
         color: #f2f2f2;
@@ -118,6 +123,18 @@ const Header = styled.div`
 
 const Body = styled.div`
   padding-top: 1rem;
+
+  div.ImageWrapper {
+    display: flex;
+    flex-direction: row;
+    justify-content: left;
+    align-items: center;
+    gap: 10px;
+    img {
+      flex: 0 0 auto;
+      object-fit: contain;
+    }
+  }
 
   p.content {
     padding: 0.5rem;

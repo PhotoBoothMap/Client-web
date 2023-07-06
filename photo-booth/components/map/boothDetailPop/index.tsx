@@ -30,7 +30,6 @@ export default function BoothDetailPop({
   const navigation = useRouter();
   const user = useLoginUserStore();
 
-  const [totalReviews, setTotalReviews] = useState<number>(999);
   const [starRate, setStarRate] = useState<number>(0);
 
   const testData: PhotoBooth = useMemo(() => {
@@ -43,6 +42,7 @@ export default function BoothDetailPop({
           '서울 강남구 강남대로 102길 31 1층 4호 서울 강남구 강남대로 102길 31 1층 4호 서울 강남구 강남대로 102길 31 1층 4호',
         score: 4.5,
         reviewNum: 10,
+        tagNum: 200,
       },
       userTags: {
         '사진이 잘 나와요': 82,
@@ -58,7 +58,7 @@ export default function BoothDetailPop({
           content:
             '여기 사진 진짜 잘 나오네요. 만족스러운 시간이었습니다. 다음에도 꼭 가고싶어요...',
           score: 4.5,
-          imgUrl: '',
+          imgUrl: [],
           userTags: ['사진이 잘 나와요', '조명이 좋아요', '파우더룸이 잘 되어있어요'] as tagValue[],
         },
       ],
@@ -68,15 +68,7 @@ export default function BoothDetailPop({
   const { boothDetail, userTags, review } = useMemo(() => {
     const { boothDetail, userTags, review } = boothInfo ?? testData;
     // const { boothDetail, userTags, review } = testData;
-    let total = 0;
 
-    const curKeys = Object.keys(userTags!) as Array<tagValue>;
-    curKeys.forEach((key) => {
-      if (userTags!.hasOwnProperty(key)) {
-        total += userTags![key] ?? 0;
-      }
-    });
-    setTotalReviews(total);
     return { boothDetail, userTags, review };
   }, [boothInfo]);
 
@@ -124,7 +116,7 @@ export default function BoothDetailPop({
       <UserReview>
         <div className="user_review_header">
           <p className="content">User Reviews</p>
-          <p className="number">{'(' + totalReviews + ')'}</p>
+          <p className="number">{'(' + boothDetail?.tagNum! + ')'}</p>
         </div>
         <div className="user_review_body">
           {(Object.keys(userTags!) as tagValue[]).map((userTag, idx) => {
@@ -142,10 +134,13 @@ export default function BoothDetailPop({
                   <div className={`review_text font-semibold text-[#F2F2F2]`}>{userTag}</div>
                 </div>
                 <div className="row_right">
-                  <Stick width={150} rate={value! / (totalReviews === 0 ? 1 : totalReviews)}>
+                  <Stick
+                    width={150}
+                    rate={value! / (boothDetail?.tagNum! === 0 ? 1 : boothDetail?.tagNum!)}
+                  >
                     <div className="stick"></div>
                   </Stick>
-                  <div className="rate">{`${value}/${totalReviews}`}</div>
+                  <div className="rate">{`${value}/${boothDetail?.tagNum!}`}</div>
                 </div>
               </div>
             );

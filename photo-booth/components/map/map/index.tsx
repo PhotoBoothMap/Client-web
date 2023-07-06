@@ -8,6 +8,7 @@ import { mapRepository } from '@repositories/map';
 import { Coordinate } from '@utils/interface/basic';
 import { BoothPreview, PhotoBooth, photoBooth } from '@utils/interface/photoBooth';
 
+import { defaultCor } from '@assets/const';
 import { boothRepository } from '@repositories/booth';
 import { debounce } from 'lodash';
 import { useState } from 'react';
@@ -35,6 +36,7 @@ const testBooth = {
     address: '서울 강남구 강남대로 102길 31 1층 4호',
     score: 4.2,
     reviewNum: 10,
+    tagNum: 200,
     coordinate: {
       lat: 30,
       lng: 30,
@@ -50,7 +52,6 @@ const testBooth = {
 
 export default function Map() {
   /* prettier-ignore */
-  const [userCor, setUserCor] = useMapStore((state) => [state.initialPosition, state.setInitialPostion]);
   const [curCor, setCurCor] = useMapStore((state) => [state.curPosition, state.setCurPosition]);
   const boothFilters = useBoothStore((state) => state.boothFilters);
   const [isGettingMarker, setIsGettingMarker] = useBoothStore((state) => [
@@ -58,12 +59,13 @@ export default function Map() {
     state.setIsGettingMarker,
   ]);
 
+  const [isShowMap, setIsShowMap] = useState<boolean>(false);
   const [isLoading, setIsLoading] = useState<boolean>(false);
 
   const [curBoothDetail, setCurBoothDetail] = useState<PhotoBooth | null>(null);
   const [boothDetailUp, setBoothDetailUp] = useState<boolean>(false);
 
-  const [curLevel, setCurLevel] = useState<number | null>(null);
+  const [curLevel, setCurLevel] = useState<number | null>(5);
   const [curBoundDistance, setCurBoundDistance] = useState<number>(Number.POSITIVE_INFINITY);
   const [curSearchType, setCurSearchType] = useState<searchType | null>(searchType.지역);
   const [curMarkers, setCurMarkers] = useState<Array<any>>([]);
@@ -82,7 +84,7 @@ export default function Map() {
   const curMoveFunctionRef = useRef<any>(null);
 
   useEffect(() => {
-    if (ref.current === null) {
+    if (ref.current === null || !isShowMap) {
       return;
     }
     const script = document.createElement('script');
@@ -95,16 +97,16 @@ export default function Map() {
         const container = ref.current;
         const options = {
           center: new window.kakao.maps.LatLng(curCor.lat, curCor.lng),
-          level: 3,
+          level: 5,
         };
         const map = new window.kakao.maps.Map(container, options);
         curMap.current = map;
       });
     });
-  }, []);
+  }, [isShowMap]);
 
   useEffect(() => {
-    if (curMap.current == null) return;
+    if (curMap.current == null || !isShowMap) return;
     window.kakao.maps.event.addListener(
       curMap.current,
       'zoom_changed',
@@ -114,8 +116,7 @@ export default function Map() {
         setIsGettingMarker(true);
       }, 500),
     );
-    setCurLevel(5);
-  }, [curMap.current]);
+  }, [curMap.current, isShowMap]);
 
   const getDistanceByCor = (cor1: Coordinate, cor2: Coordinate) => {
     if (curMap.current === null) return;
@@ -206,6 +207,9 @@ export default function Map() {
 
   const getMarkersByCor = async (centerCor: Coordinate, neCor: Coordinate) => {
     const response = await mapRepository.getMarkers(centerCor, neCor, boothFilters);
+    curMarkers.forEach((marker) => {
+      marker.setMap(null);
+    });
     const markerList: Array<any> = [];
     response?.forEach((booth) => {
       const { id, brand, coordinate } = booth;
@@ -270,14 +274,14 @@ export default function Map() {
 
   // 줌 in,out 시 bound 거리 다시 계산
   useEffect(() => {
-    if (curMap.current === null) return;
+    if (curMap.current === null || !isShowMap) return;
 
     const centerLatLng = (curMap.current as any).getCenter();
     const bounds = (curMap.current as any).getBounds();
     const neLatLng = bounds.getNorthEast();
     const boundDistance = getDistanceByLatLng(centerLatLng, neLatLng);
     setCurBoundDistance(boundDistance);
-  }, [curMap.current, curLevel]);
+  }, [curMap.current, curLevel, isShowMap]);
 
   const centerChangeEvent = useCallback(
     debounce(() => {
@@ -306,7 +310,7 @@ export default function Map() {
     try {
       await getMarkersByCor(latLngConstructor(latLng), latLngConstructor(neLatLng));
       await getPreviews([]);
-      curPreviews.current = 0;
+      curPreviews.current = 10;
     } catch (e) {
       console.log(e);
     } finally {
@@ -326,7 +330,7 @@ export default function Map() {
 
   // 이동시에 일정 거리 이동시 부스 정보 업데이트
   useEffect(() => {
-    if (curMap.current === null || isGettingMarker) {
+    if (curMap.current === null || isGettingMarker || !isShowMap) {
       return;
     }
 
@@ -338,18 +342,18 @@ export default function Map() {
 
     window.kakao.maps.event.addListener(curMap.current, 'center_changed', centerChangeEvent);
     curMoveFunctionRef.current = centerChangeEvent;
-  }, [curMap.current, centerChangeEvent]);
+  }, [curMap.current, centerChangeEvent, isShowMap]);
 
   useEffect(() => {
-    if (curMap.current === null) return;
+    if (curMap.current === null || !isShowMap) return;
     async function toAsync(fn: any) {
       await fn();
     }
     toAsync(getMarkers);
-  }, [curMap.current, Array.from(boothFilters).length]);
+  }, [curMap.current, Array.from(boothFilters).length, isShowMap]);
 
   useEffect(() => {
-    if (!isGettingMarker) return;
+    if (!isGettingMarker || !isShowMap) return;
 
     async function toAsync(fn: any) {
       await fn();
@@ -357,7 +361,7 @@ export default function Map() {
     }
 
     toAsync(getMarkers);
-  }, [curMap.current, isGettingMarker]);
+  }, [curMap.current, isGettingMarker, isShowMap]);
 
   // useEffect(() => {
   //   if (curMap.current === null) return;
@@ -374,6 +378,38 @@ export default function Map() {
   //   }
   //   toAsync(getMarkers);
   // }, [curMap.current]);
+
+  const getMyGps = () => {
+    let gpsOptions = {
+      enableHighAccuracy: true,
+      timeout: 5000,
+    };
+
+    return new Promise((resolve, rejected) => {
+      navigator.geolocation.getCurrentPosition(resolve, rejected);
+    });
+  };
+
+  useEffect(() => {
+    async function toAsync(fn: any) {
+      await fn();
+    }
+    toAsync(async () => {
+      try {
+        const position = (await getMyGps()) as any;
+        setCurCor({
+          lat: position.coords.latitude,
+          lng: position.coords.longitude,
+        });
+      } catch (e) {
+        const defaultPosition = defaultCor();
+        setCurCor(defaultPosition);
+      } finally {
+        setIsLoading(false);
+        setIsShowMap(true);
+      }
+    });
+  }, []);
 
   return (
     <Wrapper>

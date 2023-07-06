@@ -5,7 +5,7 @@ const DEFAULTCOR = {
   lng: 126.9294,
 };
 
-export function defaultCor() {
+export function defaultCor()  {
   return clone(DEFAULTCOR);
 }
 

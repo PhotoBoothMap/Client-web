@@ -27,7 +27,7 @@ export default function SearchBox({
 
   const inputPlaceholder = useMemo(() => {
     switch (curSearchType) {
-      case searchType.부스:
+      case searchType.브랜드:
         return '브랜드 명으로 검색해보세요';
       case searchType.지역:
         return '지역 명으로 검색해보세요';
@@ -67,11 +67,11 @@ export default function SearchBox({
             <li
               className="dropdown_menu"
               onClick={() => {
-                setCurSearchType(searchType.부스);
+                setCurSearchType(searchType.브랜드);
                 setIsSelectView(false);
               }}
             >
-              부스명
+              브랜드명
             </li>
             <li
               className="dropdown_menu"
@@ -99,7 +99,7 @@ export default function SearchBox({
             width="16"
             onClick={() => {
               switch (curSearchType) {
-                case searchType.부스:
+                case searchType.브랜드:
                   searchByBooth(curInput);
                   break;
                 case searchType.지역:
