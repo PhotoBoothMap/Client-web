@@ -23,6 +23,8 @@ export default function PreviewsWrapper({
   getPreviews,
   getMarkers,
 }: PreviewWrapperProps) {
+  const contentBody = useRef<HTMLUListElement>(null);
+
   const curBoothPreviews = useBoothStore((state) => state.curBoothPreviews);
   const [curOffset, setCurOffset] = useState<number>(0);
   const [mouseBeforePosition, setMouseBeforePosition] = useState<number>(0);
@@ -70,6 +72,9 @@ export default function PreviewsWrapper({
 
       if (dy > 0 && neOffset > window.innerHeight * 0.3 && neOffset < window.innerHeight * 0.35) {
         setCurOffset(window.innerHeight * 0.9);
+        console.log('is scroll here');
+        (contentBody.current as HTMLUListElement).scrollTo({ top: 0, behavior: 'smooth' });
+
         setIsDragging(false);
         return;
       }
@@ -99,6 +104,8 @@ export default function PreviewsWrapper({
 
       if (dy > 0 && neOffset > window.innerHeight * 0.25 && neOffset < window.innerHeight * 0.35) {
         setCurOffset(window.innerHeight * 0.9);
+        (contentBody.current as HTMLUListElement).scrollTo({ top: 0, behavior: 'smooth' });
+
         setIsDragging(false);
         return;
       }
@@ -180,7 +187,7 @@ export default function PreviewsWrapper({
           <Image width="40" src={hamburgetScroll} alt="" draggable={false} />
         </HamburgerScroll>
       </Header>
-      <Body>
+      <Body ref={contentBody}>
         {curBoothPreviews.map((previewInfo, idx) => {
           const { id, brand, name, distance, address, score, reviewNum } = previewInfo;
           return (

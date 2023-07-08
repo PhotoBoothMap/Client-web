@@ -297,7 +297,7 @@ export default function Map() {
       if (curDistance >= curBoundDistance && !isGettingMarker) {
         setIsGettingMarker(true);
       }
-    }, 500),
+    }, 300),
     [curMap.current, isGettingMarker, curCor.lat, curCor.lng, curBoundDistance],
   );
 

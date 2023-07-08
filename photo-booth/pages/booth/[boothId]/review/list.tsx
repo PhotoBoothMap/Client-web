@@ -98,7 +98,8 @@ export default function BoothReviewList() {
   const getReviews = async () => {
     setIsRequesting(true);
     try {
-      const { review } = await requestReviewApi(Number(navigation.query.boothId), curPage.current);
+      const response = await requestReviewApi(Number(navigation.query.boothId), curPage.current);
+      const review = response.review;
 
       if (review.length === 0) {
         curPage.current = -1;
@@ -129,12 +130,10 @@ export default function BoothReviewList() {
   useEffect(() => {
     if (!navigation.query.boothId) return;
 
-
     if (isOnScreen && !isRequesting && curPage.current !== -1) {
-
       getReviews();
     }
-  }, [curPage, navigation.query.boothId, isOnScreen, isRequesting]);
+  }, [isOnScreen]);
 
   useEffect(() => {
     getReviews();

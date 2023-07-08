@@ -42,8 +42,7 @@ export const registerReviewApi = (boothId: number, requestBody: {}) => {
 };
 
 interface Response<T> {
-  success: boolean;
-  data: { result: T };
+  data: { result: T; success: boolean };
 }
 
 export const requestReviewApi = async (boothId: number, count: number) => {
@@ -51,7 +50,7 @@ export const requestReviewApi = async (boothId: number, count: number) => {
     const response: Response<{
       review: Array<Review>;
     }> = await axios.get(`${HOST_URL}/booth/${boothId}/review?count=${count}`);
-    if (!response.success) {
+    if (!response.data.success) {
       Error('get review error');
       return { review: [] as Review[] };
     } else {

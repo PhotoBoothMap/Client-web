@@ -83,7 +83,7 @@ export interface BoothDetail {
 
 export interface Review {
   user: string;
-  date: Date | undefined;
+  date: string | undefined;
   content: string;
   score: number;
 
