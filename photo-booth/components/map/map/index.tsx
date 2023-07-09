@@ -185,7 +185,7 @@ export default function Map() {
 
     const icon = new window.kakao.maps.MarkerImage(
       `${process.env.NEXT_PUBLIC_HOST}${boothIcon}`,
-      new window.kakao.maps.Size(42, 56),
+      new window.kakao.maps.Size(35, 45),
       {
         offset: new window.kakao.maps.Point(16, 34),
         coords: '1,20,1,9,5,2,10,0,21,0,27,3,30,9,30,20,17,33,14,33',

@@ -11,7 +11,7 @@ export function defaultCor() {
 
 export const BoothColor = {
   인생네컷: '#FF93D4',
-  포토이즘: '#FFC700',
+  포토이즘: '#FF4F06',
   하루필름: '#0981FF',
   포토매틱: '#FF4F06',
   셀픽스: '#00C543',
