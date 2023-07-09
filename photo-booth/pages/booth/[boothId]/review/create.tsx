@@ -129,7 +129,7 @@ const BoothReviewCreatePage = () => {
                   ) : (
                     <input
                       type="file"
-                      accept="image/*"
+                      accept=".jpg, .png"
                       className="register-photo"
                       onChange={(e) => {
                         registerPhoto(e);
