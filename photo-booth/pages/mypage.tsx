@@ -1,5 +1,6 @@
 import BasicHeader from '@components/common/header/BasicHeader';
 import ReviewComp from '@components/map/review';
+import { logoutApi } from '@repositories/login/auth';
 import { getMyReviewsApi } from '@repositories/user/myPage';
 import { useLoginUserStore } from '@store/login';
 import { tagKey } from '@utils/interface/photoBooth';
@@ -45,13 +46,30 @@ const mypage = () => {
     }
   }, [router, hydrated]);
 
+  const logout = useCallback(async () => {
+    const response = await logoutApi();
+    if (response.success) {
+      user.resetLoginUser();
+      router.push('/map');
+    }
+  }, []);
+
   if (!hydrated) {
     // Returns null on first render, so the client and server match
     return null;
   } else
     return (
       <article className={`text-[#F2F2F2]`}>
-        <BasicHeader type={'back'} text={'My page'} onClickEvent={() => router.push('/map')} />
+        <BasicHeader
+          type={'back'}
+          text={'My page'}
+          onClickEvent={() => router.push('/map')}
+          rightElement={
+            <div onClick={() => logout()} className={`cursor-pointer font-normal text-sm`}>
+              로그아웃
+            </div>
+          }
+        />
         <section>
           <section>
             <div className={`flex flex-col items-center gap-2 p-4`}>

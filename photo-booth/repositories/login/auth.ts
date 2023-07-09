@@ -85,3 +85,23 @@ export const reIssueApi = async () => {
 
   return response;
 };
+
+export const logoutApi = async () => {
+  const at = authAPI.defaults.headers.common['Authorization'];
+
+  const response = await fetch(`${process.env.NEXT_PUBLIC_API_HOST}/auth/logout/`, {
+    method: 'PUT',
+    headers: {
+      'Content-Type': 'application/json',
+      Authorization: `Bearer ${at}`,
+    },
+  }).then((res) => {
+    return res.json();
+  });
+
+  if (response.data.success) {
+    authAPI.defaults.headers.common['Authorization'] = '';
+  }
+
+  return response;
+};

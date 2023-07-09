@@ -4,10 +4,11 @@ import Image from 'next/image';
 type props = {
   type: 'close' | 'back';
   text: string;
+  rightElement?: null | any;
   onClickEvent: () => void;
 };
 
-const BasicHeader = ({ type, text, onClickEvent }: props) => {
+const BasicHeader = ({ type, text, rightElement = null, onClickEvent }: props) => {
   return (
     <div
       className={`review-header flex items-center justify-between p-4 border-[#2A2A2A] border-b`}
@@ -21,7 +22,7 @@ const BasicHeader = ({ type, text, onClickEvent }: props) => {
         <Image src={`/common/${type}.svg`} width={25} height={25} alt="버튼" />
       </div>
       <div className={`font-semibold`}>{text}</div>
-      <div></div>
+      <div>{rightElement && rightElement}</div>
     </div>
   );
 };
