@@ -86,6 +86,7 @@ export default function Review({ name, score, review }: ReviewProps) {
 }
 
 const Wrapper = styled.div`
+  width: 100%;
   background-color: rgba(26, 26, 26, 0.7);
   padding: 1rem;
   border-radius: 12px;

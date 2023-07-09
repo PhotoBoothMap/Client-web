@@ -102,7 +102,7 @@ export default function BoothPreview({
         <div className="review_wrapper">
           <div className="score_wrapper">
             <Image src={starIcon} alt="" height="14" />
-            <p className="score">{score}</p>
+            {score ? <p className="score">{score}</p> : <></>}
           </div>
           <div className="review">{`리뷰 ${reviewNum}`}</div>
         </div>
@@ -160,18 +160,20 @@ const Body = styled.div`
         flex-direction: row;
         align-items: center;
         border-right: 2px solid #666666;
-        gap: 8px;
         height: 16px;
         font-size: 14px;
-        padding-right: 10px;
+        img {
+          margin-right: 8px;
+        }
       }
 
       p.score {
         color: white;
+        padding-right: 10px;
       }
 
       div.review {
-        padding-left: 0.5rem;
+        padding-left: 8px;
         color: white;
       }
     }

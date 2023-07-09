@@ -1,7 +1,6 @@
-import * as React from 'react';
-import Rating from '@mui/material/Rating';
-import Box from '@mui/material/Box';
 import StarIcon from '@mui/icons-material/Star';
+import Box from '@mui/material/Box';
+import Rating from '@mui/material/Rating';
 import { useState } from 'react';
 
 type props = {
@@ -36,13 +35,21 @@ export default function StarRate({ starRate, setStarRate }: props) {
         }}
         icon={
           <StarIcon
-            style={{ color: '#FFC700', width: '3rem', height: '3rem' }}
+            sx={{
+              ml: 0.5,
+              mr: 0.5,
+            }}
+            style={{ color: '#FFC700', width: '28px', height: '28px' }}
             fontSize="inherit"
           />
         }
         emptyIcon={
           <StarIcon
-            style={{ opacity: 0.5, color: '#F2F2F280', width: '3rem', height: '3rem' }}
+            sx={{
+              ml: 0.5,
+              mr: 0.5,
+            }}
+            style={{ opacity: 0.5, color: '#F2F2F280', width: '28px', height: '28px' }}
             fontSize="inherit"
           />
         }
