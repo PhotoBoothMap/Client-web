@@ -19,7 +19,7 @@ const BasicHeader = ({ type, text, rightElement = null, onClickEvent }: props) =
           onClickEvent();
         }}
       >
-        <Image src={`/common/${type}.svg`} width={25} height={25} alt="버튼" />
+        <Image src={`/common/${type}.svg`} width={24} height={24} alt="버튼" />
       </div>
       <div className={`flex font-semibold flex-grow justify-center items-center w-[30%]`}>
         {text}
