@@ -14,15 +14,19 @@ const BasicHeader = ({ type, text, rightElement = null, onClickEvent }: props) =
       className={`review-header flex items-center justify-between p-4 border-[#2A2A2A] border-b`}
     >
       <div
-        className={`cursor-pointer`}
+        className={`flex flex-shrink items-center justify-start cursor-pointer w-[30%]`}
         onClick={() => {
           onClickEvent();
         }}
       >
         <Image src={`/common/${type}.svg`} width={25} height={25} alt="버튼" />
       </div>
-      <div className={`font-semibold`}>{text}</div>
-      <div>{rightElement && rightElement}</div>
+      <div className={`flex font-semibold flex-grow justify-center items-center w-[30%]`}>
+        {text}
+      </div>
+      <div className={`flex flex-shrink items-center justify-end w-[30%]`}>
+        {rightElement && rightElement}
+      </div>
     </div>
   );
 };
