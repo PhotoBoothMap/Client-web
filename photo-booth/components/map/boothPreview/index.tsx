@@ -13,11 +13,12 @@ import styled from 'styled-components';
 import markBlued from '@image/blue_mark.png';
 import markGreen from '@image/green_mark.png';
 import markGrey from '@image/grey_mark.png';
+import markOrange from '@image/orange_mark.png';
 import markPink from '@image/pink_mark.png';
+import markPurple from '@image/purple_mark.png';
 import markRed from '@image/red_mark.png';
 import starIcon from '@image/star_icon.png';
 import markWhite from '@image/white_mark.png';
-import markYellow from '@image/yellow_mark.png';
 
 interface BoothPreviewProps extends BoothPreviewInfo {
   setCurBoothDetail: (value: PhotoBooth) => void;
@@ -66,13 +67,16 @@ export default function BoothPreview({
         boothIcon = markBlued;
         break;
       case photoBooth.포토이즘:
-        boothIcon = markYellow;
-        break;
-      case photoBooth.포토매틱:
         boothIcon = markRed;
         break;
       case photoBooth.포토그레이:
         boothIcon = markGrey;
+        break;
+      case photoBooth.모노맨션:
+        boothIcon = markOrange;
+        break;
+      case photoBooth.포토시그니처:
+        boothIcon = markPurple;
         break;
       case photoBooth.인생네컷:
         boothIcon = markPink;
@@ -107,7 +111,7 @@ export default function BoothPreview({
           <div className="review">{`리뷰 ${reviewNum}`}</div>
         </div>
       </Body>
-      <BoothIconWrapper color={BoothColor[brand!]}>
+      <BoothIconWrapper color={BoothColor[brand!] ?? '#f2f2f2'}>
         {curIcon.current !== null ? (
           <Image src={curIcon.current} alt="" height="40" />
         ) : (

@@ -160,8 +160,12 @@ export default function Map() {
         boothIcon = 'image/yellow_mark_map.png';
         break;
 
-      case photoBooth.포토매틱:
-        boothIcon = 'image/red_mark_map.png';
+      case photoBooth.모노맨션:
+        boothIcon = 'image/orange_mark_map.png';
+        break;
+
+      case photoBooth.포토시그니처:
+        boothIcon = 'image/purple_mark_map.png';
         break;
 
       case photoBooth.포토그레이:

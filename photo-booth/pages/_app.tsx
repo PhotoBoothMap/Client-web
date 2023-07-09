@@ -5,6 +5,7 @@ config.autoAddCss = false;
 import type { AppProps } from 'next/app';
 
 import { GlobalLayout } from '@styles/common/Layout';
+import Head from 'next/head';
 import Script from 'next/script';
 import '../styles/globals.css';
 
@@ -25,6 +26,9 @@ function MyApp({ Component, pageProps }: AppProps) {
     <>
       <GlobalLayout>
         {/* <Hamburger></Hamburger> */}
+        <Head>
+          <meta name="naver-site-verification" content="c417466997957662e9c98d001fa95c13b4f4eb20" />
+        </Head>
         <Component {...pageProps} />
         <Script src="https://developers.kakao.com/sdk/js/kakao.js" onLoad={kakaoInit}></Script>
       </GlobalLayout>
