@@ -133,7 +133,7 @@ const SearchBoxWrapper = styled.div`
   position: relative;
   width: 100%;
   height: 42px;
-  padding: 0rem 1.5rem;
+  padding: 0rem 1rem;
 
   background-color: #242424;
   border-radius: 40px;
@@ -163,7 +163,7 @@ const SearchBoxWrapper = styled.div`
       object-fit: contain;
       position: absolute;
       top: 50%;
-      right: 0.5rem;
+      right: 16px;
       transform: translate(-50%, -50%);
     }
   }
@@ -178,7 +178,7 @@ const DropDown = styled.button<DropDownProps>`
   height: 36px;
   font-size: 14px;
   position: relative;
-  color: #979797;
+  color: #f2f2f2;
   background-color: #242424;
   border: none;
   margin-right: 10px;
@@ -188,7 +188,7 @@ const DropDown = styled.button<DropDownProps>`
     left: -1rem;
     top: 40px;
     background-color: #242424;
-    width: 80px;
+    width: 90px;
     padding: 0.5rem;
     opacity: ${({ state }) => (state ? 1 : 0)};
     transition-duration: 0.5s;
@@ -208,6 +208,7 @@ const DropDown = styled.button<DropDownProps>`
     display: flex;
     flex-direction: row;
     justify-content: center;
+    border-right: 1px solid #f2f2f2;
     gap: 10px;
     img {
       flex: 0 0 auto;

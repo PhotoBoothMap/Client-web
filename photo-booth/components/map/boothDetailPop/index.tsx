@@ -173,7 +173,7 @@ export default function BoothDetailPop({
       <ReviewWrapper>
         <ReviewHeader>
           <Image src={LogoBright} alt="" width="44" />
-          <p>{`${boothDetail!.name} 어떠셨나요`}</p>
+          <p>{`${boothDetail!.name} 어떠셨나요?`}</p>
           <StarRate starRate={starRate} setStarRate={setStarRate} />
         </ReviewHeader>
         <ReviewBody>
@@ -194,7 +194,7 @@ export default function BoothDetailPop({
           }}
         >
           <span>리뷰 더보기</span>
-          <Image src={PlusIcon} alt="" height="16" />
+          <Image src={PlusIcon} alt="" height="14" />
         </Footer>
       </ReviewWrapper>
     </Wrapper>
@@ -421,7 +421,7 @@ const ReviewHeader = styled.div`
 
   p {
     color: white;
-    font-size: 14px;
+    font-size: 18px;
     font-weight: 600;
   }
 `;
@@ -429,6 +429,7 @@ const ReviewHeader = styled.div`
 const ReviewBody = styled.div`
   display: flex;
   flex-direction: column;
+  width: 100%;
   gap: 0.5rem;
 `;
 
@@ -441,9 +442,10 @@ const Footer = styled.div`
   padding: 1em;
   background-color: rgba(26, 26, 26, 0.7);
   border-radius: 0.5rem;
+  gap: 4px;
   & {
     span {
-      font-size: 18px;
+      font-size: 14px;
     }
   }
 `;
