@@ -86,9 +86,7 @@ export interface Review {
   date: string | undefined;
   content: string;
   score: number;
-
   imgUrl: string[];
-
   brand: string;
   name: string;
   userTags: Array<tagValue> | Array<tagKey>;
