@@ -270,7 +270,7 @@ export default function Map() {
 
         await getMarkersByCor(latLngConstructor(curCor), latLngConstructor(neCor));
 
-        getMarkersByCor(latLngConstructor(curCor), latLngConstructor(neCor));
+        // getMarkersByCor(latLngConstructor(curCor), latLngConstructor(neCor));
         setCurCor(curCor);
       } else {
       }
