@@ -54,7 +54,7 @@ export default function Review({ name, score, review }: ReviewProps) {
               }
             />
           </Box>
-          <p className="date">{'2023.03.26'}</p>
+          <p className="date">{review.date?.split(' ')[0]}</p>
         </div>
         <div className="name_wrapper">
           <p className="name">{name}</p>

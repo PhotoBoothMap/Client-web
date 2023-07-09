@@ -1,12 +1,12 @@
 import BasicHeader from '@components/common/header/BasicHeader';
+import ReviewComp from '@components/map/review';
+import LogoBright from '@image/logo_bright.png';
 import { getMyReviewsApi } from '@repositories/user/myPage';
 import { useLoginUserStore } from '@store/login';
+import { tagKey } from '@utils/interface/photoBooth';
+import Image from 'next/image';
 import { useRouter } from 'next/router';
 import React, { useCallback, useEffect, useState } from 'react';
-import ReviewComp from '@components/map/review';
-import Image from 'next/image';
-import LogoBright from '@image/logo_bright.png';
-import { tagKey } from '@utils/interface/photoBooth';
 
 type reviewType = {
   starRate: number;
@@ -74,7 +74,7 @@ const mypage = () => {
                   if (typeof user.nickName === 'string') {
                     const _review = {
                       user: user.nickName,
-                      date: new Date(review.date),
+                      date: review.date,
                       content: review.content,
                       score: review.starRate,
                       imgUrl: review.imageUrls,
