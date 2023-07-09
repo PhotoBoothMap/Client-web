@@ -36,13 +36,13 @@ export default function StarRate({ starRate, setStarRate }: props) {
         }}
         icon={
           <StarIcon
-            style={{ color: '#FFC700', width: '3rem', height: '3rem' }}
+            style={{ color: '#FFC700', width: '2.5rem', height: '2.5rem' }}
             fontSize="inherit"
           />
         }
         emptyIcon={
           <StarIcon
-            style={{ opacity: 0.5, color: '#F2F2F280', width: '3rem', height: '3rem' }}
+            style={{ opacity: 0.5, color: '#F2F2F280', width: '2.5rem', height: '2.5rem' }}
             fontSize="inherit"
           />
         }
