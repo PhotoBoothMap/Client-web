@@ -1,6 +1,5 @@
 import BasicHeader from '@components/common/header/BasicHeader';
 import ReviewComp from '@components/map/review';
-import LogoBright from '@image/logo_bright.png';
 import { getMyReviewsApi } from '@repositories/user/myPage';
 import { useLoginUserStore } from '@store/login';
 import { tagKey } from '@utils/interface/photoBooth';
@@ -56,7 +55,7 @@ const mypage = () => {
         <section>
           <section>
             <div className={`flex flex-col items-center gap-2 p-4`}>
-              <Image src={LogoBright} alt="" width="80" />
+              <Image src={'/common/user-logo.svg'} alt="" width="80" height={80} />
               {user && <div className={`text-lg font-semibold`}>{user.nickName ?? '-'}</div>}
             </div>
             <div className={`p-4`}>
