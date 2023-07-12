@@ -39,7 +39,7 @@ export default function StarRate({ starRate, setStarRate }: props) {
               ml: 0.5,
               mr: 0.5,
             }}
-            style={{ color: '#FFC700', width: '28px', height: '28px' }}
+            style={{ color: '#FFC700', width: '2.5rem', height: '2.5rem' }}
             fontSize="inherit"
           />
         }
@@ -49,7 +49,7 @@ export default function StarRate({ starRate, setStarRate }: props) {
               ml: 0.5,
               mr: 0.5,
             }}
-            style={{ opacity: 0.5, color: '#F2F2F280', width: '28px', height: '28px' }}
+            style={{ opacity: 0.5, color: '#F2F2F280', width: '2.5rem', height: '2.5rem' }}
             fontSize="inherit"
           />
         }
