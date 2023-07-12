@@ -129,7 +129,7 @@ const BoothReviewCreatePage = () => {
                   ) : (
                     <input
                       type="file"
-                      accept="image/*"
+                      accept=".jpg, .png"
                       className="register-photo"
                       onChange={(e) => {
                         registerPhoto(e);
@@ -174,7 +174,9 @@ const BoothReviewCreatePage = () => {
         )}
       </div>
 
-      <div className={`review-button-box w-full p-4 flex justify-center text-black bg-black`}>
+      <div
+        className={`review-button-box w-full p-4 flex justify-center text-black bg-transparent pb-12`}
+      >
         <BasicButton
           text={page === 1 ? '다음' : '리뷰 등록'}
           color={

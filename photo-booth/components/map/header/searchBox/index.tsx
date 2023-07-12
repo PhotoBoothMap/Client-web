@@ -2,6 +2,7 @@ import { searchType } from '@components/map/map';
 import LogoDark from '@image/logo_dark.png';
 import SearchIcon from '@image/search_icon.png';
 import YellowArrow from '@image/yellow_arrow.png';
+import { useLoginUserStore } from '@store/login';
 import Image from 'next/image';
 import { useRouter } from 'next/router';
 import { useMemo, useState } from 'react';
@@ -21,6 +22,7 @@ export default function SearchBox({
   searchByBooth,
 }: SearchBoxProps) {
   const navigation = useRouter();
+  const user = useLoginUserStore();
 
   const [isSelectView, setIsSelectView] = useState<boolean>(false);
   const [curInput, setCurInput] = useState<string>('');
@@ -38,15 +40,30 @@ export default function SearchBox({
 
   return (
     <Wrapper>
-      <Image
-        src={LogoDark}
-        alt=""
-        width="42"
-        height="42"
-        onClick={() => {
-          navigation.push('/account/login');
-        }}
-      />
+      {user.id ? (
+        <Image
+          src={LogoDark}
+          alt=""
+          width="42"
+          height="42"
+          onClick={() => {
+            navigation.push('/mypage');
+          }}
+          style={{ cursor: 'pointer' }}
+        />
+      ) : (
+        <Image
+          src={LogoDark}
+          alt=""
+          width="42"
+          height="42"
+          onClick={() => {
+            navigation.push('/account/login');
+          }}
+          style={{ cursor: 'pointer' }}
+        />
+      )}
+
       <SearchBoxWrapper>
         <DropDown
           state={isSelectView}
