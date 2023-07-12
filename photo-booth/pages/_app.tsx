@@ -26,6 +26,7 @@ function MyApp({ Component, pageProps }: AppProps) {
     <>
       <Head>
         <link rel="icon" href="/favicon.ico" sizes="any" />
+        <title>여기 사진</title>
       </Head>
       <GlobalLayout>
         {/* <Hamburger></Hamburger> */}
