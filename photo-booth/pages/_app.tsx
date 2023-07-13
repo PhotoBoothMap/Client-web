@@ -8,7 +8,6 @@ import { GlobalLayout } from '@styles/common/Layout';
 import Head from 'next/head';
 import Script from 'next/script';
 import '../styles/globals.css';
-import Head from 'next/head';
 
 declare global {
   // Kakao 함수를 전역에서 사용할 수 있도록 선언
