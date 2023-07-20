@@ -157,7 +157,7 @@ export default function Map() {
         break;
 
       case photoBooth.포토이즘:
-        boothIcon = 'image/yellow_mark_map.png';
+        boothIcon = 'image/red_mark_map.png';
         break;
 
       case photoBooth.모노맨션:
