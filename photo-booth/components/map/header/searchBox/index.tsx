@@ -206,15 +206,16 @@ const DropDown = styled.button<DropDownProps>`
     top: 40px;
     background-color: #242424;
     width: 90px;
-    padding: 0.5rem;
+    padding: 0.2rem;
     opacity: ${({ state }) => (state ? 1 : 0)};
     transition-duration: 0.5s;
     pointer-events: ${({ state }) => (state ? 'auto' : 'none')};
     list-style-type: none;
+    border-radius: 5px;
     z-index: 99;
     li {
       background-color: #242424;
-      padding: 0.5rem;
+      padding: 0.2rem;
     }
     li:first-child {
       border-bottom: 1px solid #979797;
@@ -225,7 +226,7 @@ const DropDown = styled.button<DropDownProps>`
     display: flex;
     flex-direction: row;
     justify-content: center;
-    border-right: 1px solid #f2f2f2;
+    border-right: 1px solid #393939;
     gap: 10px;
     img {
       flex: 0 0 auto;

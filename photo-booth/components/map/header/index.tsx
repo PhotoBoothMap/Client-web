@@ -83,12 +83,18 @@ export default function MapHeader({
                 key={`${booth}${idx}`}
                 state={boothFilters.has(booth)}
                 color={BoothColor[booth]}
+                style={{
+                  color: booth === photoBooth.기타 ? '#242424' : 'white',
+                }}
                 onClick={() => {
                   toggleFilter(booth);
                 }}
               >
                 <p>{booth}</p>
-                <CheckWrapper state={boothFilters.has(booth)} color={BoothColor[booth]}>
+                <CheckWrapper
+                  state={boothFilters.has(booth)}
+                  color={booth === photoBooth.기타 ? '#242424' : BoothColor[booth]}
+                >
                   {boothFilters.has(booth) ? (
                     <FontAwesomeIcon icon={faCheck} />
                   ) : (

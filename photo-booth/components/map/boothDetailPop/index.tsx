@@ -95,8 +95,8 @@ export default function BoothDetailPop({
         <Image
           src={HeaderArrow}
           alt=""
-          width="13"
-          height="7"
+          width="24"
+          height="24"
           onClick={() => {
             // setCurBoothDetail(null);
             setBoothDetailUp(false);
