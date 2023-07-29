@@ -8,11 +8,9 @@ authAPI.defaults.withCredentials = true;
 
 authAPI.interceptors.response.use(
   (config) => {
-    // 요청이 전달되기 전에 작업 수행 (성공하면 그냥 지나감)
     return config;
   },
   async (err) => {
-    // 요청 오류가 있는 작업 수행
     const {
       config,
       response: { status },
