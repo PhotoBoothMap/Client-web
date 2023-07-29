@@ -38,8 +38,8 @@ const Tag = ({ tagKey, selected = false }: props) => {
     >
       <Image
         src={`/common/review/tag/${tagKey}.svg`}
-        width={24}
-        height={24}
+        width={18}
+        height={18}
         alt={`${tags[tagKey]}`}
       />
       <div className={`text-xs font-semibold text-[#F2F2F2]`}>{tags[tagKey]}</div>
@@ -50,6 +50,6 @@ const Tag = ({ tagKey, selected = false }: props) => {
 export default Tag;
 
 const Wrapper = styled.div`
-  width: 165px;
-  padding: 0.5rem;
+  min-width: 170px;
+  padding: 0.5rem 14px;
 `;

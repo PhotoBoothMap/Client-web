@@ -5,9 +5,9 @@ config.autoAddCss = false;
 import type { AppProps } from 'next/app';
 
 import { GlobalLayout } from '@styles/common/Layout';
+import Head from 'next/head';
 import Script from 'next/script';
 import '../styles/globals.css';
-import Head from 'next/head';
 
 declare global {
   // Kakao 함수를 전역에서 사용할 수 있도록 선언
@@ -25,6 +25,7 @@ function MyApp({ Component, pageProps }: AppProps) {
   return (
     <>
       <Head>
+        <meta name="naver-site-verification" content="c417466997957662e9c98d001fa95c13b4f4eb20" />
         <link rel="icon" href="/favicon.ico" sizes="any" />
         <title>여기 사진</title>
       </Head>
