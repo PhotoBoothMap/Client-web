@@ -6,7 +6,7 @@ export const authAPI = axios.create({
 });
 authAPI.defaults.withCredentials = true;
 
-axios.interceptors.request.use(
+authAPI.interceptors.response.use(
   (config) => {
     // 요청이 전달되기 전에 작업 수행 (성공하면 그냥 지나감)
     return config;
@@ -17,6 +17,10 @@ axios.interceptors.request.use(
       config,
       response: { status },
     } = err;
+
+    if (status === 401) {
+      window.location.replace('/account/login');
+    }
 
     /** 1 */
     if (config.url === '/auth/reissue/' || status !== 401 || config.sent) {
