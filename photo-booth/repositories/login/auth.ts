@@ -44,7 +44,7 @@ authAPI.interceptors.response.use(
 export const kakaoLoginApi = async (code: string) => {
   const response = axios
     .post(
-      `${HOST_URL}/auth/kakao/`,
+      `${HOST_URL}/auth/kakao`,
       JSON.stringify({
         authorizationCode: code,
       }),
@@ -65,7 +65,7 @@ export const kakaoLoginApi = async (code: string) => {
 export const validateApi = async () => {
   const at = authAPI.defaults.headers.common['Authorization'];
 
-  const response = await fetch(`${process.env.NEXT_PUBLIC_API_HOST}/members/validate/`, {
+  const response = await fetch(`${process.env.NEXT_PUBLIC_API_HOST}/members/validate`, {
     method: 'PUT',
     headers: {
       'Content-Type': 'application/json',
@@ -79,7 +79,7 @@ export const validateApi = async () => {
 export const reIssueApi = async () => {
   const at = authAPI.defaults.headers.common['Authorization'];
 
-  const response = await fetch(`${process.env.NEXT_PUBLIC_API_HOST}/auth/reissue/`, {
+  const response = await fetch(`${process.env.NEXT_PUBLIC_API_HOST}/auth/reissue`, {
     method: 'GET',
     headers: {
       'Content-Type': 'application/json',
@@ -93,17 +93,17 @@ export const reIssueApi = async () => {
 export const logoutApi = async () => {
   const at = authAPI.defaults.headers.common['Authorization'];
 
-  const response = await fetch(`${process.env.NEXT_PUBLIC_API_HOST}/auth/logout/`, {
-    method: 'PUT',
+  const response = await fetch(`${process.env.NEXT_PUBLIC_API_HOST}/auth/logout`, {
+    method: 'POST',
     headers: {
       'Content-Type': 'application/json',
-      Authorization: `Bearer ${at}`,
+      Authorization: `${at}`,
     },
   }).then((res) => {
     return res.json();
   });
 
-  if (response.data.success) {
+  if (response.success) {
     authAPI.defaults.headers.common['Authorization'] = '';
   }
 
