@@ -40,7 +40,7 @@ authAPI.interceptors.response.use(
 );
 
 export const kakaoLoginApi = async (code: string) => {
-  const response = axios
+  const response = authAPI
     .post(
       `${HOST_URL}/auth/kakao`,
       JSON.stringify({
