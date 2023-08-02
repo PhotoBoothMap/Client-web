@@ -6,17 +6,19 @@ export const authAPI = axios.create({
 });
 authAPI.defaults.withCredentials = true;
 
-axios.interceptors.request.use(
+authAPI.interceptors.response.use(
   (config) => {
-    // 요청이 전달되기 전에 작업 수행 (성공하면 그냥 지나감)
     return config;
   },
   async (err) => {
-    // 요청 오류가 있는 작업 수행
     const {
       config,
       response: { status },
     } = err;
+
+    if (status === 401) {
+      window.location.replace('/account/login');
+    }
 
     /** 1 */
     if (config.url === '/auth/reissue/' || status !== 401 || config.sent) {
@@ -38,9 +40,9 @@ axios.interceptors.request.use(
 );
 
 export const kakaoLoginApi = async (code: string) => {
-  const response = axios
+  const response = authAPI
     .post(
-      `${HOST_URL}/auth/kakao/`,
+      `${HOST_URL}/auth/kakao`,
       JSON.stringify({
         authorizationCode: code,
       }),
@@ -61,7 +63,7 @@ export const kakaoLoginApi = async (code: string) => {
 export const validateApi = async () => {
   const at = authAPI.defaults.headers.common['Authorization'];
 
-  const response = await fetch(`${process.env.NEXT_PUBLIC_API_HOST}/members/validate/`, {
+  const response = await fetch(`${process.env.NEXT_PUBLIC_API_HOST}/members/validate`, {
     method: 'PUT',
     headers: {
       'Content-Type': 'application/json',
@@ -75,7 +77,7 @@ export const validateApi = async () => {
 export const reIssueApi = async () => {
   const at = authAPI.defaults.headers.common['Authorization'];
 
-  const response = await fetch(`${process.env.NEXT_PUBLIC_API_HOST}/auth/reissue/`, {
+  const response = await fetch(`${process.env.NEXT_PUBLIC_API_HOST}/auth/reissue`, {
     method: 'GET',
     headers: {
       'Content-Type': 'application/json',
@@ -89,17 +91,17 @@ export const reIssueApi = async () => {
 export const logoutApi = async () => {
   const at = authAPI.defaults.headers.common['Authorization'];
 
-  const response = await fetch(`${process.env.NEXT_PUBLIC_API_HOST}/auth/logout/`, {
-    method: 'PUT',
+  const response = await fetch(`${process.env.NEXT_PUBLIC_API_HOST}/auth/logout`, {
+    method: 'POST',
     headers: {
       'Content-Type': 'application/json',
-      Authorization: `Bearer ${at}`,
+      Authorization: `${at}`,
     },
   }).then((res) => {
     return res.json();
   });
 
-  if (response.data.success) {
+  if (response.success) {
     authAPI.defaults.headers.common['Authorization'] = '';
   }
 
