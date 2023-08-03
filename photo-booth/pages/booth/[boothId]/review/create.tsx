@@ -18,6 +18,7 @@ const BoothReviewCreatePage = () => {
   const [starRate, setStarRate] = useState(0);
   const [userTags, setUserTags] = useState<tagKey[]>([]);
   const [photos, setPhotos] = useState<string[]>([]);
+  const [photoFiles, setPhotoFiles] = useState<string[]>([]);
   const [content, setContent] = useState('');
 
   const registerPhoto = useCallback(
@@ -28,7 +29,8 @@ const BoothReviewCreatePage = () => {
       const response = await registerPhotoApi(Number(router.query.boothId), formData);
 
       if (response.success) {
-        setPhotos([...photos, response.result.imageFile]);
+        setPhotos([...photos, response.result.imageUrl]);
+        setPhotoFiles([...photoFiles, response.result.imageFile]);
       } else {
         alert(response.message);
       }
@@ -44,6 +46,9 @@ const BoothReviewCreatePage = () => {
         const _photos = [...photos];
         _photos.splice(photoIndex, 1);
         setPhotos(_photos);
+        const _photoFiles = [...photoFiles];
+        _photoFiles.splice(photoIndex, 1);
+        setPhotoFiles(_photoFiles);
       } else {
         alert(response.message);
       }
@@ -147,8 +152,8 @@ const BoothReviewCreatePage = () => {
                   </div>
                   <div className={`font-semibold text-sm`}>{photos.length}/3</div>
                 </RegisterPhotoBoxStyle>
-                {photos.length > 0 &&
-                  photos.map((photoUrl, index) => (
+                {photoFiles.length > 0 &&
+                  photoFiles.map((photoUrl, index) => (
                     <PreviewPhotoBoxStyle
                       photoUrl={`data:image/jpeg;base64,${photoUrl}`}
                       key={index}
