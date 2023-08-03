@@ -28,7 +28,7 @@ const BoothReviewCreatePage = () => {
       const response = await registerPhotoApi(Number(router.query.boothId), formData);
 
       if (response.success) {
-        setPhotos([...photos, response.result.imageUrl]);
+        setPhotos([...photos, response.result.imageFile]);
       } else {
         alert(response.message);
       }
@@ -149,7 +149,10 @@ const BoothReviewCreatePage = () => {
                 </RegisterPhotoBoxStyle>
                 {photos.length > 0 &&
                   photos.map((photoUrl, index) => (
-                    <PreviewPhotoBoxStyle photoUrl={photoUrl} key={index}>
+                    <PreviewPhotoBoxStyle
+                      photoUrl={`data:image/jpeg;base64,${photoUrl}`}
+                      key={index}
+                    >
                       <div className="delete-button" onClick={() => deletePhoto(index)}>
                         <Image
                           src={`/common/close.svg`}
