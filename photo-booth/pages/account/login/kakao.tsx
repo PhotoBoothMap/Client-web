@@ -12,9 +12,11 @@ const kakaoLoginPage = () => {
     async (code: string) => {
       const response = await kakaoLoginApi(code);
       const accessToken = response.headers.get('Authorization');
-      authAPI.defaults.headers.common['Authorization'] = `${accessToken}`;
 
       if (response.data.success) {
+        authAPI.defaults.headers.common[
+          'Authorization'
+        ] = `Bearer ${response.data.result.accessToken}`;
         setId(response.data.result.userId);
         setNickName(response.data.result.nickname);
         setProfile(response.data.result.profileImageUrl);
