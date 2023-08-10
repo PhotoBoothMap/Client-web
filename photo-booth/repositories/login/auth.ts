@@ -61,45 +61,40 @@ export const kakaoLoginApi = async (code: string) => {
 };
 
 export const validateApi = async () => {
-  const at = authAPI.defaults.headers.common['Authorization'];
-
-  const response = await fetch(`${process.env.NEXT_PUBLIC_API_HOST}/members/validate`, {
-    method: 'PUT',
-    headers: {
-      'Content-Type': 'application/json',
-      Authorization: `Bearer ${at}`,
-    },
-  }).then((res) => res.json());
+  const response = authAPI
+    .put(`${process.env.NEXT_PUBLIC_API_HOST}/members/validate`)
+    .then((response) => {
+      return response;
+    })
+    .catch((error) => {
+      return error.response;
+    });
 
   return response;
 };
 
 export const reIssueApi = async () => {
-  const at = authAPI.defaults.headers.common['Authorization'];
-
-  const response = await fetch(`${process.env.NEXT_PUBLIC_API_HOST}/auth/reissue`, {
-    method: 'GET',
-    headers: {
-      'Content-Type': 'application/json',
-      Authorization: `Bearer ${at}`,
-    },
-  }).then((res) => res.json());
+  const response = authAPI
+    .get(`${process.env.NEXT_PUBLIC_API_HOST}/auth/reissue`)
+    .then((response) => {
+      return response;
+    })
+    .catch((error) => {
+      return error.response;
+    });
 
   return response;
 };
 
 export const logoutApi = async () => {
-  const at = authAPI.defaults.headers.common['Authorization'];
-
-  const response = await fetch(`${process.env.NEXT_PUBLIC_API_HOST}/auth/logout`, {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-      Authorization: `${at}`,
-    },
-  }).then((res) => {
-    return res.json();
-  });
+  const response = await authAPI
+    .post(`${process.env.NEXT_PUBLIC_API_HOST}/auth/logout`)
+    .then((response) => {
+      return response;
+    })
+    .catch((error) => {
+      return error.response;
+    });
 
   if (response.success) {
     authAPI.defaults.headers.common['Authorization'] = '';
