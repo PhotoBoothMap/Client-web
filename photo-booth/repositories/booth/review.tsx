@@ -1,7 +1,6 @@
 import { HOST_URL } from '@assets/url';
 import { authAPI } from '@repositories/login/auth';
 import { Review } from '@utils/interface/photoBooth';
-import axios from 'axios';
 
 export const registerPhotoApi = (boothId: number, file: any) => {
   const data = authAPI
@@ -49,7 +48,7 @@ export const requestReviewApi = async (boothId: number, count: number) => {
   try {
     const response: Response<{
       review: Array<Review>;
-    }> = await axios.get(`${HOST_URL}/booth/${boothId}/review?count=${count}`);
+    }> = await authAPI.get(`${HOST_URL}/booth/${boothId}/review?count=${count}`);
     if (!response.data.success) {
       Error('get review error');
       return { review: [] as Review[] };

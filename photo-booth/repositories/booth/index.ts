@@ -1,7 +1,6 @@
-import axios from 'axios';
-
 import { HOST_URL } from '@assets/url';
 import { PhotoBooth, Review, photoBooth } from '@utils/interface/photoBooth';
+import { authAPI } from '@repositories/login/auth';
 
 interface Response<T> {
   data: { result: T };
@@ -10,7 +9,7 @@ interface Response<T> {
 class BoothRepository {
   async getBooth(id: number): Promise<PhotoBooth | null> {
     try {
-      const response: Response<PhotoBooth> = await axios.get(`${HOST_URL}/booth/${id}`);
+      const response: Response<PhotoBooth> = await authAPI.get(`${HOST_URL}/booth/${id}`);
 
       const result = response.data['result'];
       return result;
@@ -21,7 +20,7 @@ class BoothRepository {
 
   async getReview(id: number, count: number): Promise<{ review: Array<Review> } | null> {
     try {
-      const response: Response<{ review: Array<Review> }> = await axios.get(
+      const response: Response<{ review: Array<Review> }> = await authAPI.get(
         `${HOST_URL}/booth/${id}/review?count=${count}`,
       );
       const result = response.data['result'];

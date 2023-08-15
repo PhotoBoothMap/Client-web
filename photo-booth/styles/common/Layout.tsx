@@ -6,7 +6,7 @@ export const GlobalLayout = styled.section`
     width: 100vw;
     max-width: 28.125rem;
 
-    min-height: 100vh;
+    min-height: calc(var(--vh, 1vh) * 100);
     height: 100vh;
     margin: 0 auto;
 

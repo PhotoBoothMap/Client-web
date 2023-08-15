@@ -8,6 +8,7 @@ import { GlobalLayout } from '@styles/common/Layout';
 import Head from 'next/head';
 import Script from 'next/script';
 import '../styles/globals.css';
+import { useEffect } from 'react';
 
 declare global {
   // Kakao 함수를 전역에서 사용할 수 있도록 선언
@@ -21,6 +22,12 @@ function MyApp({ Component, pageProps }: AppProps) {
     // 페이지가 로드되면 실행
     window.Kakao.init(process.env.NEXT_PUBLIC_KAKAOMAP_APPKEY);
   };
+
+  let vh = 0;
+  useEffect(() => {
+    vh = window.innerHeight * 0.01;
+    document.documentElement.style.setProperty('--vh', `${vh}px`);
+  }, []);
 
   return (
     <>
