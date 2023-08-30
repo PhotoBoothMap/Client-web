@@ -6,20 +6,19 @@ import { useLoginUserStore } from '@store/login';
 const kakaoLoginPage = () => {
   const router = useRouter();
   const { code: authCode, error: kakaoServerError } = router.query;
-  const { setNickName, setProfile, setId } = useLoginUserStore();
+  const { setNickName, setProfile, setId, setToken } = useLoginUserStore();
 
   const loginHandler = useCallback(
     async (code: string) => {
       const response = await kakaoLoginApi(code);
-      const accessToken = response.headers.get('Authorization');
 
       if (response.data.success) {
-        authAPI.defaults.headers.common[
-          'Authorization'
-        ] = `Bearer ${response.data.result.accessToken}`;
+        const accessTocken = `Bearer ${response.data.result.accessToken}`;
+        authAPI.defaults.headers.common['Authorization'] = accessTocken;
         setId(response.data.result.userId);
         setNickName(response.data.result.nickname);
         setProfile(response.data.result.profileImageUrl);
+        setToken(accessTocken);
 
         router.push('/map');
       } else {
