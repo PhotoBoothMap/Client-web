@@ -5,9 +5,11 @@ interface loginUserState {
   id: number | null;
   nickName: string | null;
   profile: string | null;
+  token: string | null;
   setId: (id: number) => void;
   setNickName: (nickName: string) => void;
   setProfile: (profile: string) => void;
+  setToken: (tocken: string) => void;
   resetLoginUser: () => void;
 }
 
@@ -16,7 +18,7 @@ type loginUserPersist = (
   options: PersistOptions<loginUserState>,
 ) => StateCreator<loginUserState>;
 
-const initialLoginUser = { id: null, nickName: null, profile: null };
+const initialLoginUser = { id: null, nickName: null, profile: null, token: null };
 
 export const useLoginUserStore = create<loginUserState>(
   (persist as loginUserPersist)(
@@ -25,6 +27,7 @@ export const useLoginUserStore = create<loginUserState>(
       setId: (id: number) => set({ id: id }),
       setNickName: (nickName: string) => set({ nickName: nickName }),
       setProfile: (profile: string) => set({ profile: profile }),
+      setToken: (token: string) => set({ token: token }),
       resetLoginUser: () => {
         set(initialLoginUser);
       },
