@@ -8,7 +8,7 @@ export const getMyReviewsApi = () => {
       return response.data;
     })
     .catch((error) => {
-      return error.response.data;
+      return error.response;
     });
   return data;
 };
