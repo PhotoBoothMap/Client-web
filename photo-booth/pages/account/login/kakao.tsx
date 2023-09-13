@@ -18,7 +18,6 @@ const kakaoLoginPage = () => {
         setId(response.data.result.userId);
         setNickName(response.data.result.nickname);
         setProfile(response.data.result.profileImageUrl);
-        setToken(accessTocken);
 
         router.push('/map');
       } else {
