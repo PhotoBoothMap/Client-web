@@ -1,4 +1,6 @@
 # 여기 사진
+![og_image](https://github.com/PhotoBoothMap/Client-web/assets/77733145/86200023-0767-490d-b59a-e3d553fd27e9)
+
 
 ## 🎈 About Project
 
@@ -33,7 +35,8 @@
 
 | React.js | Next.js | Typescript |
 | -------- | ------- | ---------- |
-|          |         |
+|  <img src="https://github.com/PhotoBoothMap/Client-web/assets/77733145/6a2ac6b7-2467-4617-acd1-c91802059aa8"  width="100" height="90"/>   |<img src="https://github.com/PhotoBoothMap/Client-web/assets/77733145/8792939f-a5f6-4da4-9ce3-e21f8f730bb1"  width="100" height="100"/>   |<img src="https://github.com/PhotoBoothMap/Client-web/assets/77733145/31b1fee3-dbc3-48dc-9667-6914f9b48fb1"  width="100" height="100"/>   |
+
 
 ## 👩🏻‍💻 Duration
 
